@@ -1,19 +1,26 @@
 const { assign } = require("nodemailer/lib/shared");
 const locationModel = require("../models/locationModel");
+const stateModel = require("../models/stateModel");
+const hotelModel = require("../models/hotelModel");
 
 exports.create = async (req, res) => {
   try {
-    const { city, state } = req.body;
+    const { state, name, code } = req.body;
 
-    const checkCity = await locationModel.findOne({ city });
+    const checkState = await stateModel.findOne({ name: state });
+    if (!checkState) {
+      return res.status(400).json({ message: "State does not exist" });
+    }
 
+    const checkCity = await locationModel.findOne({ name });
     if (checkCity) {
       return res.status(400).json({ message: "Location already exists" });
     }
 
     const location = {
-      city,
-      state,
+      name,
+      code,
+      stateId: checkState._id,
       assignedBy: req.user._id,
     };
 
@@ -29,7 +36,8 @@ exports.getAll = async (req, res) => {
   try {
     const location = await locationModel
       .find()
-      .populate("assignedBy", "name email age phone role status");
+      .populate("assignedBy", "name email age phone role status")
+      .populate("stateId", "name");
 
     res.status(200).json(location);
   } catch (error) {
@@ -47,7 +55,8 @@ exports.getOne = async (req, res) => {
 
     const location = await locationModel
       .findById(id)
-      .populate("assignedBy", "name email age phone role status");
+      .populate("assignedBy", "name email age phone role status")
+      .populate("stateId", "name");
 
     if (!location) {
       return res.status(404).json({ message: "No Location found" });
@@ -62,7 +71,7 @@ exports.getOne = async (req, res) => {
 exports.updateLocation = async (req, res) => {
   try {
     const { id } = req.query;
-    const { city, state } = req.body;
+    const { name, code } = req.body;
 
     if (!id) {
       return res.status(404).json({ message: "Please provide an id" });
@@ -76,8 +85,8 @@ exports.updateLocation = async (req, res) => {
     const updateLocation = await locationModel.findByIdAndUpdate(
       id,
       {
-        city,
-        state,
+        name,
+        code,
       },
       { new: true }
     );
@@ -103,9 +112,24 @@ exports.softDelete = async (req, res) => {
       return res.status(404).json({ message: "No Location found" });
     }
 
+    const state = await stateModel.findById(location.stateId);
+    if (!state) {
+      return res.status(404).json({ message: "No State found" });
+    }
+
     let status = "";
     if (location.status === "active") status = "inactive";
     else status = "active";
+
+    
+    if (state.status === "inactive") {
+      return res.status(400).json({ message: "State is inactive" });
+    }
+
+    const updateHotel = await hotelModel.updateMany(
+      { locationId: id },
+      { $set: { status } }
+    );
 
     const updateLocation = await locationModel.findByIdAndUpdate(
       id,
@@ -137,10 +161,28 @@ exports.hardDelete = async (req, res) => {
     }
 
     const updateLocation = await locationModel.findByIdAndDelete(id);
+    const deleteHotels = await hotelModel.deleteMany({ locationId: id });
 
-    return res
-      .status(200)
-      .json({ message: "Location deleted" });
+    return res.status(200).json({ message: "Location deleted" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.getAllByState = async (req, res) => {
+  try {
+    const { id } = req.query;
+
+    if (!id) {
+      return res.status(404).json({ message: "Please provide an id" });
+    }
+
+    const location = await locationModel
+      .find({ stateId: id })
+      .populate("assignedBy", "name email age phone role status")
+      .populate("stateId", "name");
+
+    res.status(200).json(location);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

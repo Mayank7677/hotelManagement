@@ -83,13 +83,13 @@ const ResetPassPage = () => {
   return (
     <section className="flex items-center justify-center h-screen">
       <div class="flex  gap-10   rounded-4xl py-10  border-zinc-700 items-center">
-        <div class="w-full hidden md:inline-block">
+        {/* <div class="w-full hidden md:inline-block">
           <img
             class="h-[600px]"
             src="https://plus.unsplash.com/premium_photo-1666973935928-5b6e53a2d286?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDE2fHx8ZW58MHx8fHx8"
             alt="leftSideImage"
           />
-        </div>
+        </div> */}
 
         <div class="w-full flex flex-col items-center justify-center ">
           <form

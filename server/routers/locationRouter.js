@@ -9,5 +9,6 @@ router.get('/getOne', auth, locationController.getOne);
 router.put('/update', auth, locationController.updateLocation);
 router.put('/softDelete', auth, locationController.softDelete);
 router.delete('/hardDelete', auth, locationController.hardDelete);
+router.get('/getAllByState', auth, locationController.getAllByState);
 
 module.exports = router;

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const locationSchema = mongoose.Schema(
+const stateSchema = mongoose.Schema(
   {
     name: {
       type: String,
@@ -15,10 +15,6 @@ const locationSchema = mongoose.Schema(
       enum: ["active", "inactive"],
       default: "active",
     },
-    stateId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "states",
-    },
     assignedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
@@ -27,4 +23,4 @@ const locationSchema = mongoose.Schema(
   { timestamps: true, versionKey: false }
 );
 
-module.exports = mongoose.model("locations", locationSchema);
+module.exports = mongoose.model('states', stateSchema);

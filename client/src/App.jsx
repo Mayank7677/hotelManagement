@@ -6,6 +6,12 @@ import Dashboard from "./components/admin/Dashboard";
 import HomePage from "./components/user/HomePage";
 import { Toaster } from "sonner";
 import ResetPassPage from "./auth/ResetPassPage";
+import CreateState from "./components/admin/CreateState";
+import CreateCity from "./components/admin/CreateCity";
+import CreateHotels from "./components/admin/CreateHotels";
+import AdminRoutes from "./protectedRoutes/AdminRoutes";
+import CheckToken from "./protectedRoutes/CheckToken";
+import MainLayout from "./layouts/MainLayout";
 
 const App = () => {
   return (
@@ -15,8 +21,30 @@ const App = () => {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/" element={<LoginPage />} />
         <Route path="/reset" element={<ResetPassPage />} />
-        <Route path="/admin" element={<Dashboard />} />
-        <Route path="/home" element={<HomePage />} />
+
+        <Route element={<MainLayout />}>
+          <Route
+            path="/home"
+            element={
+              <CheckToken>
+                <HomePage />
+              </CheckToken>
+            }
+          />
+
+          <Route
+            path="/admin"
+            element={
+              <AdminRoutes>
+                <Dashboard />
+              </AdminRoutes>
+            }
+          >
+            <Route index element={<CreateState />} />
+            <Route path="city" element={<CreateCity />} />
+            <Route path="hotel" element={<CreateHotels />} />
+          </Route>
+        </Route>
       </Routes>
     </BrowserRouter>
   );

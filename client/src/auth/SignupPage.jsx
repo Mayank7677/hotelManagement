@@ -58,13 +58,13 @@ const SignupPage = () => {
   return (
     <section className="flex items-center justify-center h-screen">
       <div class="flex   gap-10   rounded-4xl py-10  border-zinc-700 items-center">
-        <div class="w-full hidden md:inline-block">
+        {/* <div class="w-full hidden md:inline-block">
           <img
             class="h-[600px]"
             src="https://plus.unsplash.com/premium_photo-1666973935928-5b6e53a2d286?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDE2fHx8ZW58MHx8fHx8"
             alt="leftSideImage"
           />
-        </div>
+        </div> */}
 
         <div class="w-full flex flex-col items-center justify-center ">
           <form
@@ -109,7 +109,7 @@ const SignupPage = () => {
               />
             </div>
 
-            <div class="flex items-center mt-6 w-full bg-transparent border border-gray-300/60 h-12 rounded-full overflow-hidden pl-4.5 gap-2">
+            <div class="flex items-center mt-4 w-full bg-transparent border border-gray-300/60 h-12 rounded-full overflow-hidden pl-4.5 gap-2">
               <p className="text-md text-gray-500">
                 <LuSmartphone />
               </p>
@@ -124,7 +124,7 @@ const SignupPage = () => {
               />
             </div>
 
-            <div class="flex items-center mt-6 w-full bg-transparent border border-gray-300/60 h-12 rounded-full overflow-hidden pl-4.5 gap-2">
+            <div class="flex items-center mt-4 w-full bg-transparent border border-gray-300/60 h-12 rounded-full overflow-hidden pl-4.5 gap-2">
               <p className="text-xl text-gray-500">
                 <CiCalendarDate />
               </p>
@@ -139,7 +139,7 @@ const SignupPage = () => {
               />
             </div>
 
-            <div class="flex items-center mt-6 w-full bg-transparent border border-gray-300/60 h-12 rounded-full overflow-hidden pl-6 gap-2">
+            <div class="flex items-center mt-4 w-full bg-transparent border border-gray-300/60 h-12 rounded-full overflow-hidden pl-6 gap-2">
               <svg
                 width="16"
                 height="11"
@@ -165,7 +165,7 @@ const SignupPage = () => {
               />
             </div>
 
-            <div class="flex items-center mt-6 w-full bg-transparent border border-gray-300/60 h-12 rounded-full overflow-hidden pl-6 gap-2">
+            <div class="flex items-center mt-4 w-full bg-transparent border border-gray-300/60 h-12 rounded-full overflow-hidden pl-6 gap-2">
               <svg
                 width="13"
                 height="17"

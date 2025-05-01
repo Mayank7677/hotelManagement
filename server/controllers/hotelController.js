@@ -1,0 +1,162 @@
+const hotelModel = require("../models/hotelModel");
+const locationModel = require("../models/locationModel");
+const stateModel = require("../models/stateModel");
+
+exports.create = async (req, res) => {
+  try {
+    const {
+      state,
+      city,
+      name,
+      address,
+      totalRoom,
+      description,
+      contactNumber,
+      contactEmail,
+    } = req.body;
+
+    const checkState = await stateModel.findOne({ name: state });
+    if (!checkState) {
+      return res.status(400).json({ message: "State does not exist" });
+    }
+    if (checkState.status === "inactive") {
+      return res.status(400).json({ message: "State is inactive" });
+    }
+
+    const checkCity = await locationModel.findOne({ name: city });
+    if (!checkCity) {
+      return res.status(400).json({ message: "City does not exist" });
+    }
+    if (checkCity.status === "inactive") {
+      return res.status(400).json({ message: "City is inactive" });
+    }
+
+    const checkHotel = await hotelModel.findOne({ name });
+    if (checkHotel) {
+      return res.status(400).json({ message: "Hotel already exists" });
+    }
+
+    const hotel = {
+      name,
+      address,
+      totalRoom,
+      locationId: checkCity._id,
+      assignedBy: req.user._id,
+      stateId: checkState._id,
+      description,
+      contactNumber,
+      contactEmail,
+    };
+    const newHotel = new hotelModel(hotel);
+    const save = await newHotel.save();
+    res.status(201).json({ message: "Hotel added successfully" });
+
+    // const checkLocation = await locationModel.findOne({ name: location });
+    // if (!checkLocation) {
+    //   return res.status(400).json({ message: "Location does not exist" });
+    // }
+    // const checkHotel = await hotelModel.findOne({ name });
+    // if (checkHotel) {
+    //   return res.status(400).json({ message: "Hotel already exists" });
+    // }
+    // const hotel = {
+    //   name,
+    //   address,
+    //   totalRoom,
+    //   locationId: checkLocation._id,
+    //   assignedBy: req.user._id,
+    //   description,
+    // };
+    // const newHotel = new hotelModel(hotel);
+    // const save = await newHotel.save();
+    // res.status(201).json({ message: "Hotel added successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.getAll = async (req, res) => {
+  try {
+    const hotel = await hotelModel
+      .find()
+      .populate("assignedBy", "name email age phone role status")
+      .populate("locationId", "name code status")
+      .populate("stateId", "name code status");
+
+    res.status(200).json(hotel);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.softDelete = async (req, res) => {
+  try {
+    const { id } = req.query;
+
+    if (!id) {
+      return res.status(404).json({ message: "Please provide an id" });
+    }
+
+    const hotel = await hotelModel.findById(id);
+    if (!hotel) {
+      return res.status(404).json({ message: "No Hotel found" });
+    }
+
+    const city = await locationModel.findById(hotel.locationId);
+    if (!city) {
+      return res.status(404).json({ message: "No City found" });
+    }
+
+    const state = await stateModel.findById(city.stateId);
+    if (!state) {
+      return res.status(404).json({ message: "No State found" });
+    }
+
+    let status = "";
+    if (hotel.status === "active") status = "inactive";
+    else status = "active";
+
+    if (state.status === "inactive") {
+      return res.status(400).json({ message: "State is inactive" });
+    }
+
+    if (city.status === "inactive") {
+      return res.status(400).json({ message: "City is inactive" });
+    }
+
+    const updateLocation = await hotelModel.findByIdAndUpdate(
+      id,
+      {
+        status,
+      },
+      { new: true }
+    );
+
+    return res
+      .status(200)
+      .json({ message: "Location updated", location: updateLocation });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.hardDelete = async (req, res) => {
+  try {
+    const { id } = req.query;
+
+    if (!id) {
+      return res.status(404).json({ message: "Please provide an id" });
+    }
+
+    const hotel = await hotelModel.findById(id);
+    if (!hotel) {
+      return res.status(404).json({ message: "No Hotel found" });
+    }
+
+    const deleteLocation = await hotelModel.findByIdAndDelete(id);
+
+    return res.status(200).json({ message: "Location deleted" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
