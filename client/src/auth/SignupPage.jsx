@@ -57,7 +57,7 @@ const SignupPage = () => {
 
   return (
     <section className="flex items-center justify-center h-screen">
-      <div class="flex   gap-10   rounded-4xl py-10  border-zinc-700 items-center">
+      <div class="flex   gap-10   rounded-4xl py-10  border-zinc-900 items-center">
         {/* <div class="w-full hidden md:inline-block">
           <img
             class="h-[600px]"
@@ -71,14 +71,14 @@ const SignupPage = () => {
             onSubmit={handleSubmit}
             class="md:w-96 w-80 flex flex-col items-center justify-center p-5"
           >
-            <h2 class="text-4xl text-gray-300 font-medium">Sign up</h2>
-            <p class="text-sm text-gray-500/90 mt-3">
+            <h2 class="text-4xl text-gray-800 font-bold">Sign up</h2>
+            <p class="text-sm text-gray-800 mt-2">
               Welcome Please sign up to continue
             </p>
 
             <button
               type="button"
-              class="w-full mt-6 bg-gray-500/10 flex items-center justify-center h-12 rounded-full"
+              class="w-full mt-6 bg-gray-100 border border-zinc-300 flex items-center justify-center h-12 rounded-full"
             >
               <img
                 src="https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/login/googleLogo.svg"
@@ -87,15 +87,15 @@ const SignupPage = () => {
             </button>
 
             <div class="flex items-center gap-4 w-full my-5">
-              <div class="w-full h-px bg-gray-300/90"></div>
-              <p class="w-full text-nowrap text-sm text-gray-500/90">
+              <div class="w-full h-px bg-gray-600"></div>
+              <p class="w-full text-nowrap text-sm text-gray-800">
                 or create an account
               </p>
-              <div class="w-full h-px bg-gray-300/90"></div>
+              <div class="w-full h-px bg-gray-600"></div>
             </div>
 
-            <div class="flex items-center w-full bg-transparent border border-gray-300/60 h-12 rounded-full overflow-hidden pl-4.5 gap-2">
-              <p className="text-md text-gray-500">
+            <div class="flex items-center w-full bg-transparent border border-gray-500 h-12 rounded-full overflow-hidden pl-4.5 gap-2">
+              <p className="text-md font-semibold text-gray-500">
                 <FaRegCircleUser />
               </p>
               <input
@@ -104,12 +104,12 @@ const SignupPage = () => {
                 value={userData.name}
                 onChange={handleChange}
                 placeholder="Full Name"
-                class="bg-transparent text-gray-500/80 placeholder-gray-500/80 outline-none text-sm w-full h-full"
+                class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full"
                 required
               />
             </div>
 
-            <div class="flex items-center mt-4 w-full bg-transparent border border-gray-300/60 h-12 rounded-full overflow-hidden pl-4.5 gap-2">
+            <div class="flex items-center mt-4 w-full bg-transparent border border-gray-500 h-12 rounded-full overflow-hidden pl-4.5 gap-2">
               <p className="text-md text-gray-500">
                 <LuSmartphone />
               </p>
@@ -119,12 +119,12 @@ const SignupPage = () => {
                 name="phone"
                 value={userData.phone}
                 onChange={handleChange}
-                class="bg-transparent text-gray-500/80 placeholder-gray-500/80 outline-none text-sm w-full h-full"
+                class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full"
                 required
               />
             </div>
 
-            <div class="flex items-center mt-4 w-full bg-transparent border border-gray-300/60 h-12 rounded-full overflow-hidden pl-4.5 gap-2">
+            <div class="flex items-center mt-4 w-full bg-transparent border border-gray-500 h-12 rounded-full overflow-hidden pl-4.5 gap-2">
               <p className="text-xl text-gray-500">
                 <CiCalendarDate />
               </p>
@@ -134,12 +134,12 @@ const SignupPage = () => {
                 name="age"
                 value={userData.age}
                 onChange={handleChange}
-                class="bg-transparent text-gray-500/80 placeholder-gray-500/80 outline-none text-sm w-full h-full"
+                class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full"
                 required
               />
             </div>
 
-            <div class="flex items-center mt-4 w-full bg-transparent border border-gray-300/60 h-12 rounded-full overflow-hidden pl-6 gap-2">
+            <div class="flex items-center mt-4 w-full bg-transparent border border-gray-500 h-12 rounded-full overflow-hidden pl-6 gap-2">
               <svg
                 width="16"
                 height="11"
@@ -160,12 +160,12 @@ const SignupPage = () => {
                 name="email"
                 value={userData.email}
                 onChange={handleChange}
-                class="bg-transparent text-gray-500/80 placeholder-gray-500/80 outline-none text-sm w-full h-full"
+                class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full"
                 required
               />
             </div>
 
-            <div class="flex items-center mt-4 w-full bg-transparent border border-gray-300/60 h-12 rounded-full overflow-hidden pl-6 gap-2">
+            <div class="flex items-center mt-4 w-full bg-transparent border border-gray-500 h-12 rounded-full overflow-hidden pl-6 gap-2">
               <svg
                 width="13"
                 height="17"
@@ -184,7 +184,7 @@ const SignupPage = () => {
                 name="password"
                 value={userData.password}
                 onChange={handleChange}
-                class="bg-transparent text-gray-500/80 placeholder-gray-500/80 outline-none text-sm w-full h-full"
+                class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full"
                 required
               />
             </div>
@@ -195,9 +195,9 @@ const SignupPage = () => {
             >
               Create
             </button>
-            <p class="text-gray-500/90 text-sm mt-4">
+            <p class="text-gray-600 text-sm font-medium mt-4">
               Already have an account?{" "}
-              <Link class="text-indigo-400 hover:underline" to="/">
+              <Link class="text-indigo-600 hover:underline" to="/">
                 Sign in
               </Link>
             </p>

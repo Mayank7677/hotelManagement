@@ -89,14 +89,14 @@ const LoginPage = () => {
             onSubmit={step === "login" ? handleLoginSubmit : handleOtpSubmit}
             class="md:w-96 w-80 flex flex-col items-center justify-center p-5"
           >
-            <h2 class="text-4xl text-gray-300 font-medium">Sign in</h2>
-            <p class="text-sm text-gray-500/90 mt-3">
+            <h2 class="text-4xl text-gray-800 font-bold">Sign in</h2>
+            <p class="text-sm text-gray-800 mt-3">
               Welcome back! Please sign in to continue
             </p>
 
             <button
               type="button"
-              class="w-full mt-8 bg-gray-500/10 flex items-center justify-center h-12 rounded-full"
+              class="w-full mt-6 bg-gray-100 border border-zinc-300 flex items-center justify-center h-12 rounded-full"
             >
               <img
                 src="https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/login/googleLogo.svg"
@@ -105,16 +105,16 @@ const LoginPage = () => {
             </button>
 
             <div class="flex items-center gap-4 w-full my-5">
-              <div class="w-full h-px bg-gray-300/90"></div>
-              <p class="w-full text-nowrap text-sm text-gray-500/90">
+              <div class="w-full h-px bg-gray-800"></div>
+              <p class="w-full text-nowrap text-sm text-gray-800">
                 or sign in with email
               </p>
-              <div class="w-full h-px bg-gray-300/90"></div>
+              <div class="w-full h-px bg-gray-800"></div>
             </div>
 
             {step === "login" && (
               <>
-                <div class="flex items-center w-full bg-transparent border border-gray-300/60 h-12 rounded-full overflow-hidden pl-6 gap-2">
+                <div class="flex items-center w-full bg-transparent border border-gray-500 h-12 rounded-full overflow-hidden pl-6 gap-2">
                   <svg
                     width="16"
                     height="11"
@@ -135,12 +135,12 @@ const LoginPage = () => {
                     name="email"
                     onChange={handleChange}
                     value={userData.email}
-                    class="bg-transparent text-gray-500/80 placeholder-gray-500/80 outline-none text-sm w-full h-full"
+                    class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full"
                     required
                   />
                 </div>
 
-                <div class="flex items-center mt-6 w-full bg-transparent border border-gray-300/60 h-12 rounded-full overflow-hidden pl-6 gap-2">
+                <div class="flex items-center mt-6 w-full bg-transparent border border-gray-500 h-12 rounded-full overflow-hidden pl-6 gap-2">
                   <svg
                     width="13"
                     height="17"
@@ -159,7 +159,7 @@ const LoginPage = () => {
                     name="password"
                     onChange={handleChange}
                     value={userData.password}
-                    class="bg-transparent text-gray-500/80 placeholder-gray-500/80 outline-none text-sm w-full h-full"
+                    class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full"
                     required
                   />
                 </div>
@@ -167,7 +167,7 @@ const LoginPage = () => {
                 <div class="w-full flex items-center justify-between mt-8 text-gray-500/80">
                   <div class="flex items-center gap-2"></div>
                   <Link
-                    class="text-sm  text-indigo-400 hover:underline"
+                    class="text-sm  text-indigo-600 hover:underline"
                     to="/reset"
                   >
                     Forgot password?
@@ -178,7 +178,7 @@ const LoginPage = () => {
 
             {step === "otp" && (
               <>
-                <div class="flex items-center w-full bg-transparent border border-gray-300/60 h-12 rounded-full overflow-hidden pl-6 gap-2">
+                <div class="flex items-center w-full bg-transparent border border-gray-500 h-12 rounded-full overflow-hidden pl-6 gap-2">
                   <svg
                     width="16"
                     height="11"
@@ -199,7 +199,7 @@ const LoginPage = () => {
                     name="otp"
                     onChange={handleChange}
                     value={userData.otp}
-                    class="bg-transparent text-gray-500/80 placeholder-gray-500/80 outline-none text-sm w-full h-full"
+                    class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full"
                     required
                   />
                 </div>
@@ -214,9 +214,9 @@ const LoginPage = () => {
             </button>
 
             {step === "login" && (
-              <p class="text-gray-500/90 text-sm mt-4">
+              <p class="text-gray-700 text-sm font-semibold mt-4">
                 Don’t have an account?{" "}
-                <Link class="text-indigo-400 hover:underline" to="/signup">
+                <Link class="text-indigo-600 hover:underline" to="/signup">
                   Create
                 </Link>
               </p>

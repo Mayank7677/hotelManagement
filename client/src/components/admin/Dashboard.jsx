@@ -70,19 +70,19 @@ const Dashboard = () => {
   return (
     <>
       {/* Sidebar + Main Content */}
-      <div className="flex min-h-screen ">
+      <div className="flex min-h-screen pt-15 relative ">
         {/* Sidebar */}
-        <div className="md:w-64 w-12 border-r text-base border-gray-300 pt-4 flex flex-col transition-all duration-300 bg-neutral-900 ">
+        <div className="md:w-64 w-16 h-full fixed  sm:pr-2 text-base  pt-7  gap-2 flex flex-col transition-all duration-300 bg-[#f7fcfe] ">
           {sidebarLinks.map((item, index) => (
             <NavLink
               to={item.path}
               key={index}
               end={item.path === "/admin"}
               className={({ isActive }) =>
-                `flex items-center py-3 px-2 gap-3 transition-colors duration-200 ${
+                `flex items-center py-2 rounded-r-3xl px-2  gap-2 text-md font-semibold tracking-tight transition-colors duration-200 ${
                   isActive
-                    ? "border-r-4 md:border-r-[6px] bg-neutral-700 border-neutral-500 text-gray-200"
-                    : "hover:bg-gray-100/10 text-gray-300"
+                    ? " text-gray-800  bg-blue-200"
+                    : "bg-gray-50 text-gray-800"
                 }`
               }
             >
@@ -93,7 +93,7 @@ const Dashboard = () => {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 p-6 bg-neutral-900 text-white overflow-y-auto">
+        <div className="flex-1 p-6 pb-10 rounded-tl-3xl border border-neutral-200  md:ml-64 ml-16 bg-white w-[85vw]  h-full fixed overflow-scroll">
           <Outlet />
         </div>
       </div>

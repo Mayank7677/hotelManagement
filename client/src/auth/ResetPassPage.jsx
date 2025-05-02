@@ -96,19 +96,19 @@ const ResetPassPage = () => {
             onSubmit={step === "login" ? handleLoginSubmit : changePassword}
             class="md:w-96 w-80 flex flex-col items-center justify-center p-5"
           >
-            <h2 class="text-4xl text-gray-300 font-medium">Reset Password</h2>
+            <h2 class="text-4xl text-gray-800 font-semibold">Reset Password</h2>
 
             <div class="flex items-center gap-4 w-full my-5">
-              <div class="w-full h-px bg-gray-300/90"></div>
-              <p class="w-full text-nowrap text-sm text-gray-500/90">
+              <div class="w-full h-px bg-gray-500"></div>
+              <p class="w-full text-nowrap text-sm text-gray-800">
                 Verify with OTP
               </p>
-              <div class="w-full h-px bg-gray-300/90"></div>
+              <div class="w-full h-px bg-gray-500"></div>
             </div>
 
             {step === "login" && (
               <>
-                <div class="flex items-center w-full bg-transparent border border-gray-300/60 h-12 rounded-full overflow-hidden pl-6 gap-2">
+                <div class="flex items-center w-full bg-transparent border border-gray-500 h-12 rounded-full overflow-hidden pl-6 gap-2">
                   <svg
                     width="16"
                     height="11"
@@ -129,7 +129,7 @@ const ResetPassPage = () => {
                     name="email"
                     onChange={handleChange}
                     value={userData.email}
-                    class="bg-transparent text-gray-500/80 placeholder-gray-500/80 outline-none text-sm w-full h-full"
+                    class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full"
                     required
                   />
                 </div>
@@ -138,7 +138,7 @@ const ResetPassPage = () => {
 
             {step === "otp" && (
               <>
-                <div class="flex mt-5 items-center w-full bg-transparent border border-gray-300/60 h-12 rounded-full overflow-hidden pl-6 gap-2">
+                <div class="flex mt-5 items-center w-full bg-transparent border border-gray-500 h-12 rounded-full overflow-hidden pl-6 gap-2">
                   <svg
                     width="16"
                     height="11"
@@ -159,12 +159,12 @@ const ResetPassPage = () => {
                     name="otp"
                     onChange={handleChange}
                     value={userData.otp}
-                    class="bg-transparent text-gray-500/80 placeholder-gray-500/80 outline-none text-sm w-full h-full"
+                    class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full"
                     required
                   />
                 </div>
 
-                <div class="flex items-center mt-6 w-full bg-transparent border border-gray-300/60 h-12 rounded-full overflow-hidden pl-6 gap-2">
+                <div class="flex items-center mt-6 w-full bg-transparent border border-gray-500 h-12 rounded-full overflow-hidden pl-6 gap-2">
                   <svg
                     width="13"
                     height="17"
@@ -183,7 +183,7 @@ const ResetPassPage = () => {
                     name="password"
                     onChange={handleChange}
                     value={userData.password}
-                    class="bg-transparent text-gray-500/80 placeholder-gray-500/80 outline-none text-sm w-full h-full"
+                    class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full"
                     required
                   />
                 </div>
@@ -197,8 +197,8 @@ const ResetPassPage = () => {
               {step === "login" ? "Send OTP" : "Reset Password"}
             </button>
 
-            <p class="text-gray-500/90 text-sm mt-4">
-              <Link class="text-indigo-400 hover:underline" to="/">
+            <p class="text-gray-700 text-sm font-semibold mt-4">
+              <Link class="text-indigo-600 hover:underline" to="/">
                 Back to login page{" "}
               </Link>
             </p>
