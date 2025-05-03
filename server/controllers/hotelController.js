@@ -1,5 +1,6 @@
 const hotelModel = require("../models/hotelModel");
 const locationModel = require("../models/locationModel");
+const roomModel = require("../models/roomModel");
 const stateModel = require("../models/stateModel");
 
 exports.create = async (req, res) => {
@@ -132,6 +133,11 @@ exports.softDelete = async (req, res) => {
       { new: true }
     );
 
+    const updateRoom = await roomModel.updateMany(
+      { hotelId: id },
+      { $set: { status } }
+    );
+
     return res
       .status(200)
       .json({ message: "Location updated", location: updateLocation });
@@ -154,6 +160,7 @@ exports.hardDelete = async (req, res) => {
     }
 
     const deleteLocation = await hotelModel.findByIdAndDelete(id);
+    const deleteRooms = await roomModel.deleteMany({ hotelId: id });
 
     return res.status(200).json({ message: "Location deleted" });
   } catch (error) {
@@ -162,3 +169,23 @@ exports.hardDelete = async (req, res) => {
 };
 
 
+exports.getAllByCity = async (req, res) => {
+  console.log(req.query)
+  try {
+    const { id } = req.query;
+
+    if (!id) {
+      return res.status(404).json({ message: "Please provide an id" });
+    }
+
+    const hotels = await hotelModel
+      .find({ locationId: id })
+      .populate("assignedBy", "name email age phone role status")
+      .populate("locationId", "name code status")
+      .populate("stateId", "name code status");
+
+    res.status(200).json(hotels);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

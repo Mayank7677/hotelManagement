@@ -2,9 +2,9 @@ const mongoose = require("mongoose");
 
 const roomSchema = mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: true,
+    hotelId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "hotels",
     },
     locationId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -14,14 +14,55 @@ const roomSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "states",
     },
-    hotelId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "hotels",
-    },
     assignedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
     },
+    roomNumber: {
+      type: String,
+      required: true,
+    },
+
+    roomType: {
+      type: String,
+      enum: ["Deluxe", "Suite", "Standard", "Family", "Single", "Double"], // Add all valid values here
+      required: true,
+    },
+
+    pricePerNight: {
+      type: Number,
+      required: true,
+    },
+    description: {
+      type: String,
+    },
+    images: [
+      {
+        url: { type: String, required: true },
+        public_id: { type: String, required: true },
+      },
+    ],
+
+    totalPersons: {
+      type: Number,
+      required: true,
+    },
+
+    isAvailable: {
+      type: Boolean,
+      default: true,
+    },
+    amenities: [{ type: String }],
+    status: {
+      type: String,
+      enum: ["active", "inactive"],
+      default: "active",
+    },
   },
   { timestamps: true, versionKey: false }
 );
+
+// 🔑 Add compound unique index here
+roomSchema.index({ hotelId: 1, roomNumber: 1 }, { unique: true });
+
+module.exports = mongoose.model("rooms", roomSchema);

@@ -1,5 +1,6 @@
 const hotelModel = require("../models/hotelModel");
 const locationModel = require("../models/locationModel");
+const roomModel = require("../models/roomModel");
 const stateModel = require("../models/stateModel");
 
 exports.create = async (req, res) => {
@@ -121,6 +122,11 @@ exports.softDelete = async (req, res) => {
       { $set: { status } }
     );
 
+    const updateRoom = await roomModel.updateMany(
+      { stateId: id },
+      { $set: { status } }
+    );
+
     const updatedState = await stateModel.findByIdAndUpdate(
       id,
       {
@@ -154,6 +160,7 @@ exports.hardDelete = async (req, res) => {
 
     const deleteCities = await locationModel.deleteMany({ stateId: id });
     const deleteHotels = await hotelModel.deleteMany({ stateId: id });
+    const deleteRooms = await roomModel.deleteMany({ stateId: id });
 
     return res.status(200).json({ message: "State deleted" });
   } catch (error) {

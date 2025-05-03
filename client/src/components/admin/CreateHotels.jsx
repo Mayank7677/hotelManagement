@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import BASE_URL from "../../utils/api";
 import { FiEdit2 } from "react-icons/fi";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import {
   Table,
@@ -129,7 +130,7 @@ const CreateHotels = () => {
 
   // city and state data for dropdown
   const [cityData, setCityData] = useState([]);
-  const [stateData, setStateData] = useState([]);
+  const [stateData, setStateData] = useState([]); 
 
   const fetchStateData = async () => {
     let token = JSON.parse(localStorage.getItem("data")).token;
@@ -227,152 +228,161 @@ const CreateHotels = () => {
   });
 
   return (
-    <div className="pb-10">
-      <h1 className="font-medium text-3xl tracking-tighter">Add Hotel</h1>
+    <div className="pb-15">
+      <Tabs defaultValue="create">
+        <TabsList>
+          <TabsTrigger value="create">Create</TabsTrigger>
+          <TabsTrigger value="active">Active</TabsTrigger>
+          <TabsTrigger value="inactive">Inactive</TabsTrigger>
+        </TabsList>
+        <TabsContent value="create">
+          <h1 className="font-medium mt-5 text-3xl tracking-tighter">
+            Add Hotel
+          </h1>
 
-      <div className="mt-10 sm:px-5 max-sm:w-full sm:w-3/4">
-        <form onSubmit={handleSubmit}>
-          <div className="flex flex-col sm:flex-row items-center gap-5 w-full">
-            <div className="w-full">
-              <label htmlFor="state">
-                <span className="text-lg font-medium tracking-tight">
-                  Select State
-                </span>
-                <select
-                  id="state"
-                  value={hotel.state}
-                  onChange={handleChange}
-                  required
-                  className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
-                >
-                  <option value="">Select a state</option>
-                  {stateData.map((s, index) => (
-                    <option key={index} value={s.name}>
-                      {s.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </div>
+          <div className="mt-10 sm:px-5 max-sm:w-full sm:w-3/4">
+            <form onSubmit={handleSubmit}>
+              <div className="flex flex-col sm:flex-row items-center gap-5 w-full">
+                <div className="w-full">
+                  <label htmlFor="state">
+                    <span className="text-lg font-medium tracking-tight">
+                      Select State
+                    </span>
+                    <select
+                      id="state"
+                      value={hotel.state}
+                      onChange={handleChange}
+                      required
+                      className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
+                    >
+                      <option value="">Select a state</option>
+                      {stateData.map((s, index) => (
+                        <option key={index} value={s.name}>
+                          {s.name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                </div>
 
-            <div className="w-full">
-              <label htmlFor="city">
-                <span className="text-lg font-medium tracking-tight">
-                  Select City
-                </span>
-                <select
-                  id="city"
-                  value={hotel.city}
-                  onChange={handleChange}
-                  required
-                  className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
-                >
-                  <option value="">Select a city</option>
-                  {cityData.map((s, index) => (
-                    <option key={index} value={s.name}>
-                      {s.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </div>
-          </div>
+                <div className="w-full">
+                  <label htmlFor="city">
+                    <span className="text-lg font-medium tracking-tight">
+                      Select City
+                    </span>
+                    <select
+                      id="city"
+                      value={hotel.city}
+                      onChange={handleChange}
+                      required
+                      className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
+                    >
+                      <option value="">Select a city</option>
+                      {cityData.map((s, index) => (
+                        <option key={index} value={s.name}>
+                          {s.name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                </div>
+              </div>
 
-          <div className="mt-7 flex flex-col sm:flex-row items-center gap-5 w-full">
-            <div className="w-full">
-              <label htmlFor="name">
-                <span className="text-lg font-medium tracking-tight">
-                  Enter Hotel Name
-                </span>
+              <div className="mt-7 flex flex-col sm:flex-row items-center gap-5 w-full">
+                <div className="w-full">
+                  <label htmlFor="name">
+                    <span className="text-lg font-medium tracking-tight">
+                      Enter Hotel Name
+                    </span>
 
-                <input
-                  type="text"
-                  id="name"
-                  placeholder="Hotel Name"
-                  value={hotel.name}
-                  onChange={handleChange}
-                  required
-                  className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
-                />
-              </label>
-            </div>
+                    <input
+                      type="text"
+                      id="name"
+                      placeholder="Hotel Name"
+                      value={hotel.name}
+                      onChange={handleChange}
+                      required
+                      className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
+                    />
+                  </label>
+                </div>
 
-            <div className="w-full">
-              <label htmlFor="totalRoom">
-                <span className="text-lg font-medium tracking-tight">
-                  Enter Total Rooms
-                </span>
+                <div className="w-full">
+                  <label htmlFor="totalRoom">
+                    <span className="text-lg font-medium tracking-tight">
+                      Enter Total Rooms
+                    </span>
 
-                <input
-                  type="number"
-                  id="totalRoom"
-                  placeholder="Total Rooms"
-                  value={hotel.totalRoom}
-                  onChange={handleChange}
-                  required
-                  className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
-                />
-              </label>
-            </div>
-          </div>
+                    <input
+                      type="number"
+                      id="totalRoom"
+                      placeholder="Total Rooms"
+                      value={hotel.totalRoom}
+                      onChange={handleChange}
+                      required
+                      className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
+                    />
+                  </label>
+                </div>
+              </div>
 
-          <div className="mt-7 flex flex-col sm:flex-row items-center gap-5 w-full">
-            <div className="w-full">
-              <label htmlFor="contactNumber">
-                <span className="text-lg font-medium tracking-tight">
-                  Enter Hotel's Contact Number
-                </span>
+              <div className="mt-7 flex flex-col sm:flex-row items-center gap-5 w-full">
+                <div className="w-full">
+                  <label htmlFor="contactNumber">
+                    <span className="text-lg font-medium tracking-tight">
+                      Enter Hotel's Contact Number
+                    </span>
 
-                <input
-                  type="text"
-                  id="contactNumber"
-                  placeholder="Contact Number"
-                  value={hotel.contactNumber}
-                  onChange={handleChange}
-                  required
-                  className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
-                />
-              </label>
-            </div>
+                    <input
+                      type="text"
+                      id="contactNumber"
+                      placeholder="Contact Number"
+                      value={hotel.contactNumber}
+                      onChange={handleChange}
+                      required
+                      className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
+                    />
+                  </label>
+                </div>
 
-            <div className="w-full">
-              <label htmlFor="contactEmail">
-                <span className="text-lg font-medium tracking-tight">
-                  Enter Hotel's Contact Email
-                </span>
+                <div className="w-full">
+                  <label htmlFor="contactEmail">
+                    <span className="text-lg font-medium tracking-tight">
+                      Enter Hotel's Contact Email
+                    </span>
 
-                <input
-                  type="email"
-                  id="contactEmail"
-                  placeholder="Contact Email"
-                  value={hotel.contactEmail}
-                  onChange={handleChange}
-                  required
-                  className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
-                />
-              </label>
-            </div>
-          </div>
+                    <input
+                      type="email"
+                      id="contactEmail"
+                      placeholder="Contact Email"
+                      value={hotel.contactEmail}
+                      onChange={handleChange}
+                      required
+                      className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
+                    />
+                  </label>
+                </div>
+              </div>
 
-          <div className="mt-7">
-            <label htmlFor="address">
-              <span className="text-lg font-medium tracking-tight">
-                Enter Hotel Address
-              </span>
+              <div className="mt-7">
+                <label htmlFor="address">
+                  <span className="text-lg font-medium tracking-tight">
+                    Enter Hotel Address
+                  </span>
 
-              <input
-                type="text"
-                id="address"
-                placeholder="Hotel Address"
-                value={hotel.address}
-                onChange={handleChange}
-                required
-                className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
-              />
-            </label>
-          </div>
+                  <input
+                    type="text"
+                    id="address"
+                    placeholder="Hotel Address"
+                    value={hotel.address}
+                    onChange={handleChange}
+                    required
+                    className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
+                  />
+                </label>
+              </div>
 
-          <div className="mt-7">
+              {/* <div className="mt-7">
             <label htmlFor="description">
               <span className="text-lg font-medium tracking-tight">
                 Enter Hotel Description
@@ -381,190 +391,229 @@ const CreateHotels = () => {
               <input
                 type="text"
                 id="description"
-                placeholder="Hotel Description"
                 value={hotel.description}
                 onChange={handleChange}
                 required
                 className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
               />
             </label>
-          </div>
+          </div> */}
 
-          <div className="mt-7">
-            <button
-              type="submit"
-              className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white cursor-pointer hover:opacity-90 transition-opacity rounded-md"
-            >
-              Submit
-            </button>
-          </div>
-        </form>
-      </div>
+              <div className="mt-7">
+                <label htmlFor="description">
+                  <span className="text-lg font-medium tracking-tight">
+                    Enter Hotel Description
+                  </span>
 
-      <div className="mt-15">
-        <div className="flex-row gap-5 sm:flex justify-between pr-10 w-full">
-          <h1 className="font-medium text-2xl sm:text-3xl tracking-tight">
-            Hotels ( Active ){" "}
-          </h1>
-
-          <div className="flex gap-5">
-            <div>
-              <input
+                  {/* <input
                 type="text"
-                placeholder="Search"
-                onChange={(e) => setSearch(e.target.value)}
-                value={search}
+                id="description"
+                placeholder="Hotel Description"
+                value={hotel.description}
+                onChange={handleChange}
                 required
-                className="mt-1 w-full px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
-              />
+                className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
+              /> */}
+
+                  <textarea
+                    value={hotel.description}
+                    onChange={handleChange}
+                    placeholder="Hotel Description"
+                    required
+                    rows="5"
+                    className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none resize-none"
+                    id="description"
+                  ></textarea>
+                </label>
+              </div>
+
+              <div className="mt-7">
+                <button
+                  type="submit"
+                  className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white cursor-pointer hover:opacity-90 transition-opacity rounded-md"
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="active">
+          {" "}
+          <div className="mt-5">
+            <div className="flex-row gap-5 sm:flex justify-between pr-10 w-full">
+              <h1 className="font-medium text-2xl sm:text-3xl tracking-tight">
+                Hotels ( Active ){" "}
+              </h1>
+
+              <div className="flex gap-5">
+                <div>
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    onChange={(e) => setSearch(e.target.value)}
+                    value={search}
+                    required
+                    className="mt-1 w-full px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
+                  />
+                </div>
+                <div>
+                  <select
+                    onChange={(e) => setClick(e.target.value)}
+                    className="mt-1 w-full px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none"
+                  >
+                    <option value="asc">Sort by: A to Z</option>
+                    <option value="dsc">Sort by: Z to A</option>
+                    <option value="timeAsc">Sort by: Newest</option>
+                    <option value="timeDesc">Sort by: Oldest</option>
+                  </select>
+                </div>
+              </div>
             </div>
-            <div>
-              <select
-                onChange={(e) => setClick(e.target.value)}
-                className="mt-1 w-full px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none"
-              >
-                <option value="asc">Sort by: A to Z</option>
-                <option value="dsc">Sort by: Z to A</option>
-                <option value="timeAsc">Sort by: Newest</option>
-                <option value="timeDesc">Sort by: Oldest</option>
-              </select>
+            <div className="sm:border border-gray-300 sm:rounded-2xl sm:p-3 mt-5 ">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[100px] ">S.NO.</TableHead>
+                    <TableHead className="">Hotel</TableHead>
+                    <TableHead className="">City</TableHead>
+                    <TableHead className="">State</TableHead>
+                    <TableHead className="">Contact Number</TableHead>
+                    <TableHead className="">Contact Email</TableHead>
+                    <TableHead className="">Created by</TableHead>
+                    <TableHead className="text-end pr-[7%] ">Manage</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {sortedData
+                    .filter((state) => state.status === "active")
+                    .map((state, index) => (
+                      <TableRow key={index}>
+                        <TableCell className="font-medium">
+                          {index + 1}
+                        </TableCell>
+                        <TableCell>{state.name}</TableCell>
+                        <TableCell>{state.locationId.name}</TableCell>
+                        <TableCell>{state.stateId.name}</TableCell>
+                        <TableCell>{state.contactNumber}</TableCell>
+                        <TableCell>{state.contactEmail}</TableCell>
+                        <TableCell>{state.assignedBy.email}</TableCell>
+                        <TableCell className="flex gap-4 justify-end">
+                          <p className="px-1.5 py-0.5 rounded-lg font-medium bg-yellow-500 text-white w-fit cursor-pointer">
+                            {/* <FiEdit2 /> */}
+                            Edit
+                          </p>
+                          <p
+                            onClick={() => handleStatusChange(state._id)}
+                            className="px-1.5 py-0.5 rounded-lg font-medium bg-blue-500 text-white w-fit cursor-pointer"
+                          >
+                            Inactive
+                          </p>
+                          <p
+                            onClick={() => handleDelete(state._id)}
+                            className="px-1.5 py-0.5 rounded-lg font-medium bg-red-500 text-white w-fit cursor-pointer"
+                          >
+                            {/* <FiEdit2 /> */}
+                            Delete
+                          </p>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
             </div>
           </div>
-        </div>
-        <div className="sm:border border-gray-300 sm:rounded-2xl sm:p-3 mt-5 ">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[100px] ">S.NO.</TableHead>
-                <TableHead className="">Hotel</TableHead>
-                <TableHead className="">City</TableHead>
-                <TableHead className="">State</TableHead>
-                <TableHead className="">Contact Number</TableHead>
-                <TableHead className="">Contact Email</TableHead>
-                <TableHead className="">Created by</TableHead>
-                <TableHead className="text-end pr-[7%] ">Manage</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {sortedData
-                .filter((state) => state.status === "active")
-                .map((state, index) => (
-                  <TableRow key={index}>
-                    <TableCell className="font-medium">{index + 1}</TableCell>
-                    <TableCell>{state.name}</TableCell>
-                    <TableCell>{state.locationId.name}</TableCell>
-                    <TableCell>{state.stateId.name}</TableCell>
-                    <TableCell>{state.contactNumber}</TableCell>
-                    <TableCell>{state.contactEmail}</TableCell>
-                    <TableCell>{state.assignedBy.email}</TableCell>
-                    <TableCell className="flex gap-4 justify-end">
-                      <p className="px-1.5 py-0.5 rounded-lg font-medium bg-yellow-500 text-white w-fit cursor-pointer">
-                        {/* <FiEdit2 /> */}
-                        Edit
-                      </p>
-                      <p
-                        onClick={() => handleStatusChange(state._id)}
-                        className="px-1.5 py-0.5 rounded-lg font-medium bg-blue-500 text-white w-fit cursor-pointer"
-                      >
-                        Inactive
-                      </p>
-                      <p
-                        onClick={() => handleDelete(state._id)}
-                        className="px-1.5 py-0.5 rounded-lg font-medium bg-red-500 text-white w-fit cursor-pointer"
-                      >
-                        {/* <FiEdit2 /> */}
-                        Delete
-                      </p>
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </div>
-      </div>
+        </TabsContent>
 
-      <div className="mt-15">
-        <div className="flex-row gap-5 sm:flex justify-between pr-10 w-full">
-          <h1 className="font-medium text-2xl sm:text-3xl tracking-tight">
-            Cities ( Inactive ){" "}
-          </h1>
+        <TabsContent value="inactive">
+          {" "}
+          <div className="mt-5">
+            <div className="flex-row gap-5 sm:flex justify-between pr-10 w-full">
+              <h1 className="font-medium text-2xl sm:text-3xl tracking-tight">
+                Cities ( Inactive ){" "}
+              </h1>
 
-          <div className="flex gap-5">
-            <div>
-              <input
-                type="text"
-                placeholder="Search"
-                onChange={(e) => setSearchInactive(e.target.value)}
-                value={searchInactive}
-                required
-                className="mt-1 w-full px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
-              />
+              <div className="flex gap-5">
+                <div>
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    onChange={(e) => setSearchInactive(e.target.value)}
+                    value={searchInactive}
+                    required
+                    className="mt-1 w-full px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
+                  />
+                </div>
+                <div>
+                  <select
+                    onChange={(e) => setClickInactive(e.target.value)}
+                    className="mt-1 w-full px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none"
+                  >
+                    <option value="asc">Sort by: A to Z</option>
+                    <option value="dsc">Sort by: Z to A</option>
+                    <option value="timeAsc">Sort by: Newest</option>
+                    <option value="timeDesc">Sort by: Oldest</option>
+                  </select>
+                </div>
+              </div>
             </div>
-            <div>
-              <select
-                onChange={(e) => setClickInactive(e.target.value)}
-                className="mt-1 w-full px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none"
-              >
-                <option value="asc">Sort by: A to Z</option>
-                <option value="dsc">Sort by: Z to A</option>
-                <option value="timeAsc">Sort by: Newest</option>
-                <option value="timeDesc">Sort by: Oldest</option>
-              </select>
+
+            <div className="sm:border border-gray-300 sm:rounded-2xl sm:p-3 mt-5 ">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[100px] ">S.NO.</TableHead>
+                    <TableHead className="">Hotel</TableHead>
+                    <TableHead className="">City</TableHead>
+                    <TableHead className="">State</TableHead>
+                    <TableHead className="">Contact Number</TableHead>
+                    <TableHead className="">Contact Email</TableHead>
+                    <TableHead className="">Created by</TableHead>
+                    <TableHead className="text-end pr-[7%] ">Manage</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {sortedDataInactive
+                    .filter((state) => state.status === "inactive")
+                    .map((state, index) => (
+                      <TableRow key={index}>
+                        <TableCell className="font-medium">
+                          {index + 1}
+                        </TableCell>
+                        <TableCell>{state.name}</TableCell>
+                        <TableCell>{state.locationId.name}</TableCell>
+                        <TableCell>{state.stateId.name}</TableCell>
+                        <TableCell>{state.contactNumber}</TableCell>
+                        <TableCell>{state.contactEmail}</TableCell>
+                        <TableCell>{state.assignedBy.email}</TableCell>
+                        <TableCell className="flex gap-4 justify-end">
+                          <p className="px-1.5 py-0.5 rounded-lg font-medium bg-yellow-500 text-white w-fit cursor-pointer">
+                            {/* <FiEdit2 /> */}
+                            Edit
+                          </p>
+                          <p
+                            onClick={() => handleStatusChange(state._id)}
+                            className="px-1.5 py-0.5 rounded-lg font-medium bg-blue-500 text-white w-fit cursor-pointer"
+                          >
+                            Active
+                          </p>
+                          <p
+                            onClick={() => handleDelete(state._id)}
+                            className="px-1.5 py-0.5 rounded-lg font-medium bg-red-500 text-white w-fit cursor-pointer"
+                          >
+                            {/* <FiEdit2 /> */}
+                            Delete
+                          </p>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
             </div>
           </div>
-        </div>
-
-        <div className="sm:border border-gray-300 sm:rounded-2xl sm:p-3 mt-5 ">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[100px] ">S.NO.</TableHead>
-                <TableHead className="">Hotel</TableHead>
-                <TableHead className="">City</TableHead>
-                <TableHead className="">State</TableHead>
-                <TableHead className="">Contact Number</TableHead>
-                <TableHead className="">Contact Email</TableHead>
-                <TableHead className="">Created by</TableHead>
-                <TableHead className="text-end pr-[7%] ">Manage</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {sortedDataInactive
-                .filter((state) => state.status === "inactive")
-                .map((state, index) => (
-                  <TableRow key={index}>
-                    <TableCell className="font-medium">{index + 1}</TableCell>
-                    <TableCell>{state.name}</TableCell>
-                    <TableCell>{state.locationId.name}</TableCell>
-                    <TableCell>{state.stateId.name}</TableCell>
-                    <TableCell>{state.contactNumber}</TableCell>
-                    <TableCell>{state.contactEmail}</TableCell>
-                    <TableCell>{state.assignedBy.email}</TableCell>
-                    <TableCell className="flex gap-4 justify-end">
-                      <p className="px-1.5 py-0.5 rounded-lg font-medium bg-yellow-500 text-white w-fit cursor-pointer">
-                        {/* <FiEdit2 /> */}
-                        Edit
-                      </p>
-                      <p
-                        onClick={() => handleStatusChange(state._id)}
-                        className="px-1.5 py-0.5 rounded-lg font-medium bg-blue-500 text-white w-fit cursor-pointer"
-                      >
-                        Active
-                      </p>
-                      <p
-                        onClick={() => handleDelete(state._id)}
-                        className="px-1.5 py-0.5 rounded-lg font-medium bg-red-500 text-white w-fit cursor-pointer"
-                      >
-                        {/* <FiEdit2 /> */}
-                        Delete
-                      </p>
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </div>
-      </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

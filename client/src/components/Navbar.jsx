@@ -18,16 +18,16 @@ const Navbar = () => {
       {/* Header */}
       <div className="flex fixed w-full z-1 items-center justify-between px-4 md:px-8  py-3 bg-[#f7fcfe]  transition-all duration-300">
         <img
-          className="h-9"
-          src="https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/dummyLogo/dummyLogoColored.svg"
+          className="h-12"
+          src="https://cdn.brandfetch.io/idC6eY3m41/theme/dark/logo.svg?c=1dxbfHSJFAPEGdCLU4o5B"
           alt="dummyLogoColored"
         />
 
-        <div className="flex items-center gap-5 text-gray-800">
+        <div className="flex items-center gap-5 ">
           <p>Hi! {name}</p>
           <button
             onClick={logOutUser}
-            className="border border-gray-800 rounded-full text-sm px-4 py-1"
+            className="border border-gray-400 bg-white cursor-pointer rounded-full text-sm px-4 py-1"
           >
             Logout
           </button>

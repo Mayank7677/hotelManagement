@@ -12,6 +12,7 @@ import CreateHotels from "./components/admin/CreateHotels";
 import AdminRoutes from "./protectedRoutes/AdminRoutes";
 import CheckToken from "./protectedRoutes/CheckToken";
 import MainLayout from "./layouts/MainLayout";
+import CreateRoom from "./components/admin/CreateRoom";
 
 const App = () => {
   return (
@@ -43,6 +44,7 @@ const App = () => {
             <Route index element={<CreateState />} />
             <Route path="city" element={<CreateCity />} />
             <Route path="hotel" element={<CreateHotels />} />
+            <Route path="room" element={<CreateRoom />} />
           </Route>
         </Route>
       </Routes>

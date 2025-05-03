@@ -64,6 +64,7 @@ const Dashboard = () => {
     { name: "Add State", path: "/admin", icon: dashboardicon },
     { name: "Add City", path: "/admin/city", icon: overviewicon },
     { name: "Add Hotel", path: "/admin/hotel", icon: chaticon },
+    { name: "Add Room", path: "/admin/room", icon: chaticon },
   ];
 
   
@@ -72,17 +73,19 @@ const Dashboard = () => {
       {/* Sidebar + Main Content */}
       <div className="flex min-h-screen pt-15 relative ">
         {/* Sidebar */}
-        <div className="md:w-64 w-16 h-full fixed  sm:pr-2 text-base  pt-7  gap-2 flex flex-col transition-all duration-300 bg-[#f7fcfe] ">
+        <div className="md:w-64 w-16 h-full fixed  sm:pr-2 text-base  mt-4  gap-2 flex flex-col transition-all duration-300 bg-[#f7fcfe]  pt-4   ">
+          <p className="bg-blue-600 text-white py-2 font-bold text-xl  tracking-tighter text-center  mb-3 rounded-2xl">
+            Manage Locations
+          </p>
+
           {sidebarLinks.map((item, index) => (
             <NavLink
               to={item.path}
               key={index}
               end={item.path === "/admin"}
               className={({ isActive }) =>
-                `flex items-center py-2 rounded-r-3xl px-2  gap-2 text-md font-semibold tracking-tight transition-colors duration-200 ${
-                  isActive
-                    ? " text-gray-800  bg-blue-200"
-                    : "bg-gray-50 text-gray-800"
+                `flex items-center py-2 border border-gray-300 rounded-r-3xl  gap-2 text-md font-semibold tracking-tight transition-colors duration-200 ${
+                  isActive ? " text-gray-800  bg-blue-200" : " text-gray-800 bg-white"
                 }`
               }
             >
@@ -93,7 +96,7 @@ const Dashboard = () => {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 p-6 pb-10 rounded-tl-3xl border border-neutral-200  md:ml-64 ml-16 bg-white w-[85vw]  h-full fixed overflow-scroll">
+        <div className="flex-1 p-6 pb-10 rounded-tl-3xl mt-3 border border-neutral-200  md:ml-64 ml-16 bg-white w-[85vw]  h-full fixed overflow-scroll">
           <Outlet />
         </div>
       </div>

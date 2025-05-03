@@ -2,6 +2,7 @@ const { assign } = require("nodemailer/lib/shared");
 const locationModel = require("../models/locationModel");
 const stateModel = require("../models/stateModel");
 const hotelModel = require("../models/hotelModel");
+const roomModel = require("../models/roomModel");
 
 exports.create = async (req, res) => {
   try {
@@ -139,6 +140,11 @@ exports.softDelete = async (req, res) => {
       { new: true }
     );
 
+    const updateRoom = await roomModel.updateMany(
+      { locationId: id },
+      { $set: { status } }
+    );
+
     return res
       .status(200)
       .json({ message: "Location updated", location: updateLocation });
@@ -162,6 +168,7 @@ exports.hardDelete = async (req, res) => {
 
     const updateLocation = await locationModel.findByIdAndDelete(id);
     const deleteHotels = await hotelModel.deleteMany({ locationId: id });
+    const deleteRooms = await roomModel.deleteMany({ locationId: id });
 
     return res.status(200).json({ message: "Location deleted" });
   } catch (error) {

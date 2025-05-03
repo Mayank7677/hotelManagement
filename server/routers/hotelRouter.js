@@ -9,5 +9,6 @@ router.get("/getAll", auth, hotelController.getAll);
 // router.put("/update", auth, hotelController.update);
 router.put("/softDelete", auth, hotelController.softDelete);
 router.delete("/hardDelete", auth, hotelController.hardDelete);
+router.get("/getAllByCity", auth, hotelController.getAllByCity);
 
 module.exports = router;
