@@ -1,8 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import BASE_URL from "../../../utils/api";
 import { toast } from "sonner";
-import BASE_URL from "../../utils/api";
-import { FiEdit2 } from "react-icons/fi";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import {
@@ -14,123 +13,110 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Link } from "react-router-dom";
 
-const CreateHotels = () => {
-  const [hotel, setHotel] = useState({
+const CreateRoom = () => {
+  const [images, setImages] = useState([]);
+
+  const [room, setRoom] = useState({
     state: "",
     city: "",
-    name: "",
-    address: "",
-    totalRoom: "",
+    hotel: "",
+    roomNumber: "",
+    roomType: "",
+    pricePerNight: "",
     description: "",
-    contactNumber: "",
-    contactEmail: "",
+    totalPersons: "",
+    amenities: "",
   });
 
   const handleChange = (e) => {
     const { id, value } = e.target;
-    setHotel((prev) => ({
+    setRoom((prev) => ({
       ...prev,
       [id]: value,
     }));
   };
 
+  const handleImageChange = (e) => {
+    const selectedFiles = Array.from(e.target.files);
+
+    if (selectedFiles.length === 0) {
+      alert("No files selected.");
+      return;
+    }
+
+    setImages((prevImages) => [...prevImages, ...selectedFiles]);
+  };
+
+  //submitting data to backend
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let token = JSON.parse(localStorage.getItem("data")).token;
-    console.log(token);
 
     try {
-      console.log(hotel);
+      const token = JSON.parse(localStorage.getItem("data")).token;
+      const formData = new FormData();
 
-      const res = await axios.post(`${BASE_URL}/hotels/create`, hotel, {
+      formData.append("state", room.state);
+      formData.append("city", room.city);
+      formData.append("hotel", room.hotel);
+      formData.append("roomNumber", room.roomNumber);
+      formData.append("roomType", room.roomType);
+      formData.append("pricePerNight", room.pricePerNight);
+      formData.append("description", room.description);
+      formData.append("totalPersons", room.totalPersons);
+
+      // For amenities if it's an array:
+      room.amenities.forEach((item) => formData.append("amenities", item));
+      // // For multiple images:
+      // images.forEach((image) => formData.append("images", image));
+
+      // Appending the images
+      images.forEach((img) => {
+        if (img.size > 0) {
+          formData.append("images", img);
+        } else {
+          console.error("Empty file selected");
+        }
+      });
+
+      // for (let pair of formData.entries()) {
+      //   console.log(pair[0] + ": ", pair[1]);
+      // }
+
+      const res = await axios.post(`${BASE_URL}/rooms/create`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
+      // console.log("Room created:", res.data);
       toast.success(res.data.message);
-      // console.log(res);
-      fetchData();
 
-      setHotel({
+      // Reset form fields
+      setRoom({
         state: "",
         city: "",
-        name: "",
-        address: "",
-        totalRoom: "",
+        hotel: "",
+        roomNumber: "",
+        roomType: "",
+        pricePerNight: "",
         description: "",
-        contactNumber: "",
-        contactEmail: "",
-      });
-    } catch (err) {
-      console.error(err);
-      toast.error(err.response.data.message);
-    }
-  };
-
-  const [hotelData, setHotelData] = useState([]);
-
-  const fetchData = async () => {
-    let token = JSON.parse(localStorage.getItem("data")).token;
-
-    try {
-      const res = await axios.get(`${BASE_URL}/hotels/getAll`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log(res.data);
-
-      setHotelData(res.data);
-    } catch (error) {
-      console.log(error.response.data.message);
-    }
-  };
-
-  const handleStatusChange = async (id) => {
-    console.log("object");
-    let token = JSON.parse(localStorage.getItem("data")).token;
-
-    try {
-      const res = await axios.put(
-        `${BASE_URL}/hotels/softDelete?id=${id}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      toast.success(res.data.message);
-      fetchData();
-    } catch (error) {
-      toast.error(error.response.data.message);
-    }
-  };
-
-  const handleDelete = async (id) => {
-    // console.log("object");
-    let token = JSON.parse(localStorage.getItem("data")).token;
-
-    try {
-      const res = await axios.delete(`${BASE_URL}/hotels/hardDelete?id=${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        totalPersons: "",
+        amenities: "",
       });
 
-      toast.success(res.data.message);
-      fetchData();
+      setImages([]);
     } catch (error) {
-      // toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Failed to create room");
+      // console.error("Failed to create room:", error.response?.data?.message);
     }
   };
 
   // city and state data for dropdown
   const [cityData, setCityData] = useState([]);
-  const [stateData, setStateData] = useState([]); 
+  const [stateData, setStateData] = useState([]);
+  const [hotelData, setHotelData] = useState([]);
 
   const fetchStateData = async () => {
     let token = JSON.parse(localStorage.getItem("data")).token;
@@ -174,30 +160,87 @@ const CreateHotels = () => {
     }
   };
 
+  const fetchHotelData = async (hotelname) => {
+    console.log(hotelname);
+    const token = JSON.parse(localStorage.getItem("data")).token;
+
+    const selectedCity = cityData.find((hotel) => hotel.name === hotelname);
+    console.log(selectedCity);
+
+    if (!selectedCity) return;
+
+    try {
+      const res = await axios.get(
+        `${BASE_URL}/hotels/getAllByCity?id=${selectedCity._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setHotelData(res.data);
+      console.log(res.data);
+    } catch (error) {
+      console.log(error.response?.data?.message || "Failed to fetch cities");
+    }
+  };
+
   useEffect(() => {
-    fetchData();
+    // fetchData();
     fetchStateData();
   }, []);
 
   // Run this whenever hotel.state changes
   useEffect(() => {
-    if (hotel.state) {
-      fetchCityData(hotel.state);
+    if (room.state) {
+      fetchCityData(room.state);
     }
-  }, [hotel.state]);
+  }, [room.state]);
+
+  useEffect(() => {
+    if (room.city) {
+      fetchHotelData(room.city);
+    }
+  }, [room.city]);
+
+  // -----------------------------------------------------------------------------------
+
+  const [roomData, setRoomData] = useState([]);
+  const fetchRoomData = async () => {
+    let token = JSON.parse(localStorage.getItem("data")).token;
+    // console.log(token);
+
+    try {
+      const res = await axios.get(`${BASE_URL}/rooms/getAll`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(res.data);
+
+      setRoomData(res.data);
+    } catch (error) {
+      console.log(error.response.data.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchRoomData();
+  }, []);
 
   // searching and sorting
   const [search, setSearch] = useState("");
-  const filteredData = hotelData.filter((state) =>
-    state.name.toLowerCase().includes(search.toLowerCase())
+  const filteredData = roomData.filter((state) =>
+    state.hotelId.name.toLowerCase().includes(search.toLowerCase())
   );
 
   const [click, setClick] = useState("default");
   const sortedData = [...filteredData].sort((a, b) => {
-    if (click === "asc") {
-      return a.name.localeCompare(b.name);
-    } else if (click === "dsc") {
-      return b.name.localeCompare(a.name);
+    if (click === "low") {
+      return a.pricePerNight - b.pricePerNight;
+    } else if (click === "high") {
+      return b.pricePerNight - a.pricePerNight;
     } else if (click === "timeAsc") {
       return new Date(a.createdAt) - new Date(b.createdAt);
     } else if (click === "timeDesc") {
@@ -208,16 +251,16 @@ const CreateHotels = () => {
   });
 
   const [searchInactive, setSearchInactive] = useState("");
-  const filteredDataInactive = hotelData.filter((state) =>
-    state.name.toLowerCase().includes(searchInactive.toLowerCase())
+  const filteredDataInactive = roomData.filter((state) =>
+    state.hotelId.name.toLowerCase().includes(searchInactive.toLowerCase())
   );
 
   const [clickInactive, setClickInactive] = useState("default");
   const sortedDataInactive = [...filteredDataInactive].sort((a, b) => {
-    if (clickInactive === "asc") {
-      return a.name.localeCompare(b.name);
-    } else if (clickInactive === "dsc") {
-      return b.name.localeCompare(a.name);
+    if (click === "low") {
+      return a.pricePerNight - b.pricePerNight;
+    } else if (click === "high") {
+      return b.pricePerNight - a.pricePerNight;
     } else if (clickInactive === "timeAsc") {
       return new Date(a.createdAt) - new Date(b.createdAt);
     } else if (clickInactive === "timeDesc") {
@@ -227,8 +270,50 @@ const CreateHotels = () => {
     }
   });
 
+  // -----------------------------------------------------------------------------------
+
+  const handleStatusChange = async (id) => {
+    console.log("object");
+    let token = JSON.parse(localStorage.getItem("data")).token;
+
+    try {
+      const res = await axios.put(
+        `${BASE_URL}/rooms/softDelete?id=${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      toast.success(res.data.message);
+      fetchRoomData();
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    console.log("object");
+    let token = JSON.parse(localStorage.getItem("data")).token;
+
+    try {
+      const res = await axios.delete(`${BASE_URL}/rooms/hardDelete?id=${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      toast.success(res.data.message);
+      fetchRoomData();
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  };
+
   return (
-    <div className="pb-15">
+    <div className="pb-10">
       <Tabs defaultValue="create">
         <TabsList>
           <TabsTrigger value="create">Create</TabsTrigger>
@@ -237,7 +322,7 @@ const CreateHotels = () => {
         </TabsList>
         <TabsContent value="create">
           <h1 className="font-medium mt-5 text-3xl tracking-tighter">
-            Add Hotel
+            Add Room
           </h1>
 
           <div className="mt-10 sm:px-5 max-sm:w-full sm:w-3/4">
@@ -250,7 +335,7 @@ const CreateHotels = () => {
                     </span>
                     <select
                       id="state"
-                      value={hotel.state}
+                      value={room.state}
                       onChange={handleChange}
                       required
                       className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
@@ -272,7 +357,7 @@ const CreateHotels = () => {
                     </span>
                     <select
                       id="city"
-                      value={hotel.city}
+                      value={room.city}
                       onChange={handleChange}
                       required
                       className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
@@ -290,16 +375,69 @@ const CreateHotels = () => {
 
               <div className="mt-7 flex flex-col sm:flex-row items-center gap-5 w-full">
                 <div className="w-full">
-                  <label htmlFor="name">
+                  <label htmlFor="hotel">
                     <span className="text-lg font-medium tracking-tight">
-                      Enter Hotel Name
+                      Select Hotel
+                    </span>
+                    <select
+                      id="hotel"
+                      value={room.hotel}
+                      onChange={handleChange}
+                      required
+                      className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
+                    >
+                      <option value="">Select Hotel</option>
+                      {hotelData.map((s, index) => (
+                        <option key={index} value={s.name}>
+                          {s.name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                </div>
+
+                <div className="w-full">
+                  <label htmlFor="roomType">
+                    <span className="text-lg font-medium tracking-tight">
+                      Enter Room Type
+                    </span>
+                    <select
+                      id="roomType"
+                      value={room.roomType}
+                      onChange={handleChange}
+                      required
+                      className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
+                    >
+                      <option value="">Select</option>
+                      {[
+                        "Deluxe",
+                        "Suite",
+                        "Standard",
+                        "Family",
+                        "Single",
+                        "Double",
+                      ].map((s, index) => (
+                        <option key={index} value={s}>
+                          {s}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                </div>
+              </div>
+
+              <div className="mt-7 flex flex-col sm:flex-row items-center gap-5 w-full">
+                <div className="w-full">
+                  <label htmlFor="roomNumber">
+                    <span className="text-lg font-medium tracking-tight">
+                      Enter Room Number
                     </span>
 
                     <input
-                      type="text"
-                      id="name"
-                      placeholder="Hotel Name"
-                      value={hotel.name}
+                      type="number"
+                      id="roomNumber"
+                      placeholder="Room Number"
+                      value={room.roomNumber}
                       onChange={handleChange}
                       required
                       className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
@@ -308,16 +446,16 @@ const CreateHotels = () => {
                 </div>
 
                 <div className="w-full">
-                  <label htmlFor="totalRoom">
+                  <label htmlFor="pricePerNight">
                     <span className="text-lg font-medium tracking-tight">
-                      Enter Total Rooms
+                      Enter Room's Price ( per night )
                     </span>
 
                     <input
                       type="number"
-                      id="totalRoom"
-                      placeholder="Total Rooms"
-                      value={hotel.totalRoom}
+                      id="pricePerNight"
+                      placeholder="Price"
+                      value={room.pricePerNight}
                       onChange={handleChange}
                       required
                       className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
@@ -328,16 +466,16 @@ const CreateHotels = () => {
 
               <div className="mt-7 flex flex-col sm:flex-row items-center gap-5 w-full">
                 <div className="w-full">
-                  <label htmlFor="contactNumber">
+                  <label htmlFor="totalPersons">
                     <span className="text-lg font-medium tracking-tight">
-                      Enter Hotel's Contact Number
+                      Total Person's Capacity
                     </span>
 
                     <input
-                      type="text"
-                      id="contactNumber"
-                      placeholder="Contact Number"
-                      value={hotel.contactNumber}
+                      type="number"
+                      id="totalPersons"
+                      placeholder="Capacity"
+                      value={room.totalPersons}
                       onChange={handleChange}
                       required
                       className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
@@ -345,78 +483,71 @@ const CreateHotels = () => {
                   </label>
                 </div>
 
-                <div className="w-full">
-                  <label htmlFor="contactEmail">
-                    <span className="text-lg font-medium tracking-tight">
-                      Enter Hotel's Contact Email
-                    </span>
+                {/* <div className="w-full">
+              <label htmlFor="pricePerNight">
+                <span className="text-lg font-medium tracking-tight">
+                  Enter Room's Price ( per night )
+                </span>
 
-                    <input
-                      type="email"
-                      id="contactEmail"
-                      placeholder="Contact Email"
-                      value={hotel.contactEmail}
-                      onChange={handleChange}
-                      required
-                      className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
-                    />
-                  </label>
-                </div>
+                <input
+                  type="number"
+                  id="pricePerNight"
+                  placeholder="Price"
+                  value={room.pricePerNight}
+                  onChange={handleChange}
+                  required
+                  className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
+                />
+              </label>
+            </div> */}
               </div>
 
               <div className="mt-7">
-                <label htmlFor="address">
-                  <span className="text-lg font-medium tracking-tight">
-                    Enter Hotel Address
-                  </span>
-
-                  <input
-                    type="text"
-                    id="address"
-                    placeholder="Hotel Address"
-                    value={hotel.address}
-                    onChange={handleChange}
-                    required
-                    className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
-                  />
+                <label className="text-lg font-medium tracking-tight">
+                  Amenities
                 </label>
+                <div className="mt-2 flex items-center gap-5 flex-wrap">
+                  {[
+                    "WiFi",
+                    "TV",
+                    "Air Conditioning",
+                    "Mini Bar",
+                    "Room Service",
+                    "Balcony",
+                  ].map((amenity) => (
+                    <div key={amenity} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id={amenity}
+                        checked={room.amenities.includes(amenity)}
+                        onChange={(e) => {
+                          const updatedAmenities = e.target.checked
+                            ? [...room.amenities, amenity]
+                            : room.amenities.filter((a) => a !== amenity);
+
+                          setRoom((prev) => ({
+                            ...prev,
+                            amenities: updatedAmenities,
+                          }));
+                        }}
+                        className="bg-gray-700 border border-gray-600 rounded"
+                      />
+                      <label htmlFor={amenity} className="ml-2 text-sm">
+                        {amenity}
+                      </label>
+                    </div>
+                  ))}
+                </div>
               </div>
-
-              {/* <div className="mt-7">
-            <label htmlFor="description">
-              <span className="text-lg font-medium tracking-tight">
-                Enter Hotel Description
-              </span>
-
-              <input
-                type="text"
-                id="description"
-                value={hotel.description}
-                onChange={handleChange}
-                required
-                className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
-              />
-            </label>
-          </div> */}
 
               <div className="mt-7">
                 <label htmlFor="description">
                   <span className="text-lg font-medium tracking-tight">
-                    Enter Hotel Description
+                    Enter Room Description
                   </span>
 
-                  {/* <input
-                type="text"
-                id="description"
-                placeholder="Hotel Description"
-                value={hotel.description}
-                onChange={handleChange}
-                required
-                className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
-              /> */}
-
                   <textarea
-                    value={hotel.description}
+                    value={room.description}
                     onChange={handleChange}
                     placeholder="Hotel Description"
                     required
@@ -424,6 +555,22 @@ const CreateHotels = () => {
                     className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none resize-none"
                     id="description"
                   ></textarea>
+                </label>
+              </div>
+
+              <div className="mt-7">
+                <label htmlFor="images">
+                  <span className="text-lg font-medium tracking-tight">
+                    Upload Room Images
+                  </span>
+                  <input
+                    type="file"
+                    id="images"
+                    accept="image/*"
+                    multiple
+                    onChange={handleImageChange}
+                    className="mt-1 w-full px-3 py-2 rounded-md border border-gray-400 sm:text-sm outline-none"
+                  />
                 </label>
               </div>
 
@@ -440,7 +587,6 @@ const CreateHotels = () => {
         </TabsContent>
 
         <TabsContent value="active">
-          {" "}
           <div className="mt-5">
             <div className="flex-row gap-5 sm:flex justify-between pr-10 w-full">
               <h1 className="font-medium text-2xl sm:text-3xl tracking-tight">
@@ -463,8 +609,8 @@ const CreateHotels = () => {
                     onChange={(e) => setClick(e.target.value)}
                     className="mt-1 w-full px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none"
                   >
-                    <option value="asc">Sort by: A to Z</option>
-                    <option value="dsc">Sort by: Z to A</option>
+                    <option value="low">Sort by: Low to High</option>
+                    <option value="high">Sort by: High to Low</option>
                     <option value="timeAsc">Sort by: Newest</option>
                     <option value="timeDesc">Sort by: Oldest</option>
                   </select>
@@ -475,12 +621,14 @@ const CreateHotels = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[100px] ">S.NO.</TableHead>
+                    <TableHead className="w-[60px] ">S.NO.</TableHead>
+                    <TableHead className="">Room No.</TableHead>
                     <TableHead className="">Hotel</TableHead>
                     <TableHead className="">City</TableHead>
                     <TableHead className="">State</TableHead>
-                    <TableHead className="">Contact Number</TableHead>
-                    <TableHead className="">Contact Email</TableHead>
+                    <TableHead className="">Type</TableHead>
+                    <TableHead className="">Capacity</TableHead>
+                    <TableHead className="">Price</TableHead>
                     <TableHead className="">Created by</TableHead>
                     <TableHead className="text-end pr-[7%] ">Manage</TableHead>
                   </TableRow>
@@ -489,21 +637,29 @@ const CreateHotels = () => {
                   {sortedData
                     .filter((state) => state.status === "active")
                     .map((state, index) => (
-                      <TableRow key={index}>
+                      <TableRow key={state._id}>
                         <TableCell className="font-medium">
                           {index + 1}
                         </TableCell>
-                        <TableCell>{state.name}</TableCell>
-                        <TableCell>{state.locationId.name}</TableCell>
+                        <TableCell>{state.roomNumber}</TableCell>
+                        <TableCell>{state.hotelId.name}</TableCell>
+                        <TableCell>
+                          {/* {state.locationId.name} */} abc{" "}
+                        </TableCell>
                         <TableCell>{state.stateId.name}</TableCell>
-                        <TableCell>{state.contactNumber}</TableCell>
-                        <TableCell>{state.contactEmail}</TableCell>
+                        <TableCell>{state.roomType}</TableCell>
+                        <TableCell className="pl-[2%]">
+                          {state.totalPersons}
+                        </TableCell>
+                        <TableCell>{state.pricePerNight}</TableCell>
                         <TableCell>{state.assignedBy.email}</TableCell>
                         <TableCell className="flex gap-4 justify-end">
-                          <p className="px-1.5 py-0.5 rounded-lg font-medium bg-yellow-500 text-white w-fit cursor-pointer">
-                            {/* <FiEdit2 /> */}
-                            Edit
-                          </p>
+                          <Link to={`/admin/room/edit/${state._id}`} state={{stateData: state}}>
+                            <p className="px-1.5 py-0.5 rounded-lg font-medium bg-yellow-500 text-white w-fit cursor-pointer">
+                              {/* <FiEdit2 /> */}
+                              Edit
+                            </p>
+                          </Link>
                           <p
                             onClick={() => handleStatusChange(state._id)}
                             className="px-1.5 py-0.5 rounded-lg font-medium bg-blue-500 text-white w-fit cursor-pointer"
@@ -527,11 +683,10 @@ const CreateHotels = () => {
         </TabsContent>
 
         <TabsContent value="inactive">
-          {" "}
           <div className="mt-5">
             <div className="flex-row gap-5 sm:flex justify-between pr-10 w-full">
               <h1 className="font-medium text-2xl sm:text-3xl tracking-tight">
-                Cities ( Inactive ){" "}
+                Hotels ( Inactive ){" "}
               </h1>
 
               <div className="flex gap-5">
@@ -539,36 +694,37 @@ const CreateHotels = () => {
                   <input
                     type="text"
                     placeholder="Search"
-                    onChange={(e) => setSearchInactive(e.target.value)}
-                    value={searchInactive}
+                    onChange={(e) => setSearch(e.target.value)}
+                    value={search}
                     required
                     className="mt-1 w-full px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
                   />
                 </div>
                 <div>
                   <select
-                    onChange={(e) => setClickInactive(e.target.value)}
+                    onChange={(e) => setClick(e.target.value)}
                     className="mt-1 w-full px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none"
                   >
-                    <option value="asc">Sort by: A to Z</option>
-                    <option value="dsc">Sort by: Z to A</option>
+                    <option value="low">Sort by: Low to High</option>
+                    <option value="high">Sort by: High to Low</option>
                     <option value="timeAsc">Sort by: Newest</option>
                     <option value="timeDesc">Sort by: Oldest</option>
                   </select>
                 </div>
               </div>
             </div>
-
             <div className="sm:border border-gray-300 sm:rounded-2xl sm:p-3 mt-5 ">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[100px] ">S.NO.</TableHead>
+                    <TableHead className="w-[60px] ">S.NO.</TableHead>
+                    <TableHead className="">Room No.</TableHead>
                     <TableHead className="">Hotel</TableHead>
                     <TableHead className="">City</TableHead>
                     <TableHead className="">State</TableHead>
-                    <TableHead className="">Contact Number</TableHead>
-                    <TableHead className="">Contact Email</TableHead>
+                    <TableHead className="">Type</TableHead>
+                    <TableHead className="">Capacity</TableHead>
+                    <TableHead className="">Price</TableHead>
                     <TableHead className="">Created by</TableHead>
                     <TableHead className="text-end pr-[7%] ">Manage</TableHead>
                   </TableRow>
@@ -577,15 +733,21 @@ const CreateHotels = () => {
                   {sortedDataInactive
                     .filter((state) => state.status === "inactive")
                     .map((state, index) => (
-                      <TableRow key={index}>
+                      <TableRow key={state._id}>
                         <TableCell className="font-medium">
                           {index + 1}
                         </TableCell>
-                        <TableCell>{state.name}</TableCell>
-                        <TableCell>{state.locationId.name}</TableCell>
+                        <TableCell>{state.roomNumber}</TableCell>
+                        <TableCell>{state.hotelId.name}</TableCell>
+                        <TableCell>
+                          {/* {state.locationId.name} */} abc{" "}
+                        </TableCell>
                         <TableCell>{state.stateId.name}</TableCell>
-                        <TableCell>{state.contactNumber}</TableCell>
-                        <TableCell>{state.contactEmail}</TableCell>
+                        <TableCell>{state.roomType}</TableCell>
+                        <TableCell className="pl-[2%]">
+                          {state.totalPersons}
+                        </TableCell>
+                        <TableCell>{state.pricePerNight}</TableCell>
                         <TableCell>{state.assignedBy.email}</TableCell>
                         <TableCell className="flex gap-4 justify-end">
                           <p className="px-1.5 py-0.5 rounded-lg font-medium bg-yellow-500 text-white w-fit cursor-pointer">
@@ -618,4 +780,4 @@ const CreateHotels = () => {
   );
 };
 
-export default CreateHotels;
+export default CreateRoom;

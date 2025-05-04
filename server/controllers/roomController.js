@@ -221,3 +221,31 @@ exports.hardDelete = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.update = async (req, res) => {
+  console.log(req.body)
+  console.log("object")
+  try {
+
+    const { id } = req.query;
+    const data = req.body;
+
+    if (!id) {
+      return res.status(404).json({ message: "Error" });
+    }
+
+    const updateRoom = await roomModel.findByIdAndUpdate(
+      id,
+      {
+        ...data,
+      },
+      { new: true }
+    );
+    return res
+      .status(200)
+      .json({ message: "Room updated", room: updateRoom });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}

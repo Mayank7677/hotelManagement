@@ -168,9 +168,8 @@ exports.hardDelete = async (req, res) => {
   }
 };
 
-
 exports.getAllByCity = async (req, res) => {
-  console.log(req.query)
+  console.log(req.query);
   try {
     const { id } = req.query;
 
@@ -185,6 +184,31 @@ exports.getAllByCity = async (req, res) => {
       .populate("stateId", "name code status");
 
     res.status(200).json(hotels);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.update = async (req, res) => {
+  console.log(req.body)
+  try {
+    const { id } = req.query;
+    const data = req.body;
+
+    if (!id) {
+      return res.status(404).json({ message: "Error" });
+    }
+
+    const updateHotel = await hotelModel.findByIdAndUpdate(
+      id,
+      {
+        ...data,
+      },
+      { new: true }
+    );
+    return res
+      .status(200)
+      .json({ message: "Hotel updated", hotel: updateHotel });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

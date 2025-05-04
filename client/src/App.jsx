@@ -6,13 +6,17 @@ import Dashboard from "./components/admin/Dashboard";
 import HomePage from "./components/user/HomePage";
 import { Toaster } from "sonner";
 import ResetPassPage from "./auth/ResetPassPage";
-import CreateState from "./components/admin/CreateState";
-import CreateCity from "./components/admin/CreateCity";
-import CreateHotels from "./components/admin/CreateHotels";
+import CreateState from "./components/admin/State/CreateState";
+import CreateCity from "./components/admin/City/CreateCity";
+import CreateHotels from "./components/admin/Hotel/CreateHotels";
 import AdminRoutes from "./protectedRoutes/AdminRoutes";
 import CheckToken from "./protectedRoutes/CheckToken";
 import MainLayout from "./layouts/MainLayout";
-import CreateRoom from "./components/admin/CreateRoom";
+import CreateRoom from "./components/admin/Room/CreateRoom";
+import EditCity from "./components/admin/City/EditCity";
+import EditState from "./components/admin/State/EditState";
+import EditHotel from "./components/admin/Hotel/EditHotel";
+import EditRoom from "./components/admin/Room/EditRoom";
 
 const App = () => {
   return (
@@ -42,9 +46,13 @@ const App = () => {
             }
           >
             <Route index element={<CreateState />} />
+            <Route path="state/edit/:id" element={<EditState />} />
             <Route path="city" element={<CreateCity />} />
+            <Route path="city/edit/:id" element={<EditCity />} />
             <Route path="hotel" element={<CreateHotels />} />
+            <Route path="hotel/edit/:id" element={<EditHotel />} />
             <Route path="room" element={<CreateRoom />} />
+            <Route path="room/edit/:id" element={<EditRoom />} />
           </Route>
         </Route>
       </Routes>

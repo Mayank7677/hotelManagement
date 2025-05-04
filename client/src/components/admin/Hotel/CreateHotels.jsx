@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
-import BASE_URL from "../../utils/api";
+import BASE_URL from "../../../utils/api";
 import { FiEdit2 } from "react-icons/fi";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -14,110 +14,26 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Link } from "react-router-dom";
 
-const topCitiesByState = {
-  "Andhra Pradesh": [
-    "Visakhapatnam",
-    "Vijayawada",
-    "Guntur",
-    "Nellore",
-    "Kurnool",
-  ],
-  "Arunachal Pradesh": ["Itanagar", "Naharlagun", "Pasighat", "Tawang", "Ziro"],
-  Assam: ["Guwahati", "Silchar", "Dibrugarh", "Jorhat", "Tezpur"],
-  Bihar: ["Patna", "Gaya", "Bhagalpur", "Muzaffarpur", "Purnia"],
-  Chhattisgarh: ["Raipur", "Bhilai", "Bilaspur", "Korba", "Durg"],
-  Goa: ["Panaji", "Margao", "Vasco da Gama", "Mapusa", "Ponda"],
-  Gujarat: ["Ahmedabad", "Surat", "Vadodara", "Rajkot", "Bhavnagar"],
-  Haryana: ["Gurugram", "Faridabad", "Panipat", "Ambala", "Karnal"],
-  "Himachal Pradesh": ["Shimla", "Dharamshala", "Mandi", "Solan", "Kullu"],
-  Jharkhand: ["Ranchi", "Jamshedpur", "Dhanbad", "Bokaro", "Deoghar"],
-  Karnataka: ["Bangalore", "Mysore", "Mangalore", "Hubli", "Belgaum"],
-  Kerala: ["Thiruvananthapuram", "Kochi", "Kozhikode", "Kollam", "Thrissur"],
-  "Madhya Pradesh": ["Bhopal", "Indore", "Gwalior", "Jabalpur", "Ujjain"],
-  Maharashtra: ["Mumbai", "Pune", "Nagpur", "Nashik", "Thane"],
-  Manipur: ["Imphal", "Thoubal", "Bishnupur", "Kakching", "Churachandpur"],
-  Meghalaya: ["Shillong", "Tura", "Nongpoh", "Baghmara", "Jowai"],
-  Mizoram: ["Aizawl", "Lunglei", "Champhai", "Serchhip", "Kolasib"],
-  Nagaland: ["Kohima", "Dimapur", "Mokokchung", "Tuensang", "Wokha"],
-  Odisha: ["Bhubaneswar", "Cuttack", "Rourkela", "Sambalpur", "Berhampur"],
-  Punjab: ["Ludhiana", "Amritsar", "Jalandhar", "Patiala", "Bathinda"],
-  Rajasthan: ["Jaipur", "Jodhpur", "Udaipur", "Kota", "Ajmer"],
-  Sikkim: ["Gangtok", "Namchi", "Geyzing", "Mangan", "Rangpo"],
-  "Tamil Nadu": [
-    "Chennai",
-    "Coimbatore",
-    "Madurai",
-    "Tiruchirappalli",
-    "Salem",
-  ],
-  Telangana: ["Hyderabad", "Warangal", "Nizamabad", "Karimnagar", "Khammam"],
-  Tripura: ["Agartala", "Udaipur", "Dharmanagar", "Kailasahar", "Belonia"],
-  "Uttar Pradesh": ["Lucknow", "Kanpur", "Agra", "Varanasi", "Noida"],
-  Uttarakhand: ["Dehradun", "Haridwar", "Roorkee", "Haldwani", "Nainital"],
-  "West Bengal": ["Kolkata", "Asansol", "Siliguri", "Durgapur", "Howrah"],
-
-  // Union Territories
-  "Andaman and Nicobar Islands": [
-    "Port Blair",
-    "Diglipur",
-    "Mayabunder",
-    "Rangat",
-    "Havelock",
-  ],
-  Chandigarh: ["Chandigarh"],
-  "Dadra and Nagar Haveli and Daman and Diu": [
-    "Silvassa",
-    "Daman",
-    "Diu",
-    "Amli",
-    "Khanvel",
-  ],
-  Delhi: ["New Delhi", "Delhi", "Dwarka", "Rohini", "Saket"],
-  "Jammu and Kashmir": [
-    "Srinagar",
-    "Jammu",
-    "Anantnag",
-    "Baramulla",
-    "Udhampur",
-  ],
-  Ladakh: ["Leh", "Kargil", "Nubra", "Diskit", "Dras"],
-  Lakshadweep: ["Kavaratti", "Agatti", "Minicoy", "Amini", "Andrott"],
-  Puducherry: ["Puducherry", "Karaikal", "Mahe", "Yanam", "Oulgaret"],
-};
-const CreateCity = () => {
-  const [suggestedCities, setSuggestedCities] = useState([]);
-
-  const [city, setCity] = useState({
+const CreateHotels = () => {
+  const [hotel, setHotel] = useState({
     state: "",
+    city: "",
     name: "",
-    code: "",
+    address: "",
+    totalRoom: "",
+    description: "",
+    contactNumber: "",
+    contactEmail: "",
   });
 
-  // const handleChange = (e) => {
-  //   const { id, value } = e.target;
-  //   setCity((prev) => ({
-  //     ...prev,
-  //     [id]: value,
-  //   }));
-  // };
   const handleChange = (e) => {
     const { id, value } = e.target;
-
-    if (id === "state") {
-      const cities = topCitiesByState[value] || [];
-      setSuggestedCities(cities);
-      setCity((prev) => ({
-        ...prev,
-        state: value,
-        name: "", // reset city when state changes
-      }));
-    } else {
-      setCity((prev) => ({
-        ...prev,
-        [id]: value,
-      }));
-    }
+    setHotel((prev) => ({
+      ...prev,
+      [id]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -126,8 +42,9 @@ const CreateCity = () => {
     console.log(token);
 
     try {
-      console.log(state);
-      const res = await axios.post(`${BASE_URL}/locations/create`, city, {
+      console.log(hotel);
+
+      const res = await axios.post(`${BASE_URL}/hotels/create`, hotel, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -137,10 +54,15 @@ const CreateCity = () => {
       // console.log(res);
       fetchData();
 
-      setCity({
+      setHotel({
         state: "",
+        city: "",
         name: "",
-        code: "",
+        address: "",
+        totalRoom: "",
+        description: "",
+        contactNumber: "",
+        contactEmail: "",
       });
     } catch (err) {
       console.error(err);
@@ -148,21 +70,20 @@ const CreateCity = () => {
     }
   };
 
-  const [cityData, setCityData] = useState([]);
+  const [hotelData, setHotelData] = useState([]);
 
   const fetchData = async () => {
     let token = JSON.parse(localStorage.getItem("data")).token;
-    // console.log(token);
 
     try {
-      const res = await axios.get(`${BASE_URL}/locations/getAll`, {
+      const res = await axios.get(`${BASE_URL}/hotels/getAll`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       console.log(res.data);
 
-      setCityData(res.data);
+      setHotelData(res.data);
     } catch (error) {
       console.log(error.response.data.message);
     }
@@ -174,7 +95,7 @@ const CreateCity = () => {
 
     try {
       const res = await axios.put(
-        `${BASE_URL}/locations/softDelete?id=${id}`,
+        `${BASE_URL}/hotels/softDelete?id=${id}`,
         {},
         {
           headers: {
@@ -195,14 +116,11 @@ const CreateCity = () => {
     let token = JSON.parse(localStorage.getItem("data")).token;
 
     try {
-      const res = await axios.delete(
-        `${BASE_URL}/locations/hardDelete?id=${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.delete(`${BASE_URL}/hotels/hardDelete?id=${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       toast.success(res.data.message);
       fetchData();
@@ -211,6 +129,8 @@ const CreateCity = () => {
     }
   };
 
+  // city and state data for dropdown
+  const [cityData, setCityData] = useState([]);
   const [stateData, setStateData] = useState([]);
 
   const fetchStateData = async () => {
@@ -225,9 +145,33 @@ const CreateCity = () => {
       });
       // console.log(res.data);
 
-      setStateData(res.data);
+      setStateData(res.data.filter((state) => state.status === "active"));
     } catch (error) {
       console.log(error.response.data.message);
+    }
+  };
+
+  // Fetch cities based on selected state
+  const fetchCityData = async (stateName) => {
+    const token = JSON.parse(localStorage.getItem("data")).token;
+
+    const selectedState = stateData.find((state) => state.name === stateName);
+
+    if (!selectedState) return;
+
+    try {
+      const res = await axios.get(
+        `${BASE_URL}/locations/getAllByState?id=${selectedState._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setCityData(res.data);
+    } catch (error) {
+      console.log(error.response?.data?.message || "Failed to fetch cities");
     }
   };
 
@@ -236,9 +180,16 @@ const CreateCity = () => {
     fetchStateData();
   }, []);
 
+  // Run this whenever hotel.state changes
+  useEffect(() => {
+    if (hotel.state) {
+      fetchCityData(hotel.state);
+    }
+  }, [hotel.state]);
+
   // searching and sorting
   const [search, setSearch] = useState("");
-  const filteredData = cityData.filter((state) =>
+  const filteredData = hotelData.filter((state) =>
     state.name.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -258,7 +209,7 @@ const CreateCity = () => {
   });
 
   const [searchInactive, setSearchInactive] = useState("");
-  const filteredDataInactive = cityData.filter((state) =>
+  const filteredDataInactive = hotelData.filter((state) =>
     state.name.toLowerCase().includes(searchInactive.toLowerCase())
   );
 
@@ -285,74 +236,195 @@ const CreateCity = () => {
           <TabsTrigger value="active">Active</TabsTrigger>
           <TabsTrigger value="inactive">Inactive</TabsTrigger>
         </TabsList>
-
         <TabsContent value="create">
           <h1 className="font-medium mt-5 text-3xl tracking-tighter">
-            Add a City
+            Add Hotel
           </h1>
 
-          <div className="mt-10 max-sm:w-full w-1/2 sm:px-5">
+          <div className="mt-10 sm:px-5 max-sm:w-full sm:w-3/4">
             <form onSubmit={handleSubmit}>
-              <div>
-                <label htmlFor="state">
-                  <span className="text-lg font-medium tracking-tight">
-                    Select State
-                  </span>
-                  <select
-                    id="state"
-                    value={city.state}
-                    onChange={handleChange}
-                    required
-                    className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
-                  >
-                    <option value="">Select a state</option>
-                    {stateData.map((s, index) => (
-                      <option key={index} value={s.name}>
-                        {s.name}
-                      </option>
-                    ))}
-                  </select>
-                </label>
+              <div className="flex flex-col sm:flex-row items-center gap-5 w-full">
+                <div className="w-full">
+                  <label htmlFor="state">
+                    <span className="text-lg font-medium tracking-tight">
+                      Select State
+                    </span>
+                    <select
+                      id="state"
+                      value={hotel.state}
+                      onChange={handleChange}
+                      required
+                      className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
+                    >
+                      <option value="">Select a state</option>
+                      {stateData.map((s, index) => (
+                        <option key={index} value={s.name}>
+                          {s.name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                </div>
+
+                <div className="w-full">
+                  <label htmlFor="city">
+                    <span className="text-lg font-medium tracking-tight">
+                      Select City
+                    </span>
+                    <select
+                      id="city"
+                      value={hotel.city}
+                      onChange={handleChange}
+                      required
+                      className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
+                    >
+                      <option value="">Select a city</option>
+                      {cityData.map((s, index) => (
+                        <option key={index} value={s.name}>
+                          {s.name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                </div>
+              </div>
+
+              <div className="mt-7 flex flex-col sm:flex-row items-center gap-5 w-full">
+                <div className="w-full">
+                  <label htmlFor="name">
+                    <span className="text-lg font-medium tracking-tight">
+                      Enter Hotel Name
+                    </span>
+
+                    <input
+                      type="text"
+                      id="name"
+                      placeholder="Hotel Name"
+                      value={hotel.name}
+                      onChange={handleChange}
+                      required
+                      className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
+                    />
+                  </label>
+                </div>
+
+                <div className="w-full">
+                  <label htmlFor="totalRoom">
+                    <span className="text-lg font-medium tracking-tight">
+                      Enter Total Rooms
+                    </span>
+
+                    <input
+                      type="number"
+                      id="totalRoom"
+                      placeholder="Total Rooms"
+                      value={hotel.totalRoom}
+                      onChange={handleChange}
+                      required
+                      className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
+                    />
+                  </label>
+                </div>
+              </div>
+
+              <div className="mt-7 flex flex-col sm:flex-row items-center gap-5 w-full">
+                <div className="w-full">
+                  <label htmlFor="contactNumber">
+                    <span className="text-lg font-medium tracking-tight">
+                      Enter Hotel's Contact Number
+                    </span>
+
+                    <input
+                      type="text"
+                      id="contactNumber"
+                      placeholder="Contact Number"
+                      value={hotel.contactNumber}
+                      onChange={handleChange}
+                      required
+                      className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
+                    />
+                  </label>
+                </div>
+
+                <div className="w-full">
+                  <label htmlFor="contactEmail">
+                    <span className="text-lg font-medium tracking-tight">
+                      Enter Hotel's Contact Email
+                    </span>
+
+                    <input
+                      type="email"
+                      id="contactEmail"
+                      placeholder="Contact Email"
+                      value={hotel.contactEmail}
+                      onChange={handleChange}
+                      required
+                      className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
+                    />
+                  </label>
+                </div>
               </div>
 
               <div className="mt-7">
-                <label htmlFor="name">
+                <label htmlFor="address">
                   <span className="text-lg font-medium tracking-tight">
-                    Enter City
-                  </span>
-
-                  <select
-                    id="name"
-                    value={city.name}
-                    onChange={handleChange}
-                    required
-                    className="mt-1 w-full px-3 py-2 rounded-md font-normal border border-gray-400 sm:text-sm outline-none"
-                  >
-                    <option value="">Select a city</option>
-                    {suggestedCities.map((c, index) => (
-                      <option key={index} value={c}>
-                        {c}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              </div>
-
-              <div className="mt-7">
-                <label htmlFor="code">
-                  <span className="text-lg font-medium tracking-tight">
-                    Enter City-code
+                    Enter Hotel Address
                   </span>
 
                   <input
                     type="text"
-                    id="code"
-                    placeholder="Citycode"
-                    value={city.code}
+                    id="address"
+                    placeholder="Hotel Address"
+                    value={hotel.address}
                     onChange={handleChange}
                     required
                     className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
                   />
+                </label>
+              </div>
+
+              {/* <div className="mt-7">
+            <label htmlFor="description">
+              <span className="text-lg font-medium tracking-tight">
+                Enter Hotel Description
+              </span>
+
+              <input
+                type="text"
+                id="description"
+                value={hotel.description}
+                onChange={handleChange}
+                required
+                className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
+              />
+            </label>
+          </div> */}
+
+              <div className="mt-7">
+                <label htmlFor="description">
+                  <span className="text-lg font-medium tracking-tight">
+                    Enter Hotel Description
+                  </span>
+
+                  {/* <input
+                type="text"
+                id="description"
+                placeholder="Hotel Description"
+                value={hotel.description}
+                onChange={handleChange}
+                required
+                className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
+              /> */}
+
+                  <textarea
+                    value={hotel.description}
+                    onChange={handleChange}
+                    placeholder="Hotel Description"
+                    required
+                    rows="5"
+                    className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none resize-none"
+                    id="description"
+                  ></textarea>
                 </label>
               </div>
 
@@ -369,10 +441,11 @@ const CreateCity = () => {
         </TabsContent>
 
         <TabsContent value="active">
-          <div className="mt-5 ">
+          {" "}
+          <div className="mt-5">
             <div className="flex-row gap-5 sm:flex justify-between pr-10 w-full">
               <h1 className="font-medium text-2xl sm:text-3xl tracking-tight">
-                Cities ( Active ){" "}
+                Hotels ( Active ){" "}
               </h1>
 
               <div className="flex gap-5">
@@ -399,14 +472,16 @@ const CreateCity = () => {
                 </div>
               </div>
             </div>
-
             <div className="sm:border border-gray-300 sm:rounded-2xl sm:p-3 mt-5 ">
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-[100px] ">S.NO.</TableHead>
+                    <TableHead className="">Hotel</TableHead>
                     <TableHead className="">City</TableHead>
                     <TableHead className="">State</TableHead>
+                    <TableHead className="">Contact Number</TableHead>
+                    <TableHead className="">Contact Email</TableHead>
                     <TableHead className="">Created by</TableHead>
                     <TableHead className="text-end pr-[7%] ">Manage</TableHead>
                   </TableRow>
@@ -420,13 +495,21 @@ const CreateCity = () => {
                           {index + 1}
                         </TableCell>
                         <TableCell>{state.name}</TableCell>
+                        <TableCell>{state.locationId.name}</TableCell>
                         <TableCell>{state.stateId.name}</TableCell>
+                        <TableCell>{state.contactNumber}</TableCell>
+                        <TableCell>{state.contactEmail}</TableCell>
                         <TableCell>{state.assignedBy.email}</TableCell>
                         <TableCell className="flex gap-4 justify-end">
-                          <p className="px-1.5 py-0.5 rounded-lg font-medium bg-yellow-500 text-white w-fit cursor-pointer">
-                            {/* <FiEdit2 /> */}
-                            Edit
-                          </p>
+                          <Link
+                            to={`/admin/hotel/edit/${state._id}`}
+                            state={{ stateData: state }}
+                          >
+                            <p className="px-1.5 py-0.5 rounded-lg font-medium bg-yellow-500 text-white w-fit cursor-pointer">
+                              {/* <FiEdit2 /> */}
+                              Edit
+                            </p>
+                          </Link>
                           <p
                             onClick={() => handleStatusChange(state._id)}
                             className="px-1.5 py-0.5 rounded-lg font-medium bg-blue-500 text-white w-fit cursor-pointer"
@@ -450,7 +533,8 @@ const CreateCity = () => {
         </TabsContent>
 
         <TabsContent value="inactive">
-          <div className="mt-5 pb-10">
+          {" "}
+          <div className="mt-5">
             <div className="flex-row gap-5 sm:flex justify-between pr-10 w-full">
               <h1 className="font-medium text-2xl sm:text-3xl tracking-tight">
                 Cities ( Inactive ){" "}
@@ -486,13 +570,15 @@ const CreateCity = () => {
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-[100px] ">S.NO.</TableHead>
+                    <TableHead className="">Hotel</TableHead>
                     <TableHead className="">City</TableHead>
                     <TableHead className="">State</TableHead>
+                    <TableHead className="">Contact Number</TableHead>
+                    <TableHead className="">Contact Email</TableHead>
                     <TableHead className="">Created by</TableHead>
                     <TableHead className="text-end pr-[7%] ">Manage</TableHead>
                   </TableRow>
                 </TableHeader>
-
                 <TableBody>
                   {sortedDataInactive
                     .filter((state) => state.status === "inactive")
@@ -502,13 +588,21 @@ const CreateCity = () => {
                           {index + 1}
                         </TableCell>
                         <TableCell>{state.name}</TableCell>
+                        <TableCell>{state.locationId.name}</TableCell>
                         <TableCell>{state.stateId.name}</TableCell>
+                        <TableCell>{state.contactNumber}</TableCell>
+                        <TableCell>{state.contactEmail}</TableCell>
                         <TableCell>{state.assignedBy.email}</TableCell>
                         <TableCell className="flex gap-4 justify-end">
-                          <p className="px-1.5 py-0.5 rounded-lg font-medium bg-yellow-500 text-white w-fit cursor-pointer">
-                            {/* <FiEdit2 /> */}
-                            Edit
-                          </p>
+                          <Link
+                            to={`/admin/hotel/edit/${state._id}`}
+                            state={{ stateData: state }}
+                          >
+                            <p className="px-1.5 py-0.5 rounded-lg font-medium bg-yellow-500 text-white w-fit cursor-pointer">
+                              {/* <FiEdit2 /> */}
+                              Edit
+                            </p>
+                          </Link>
                           <p
                             onClick={() => handleStatusChange(state._id)}
                             className="px-1.5 py-0.5 rounded-lg font-medium bg-blue-500 text-white w-fit cursor-pointer"
@@ -535,4 +629,4 @@ const CreateCity = () => {
   );
 };
 
-export default CreateCity;
+export default CreateHotels;

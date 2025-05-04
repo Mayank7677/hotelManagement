@@ -64,7 +64,7 @@ const LoginPage = () => {
       localStorage.setItem("data", JSON.stringify({ token, user }));
 
       if (user.role === "admin") {
-        navigate("/admin");
+        navigate("/admin/state");
       } else {
         navigate("/home");
       }

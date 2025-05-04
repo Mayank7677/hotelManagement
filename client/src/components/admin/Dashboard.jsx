@@ -67,7 +67,6 @@ const Dashboard = () => {
     { name: "Add Room", path: "/admin/room", icon: chaticon },
   ];
 
-  
   return (
     <>
       {/* Sidebar + Main Content */}
@@ -85,7 +84,9 @@ const Dashboard = () => {
               end={item.path === "/admin"}
               className={({ isActive }) =>
                 `flex items-center py-2 border border-gray-300 rounded-r-3xl  gap-2 text-md font-semibold tracking-tight transition-colors duration-200 ${
-                  isActive ? " text-gray-800  bg-blue-200" : " text-gray-800 bg-white"
+                  isActive
+                    ? " text-gray-800  bg-blue-200"
+                    : " text-gray-800 bg-white"
                 }`
               }
             >

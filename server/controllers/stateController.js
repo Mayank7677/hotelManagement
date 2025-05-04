@@ -65,9 +65,10 @@ exports.getOne = async (req, res) => {
 };
 
 exports.updateState = async (req, res) => {
+  console.log(req.body);
   try {
     const { id } = req.query;
-    const { name, code } = req.body;
+    const { code } = req.body;
 
     if (!id) {
       return res.status(404).json({ message: "Error" });
@@ -81,11 +82,11 @@ exports.updateState = async (req, res) => {
     const updatedState = await stateModel.findByIdAndUpdate(
       id,
       {
-        name,
         code,
       },
       { new: true }
     );
+    console.log(updatedState)
 
     return res
       .status(200)
