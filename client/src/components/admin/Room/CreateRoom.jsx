@@ -94,19 +94,19 @@ const CreateRoom = () => {
       toast.success(res.data.message);
 
       // Reset form fields
-      setRoom({
-        state: "",
-        city: "",
-        hotel: "",
-        roomNumber: "",
-        roomType: "",
-        pricePerNight: "",
-        description: "",
-        totalPersons: "",
-        amenities: "",
-      });
+      // setRoom({
+      //   state: "",
+      //   city: "",
+      //   hotel: "",
+      //   roomNumber: "",
+      //   roomType: "",
+      //   pricePerNight: "",
+      //   description: "",
+      //   totalPersons: "",
+      //   amenities: "",
+      // });
 
-      setImages([]);
+      // setImages([]);
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to create room");
       // console.error("Failed to create room:", error.response?.data?.message);

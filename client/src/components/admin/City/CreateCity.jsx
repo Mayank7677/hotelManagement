@@ -226,7 +226,7 @@ const CreateCity = () => {
       });
       // console.log(res.data);
 
-      setStateData(res.data);
+      setStateData(res.data.filter((state) => state.status === "active"));
     } catch (error) {
       console.log(error.response.data.message);
     }

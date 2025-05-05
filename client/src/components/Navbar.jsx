@@ -24,7 +24,7 @@ const Navbar = () => {
         />
 
         <div className="flex items-center gap-5 ">
-          <p>Hi! {name}</p>
+          <p className='max-sm:hidden'>Hi! {name}</p>
           <button
             onClick={logOutUser}
             className="border border-gray-400 bg-white cursor-pointer rounded-full text-sm px-4 py-1"

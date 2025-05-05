@@ -9,6 +9,7 @@ const locationRouter = require('./routers/locationRouter')
 const stateRouter = require('./routers/stateRouter')
 const hotelRouter = require('./routers/hotelRouter');
 const roomRouter = require('./routers/roomRouter');
+const bookingRouter = require('./routers/bookingRouter');
 
 
 mongoose.connect("mongodb://localhost:27017/hotelManagement");
@@ -24,6 +25,7 @@ app.use("/locations", locationRouter);
 app.use("/states", stateRouter);
 app.use("/hotels", hotelRouter);
 app.use("/rooms", roomRouter);
+app.use("/bookings", bookingRouter);
 
 app.get("/", (req, res) => {
   res.send("hello world");

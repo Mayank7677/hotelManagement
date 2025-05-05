@@ -38,3 +38,41 @@ exports.uploadFile = async (files) => {
 
   return results;
 };
+
+
+exports.updateFile = async (inputFiles) => {
+  const fileArray = Array.isArray(inputFiles) ? inputFiles : [inputFiles]; // normalize to array
+  const results = [];
+
+  for (const file of fileArray) {
+    try {
+      if (!file || !file.data) {
+        throw new Error("Invalid file input");
+      }
+
+      const result = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            folder: "hotel_rooms",
+            resource_type: "image",
+          },
+          (error, result) => {
+            if (error) return reject(error);
+            resolve({
+              url: result.secure_url,
+              public_id: result.public_id,
+            });
+          }
+        );
+
+        stream.end(file.data);
+      });
+
+      results.push(result);
+    } catch (error) {
+      console.error("Error uploading file:", error.message);
+    }
+  }
+
+  return results;
+};

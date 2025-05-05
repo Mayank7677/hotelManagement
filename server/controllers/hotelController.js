@@ -2,6 +2,7 @@ const hotelModel = require("../models/hotelModel");
 const locationModel = require("../models/locationModel");
 const roomModel = require("../models/roomModel");
 const stateModel = require("../models/stateModel");
+const { uploadFile, updateFile } = require("../utils/helper");
 
 exports.create = async (req, res) => {
   try {
@@ -190,7 +191,7 @@ exports.getAllByCity = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-  console.log(req.body)
+  console.log(req.body);
   try {
     const { id } = req.query;
     const data = req.body;
@@ -213,3 +214,61 @@ exports.update = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.hotelsWithRooms = async (req, res) => {
+  try {
+    const hotel = await hotelModel
+      .find()
+      .populate("assignedBy", "name email age phone role status")
+      .populate("locationId", "name code status")
+      .populate("stateId", "name code status");
+
+    const rooms = await roomModel
+      .find()
+      .populate("hotelId", "name code status");
+
+    res.status(200).json({ hotels: hotel, rooms });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+
+exports.updateImage = async (req, res) => {
+  console.log(req.files);
+  try {
+    const { id } = req.query;
+
+    const hotel = await hotelModel.findById(id);
+    if (!hotel) {
+      return res.status(404).json({ message: "No Hotel found" });
+    }
+
+    if (!req.files || !req.files.hotelImages) {
+      return res.status(400).json({ message: "Images are required" });
+    }
+
+    const uploadedImages = await updateFile(req.files.hotelImages);
+    console.log(uploadedImages)
+
+    const updateLocation = await hotelModel.findByIdAndUpdate(
+      id,
+      {
+        hotelImages: [...hotel.hotelImages, ...uploadedImages],
+      },
+      { new: true }
+    );
+
+    return res
+      .status(200)
+      .json({ message: "Location updated", location: updateLocation });
+  }
+  catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+
+
+

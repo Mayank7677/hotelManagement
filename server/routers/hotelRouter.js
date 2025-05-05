@@ -10,5 +10,6 @@ router.put("/update", auth, hotelController.update);
 router.put("/softDelete", auth, hotelController.softDelete);
 router.delete("/hardDelete", auth, hotelController.hardDelete);
 router.get("/getAllByCity", auth, hotelController.getAllByCity);
+router.put('/updateImage', auth, hotelController.updateImage);
 
 module.exports = router;

@@ -65,6 +65,7 @@ const Dashboard = () => {
     { name: "Add City", path: "/admin/city", icon: overviewicon },
     { name: "Add Hotel", path: "/admin/hotel", icon: chaticon },
     { name: "Add Room", path: "/admin/room", icon: chaticon },
+    { name: "Home", path: "/home", icon: chaticon },
   ];
 
   return (

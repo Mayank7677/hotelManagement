@@ -69,9 +69,9 @@ exports.createRoom = async (req, res) => {
     //   return res.status(400).json({ message: "Room already exists" });
     // }
 
-    if (!req.files || !req.files.images) {
-      return res.status(400).json({ message: "Images are required" });
-    }
+      if (!req.files || !req.files.images) {
+        return res.status(400).json({ message: "Images are required" });
+      }
 
     const uploadedImages = await uploadFile(req.files);
 
@@ -105,6 +105,72 @@ exports.getAll = async (req, res) => {
   try {
     const rooms = await roomModel
       .find()
+      .populate("assignedBy", "name email age phone role status")
+      .populate(
+        "hotelId",
+        "name address status totalRoom description contactNumber contactEmail"
+      )
+      .populate("stateId", "name code status")
+      .populate("locationId", "name code status");
+
+    res.status(200).json(rooms);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.getAllByHotel = async (req, res) => {
+  try {
+    const { id } = req.query;
+
+    if (!id) {
+      return res.status(404).json({ message: "Please provide an id" });
+    }
+
+    const rooms = await roomModel
+      .find({ hotelId: id })
+      .populate("assignedBy", "name email age phone role status")
+      .populate("hotelId", "name code status totalRoom description contactNumber contactEmail")
+      .populate("stateId", "name code status")
+      .populate("locationId", "name code status");
+
+    res.status(200).json(rooms);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.getAllByCity = async (req, res) => {
+  try {
+    const { id } = req.query;
+
+    if (!id) {
+      return res.status(404).json({ message: "Please provide an id" });
+    }
+
+    const rooms = await roomModel
+      .find({ locationId: id })
+      .populate("assignedBy", "name email age phone role status")
+      .populate("hotelId", "name code status")
+      .populate("stateId", "name code status")
+      .populate("locationId", "name code status");
+
+    res.status(200).json(rooms);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.getAllByState = async (req, res) => {
+  try {
+    const { id } = req.query;
+
+    if (!id) {
+      return res.status(404).json({ message: "Please provide an id" });
+    }
+
+    const rooms = await roomModel
+      .find({ stateId: id })
       .populate("assignedBy", "name email age phone role status")
       .populate("hotelId", "name code status")
       .populate("stateId", "name code status")
@@ -223,10 +289,9 @@ exports.hardDelete = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-  console.log(req.body)
-  console.log("object")
+  console.log(req.body);
+  console.log("object");
   try {
-
     const { id } = req.query;
     const data = req.body;
 
@@ -241,11 +306,8 @@ exports.update = async (req, res) => {
       },
       { new: true }
     );
-    return res
-      .status(200)
-      .json({ message: "Room updated", room: updateRoom });
-
+    return res.status(200).json({ message: "Room updated", room: updateRoom });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-}
+};

@@ -33,7 +33,7 @@ const hotelSchema = mongoose.Schema(
     status: {
       type: String,
       enum: ["active", "inactive"],
-      default: "active", 
+      default: "active",
     },
     contactNumber: {
       type: Number,
@@ -41,6 +41,10 @@ const hotelSchema = mongoose.Schema(
     },
     contactEmail: {
       type: String,
+      required: true,
+    },
+    hotelImages: {
+      type: Array,
       required: true,
     },
   },

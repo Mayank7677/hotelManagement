@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SignupPage from "./auth/SignupPage";
 import LoginPage from "./auth/LoginPage";
 import Dashboard from "./components/admin/Dashboard";
-import HomePage from "./components/user/HomePage";
+import HomePage from "./components/user/RoomPage";
 import { Toaster } from "sonner";
 import ResetPassPage from "./auth/ResetPassPage";
 import CreateState from "./components/admin/State/CreateState";
@@ -17,6 +17,9 @@ import EditCity from "./components/admin/City/EditCity";
 import EditState from "./components/admin/State/EditState";
 import EditHotel from "./components/admin/Hotel/EditHotel";
 import EditRoom from "./components/admin/Room/EditRoom";
+import RoomDetails from "./components/user/RoomDetails";
+import AllHotels from "./components/user/AllHotels";
+import BookRoom from "./components/user/BookRoom";
 
 const App = () => {
   return (
@@ -32,7 +35,32 @@ const App = () => {
             path="/home"
             element={
               <CheckToken>
+                <AllHotels />
+              </CheckToken>
+            }
+          />
+          <Route
+            path="/roomPage/:id"
+            element={
+              <CheckToken>
                 <HomePage />
+              </CheckToken>
+            }
+          />
+
+          <Route
+            path="/roomsdetail/:id"
+            element={
+              <CheckToken>
+                <RoomDetails />
+              </CheckToken>
+            }
+          />
+          <Route
+            path="/bookRoom"
+            element={
+              <CheckToken>
+                <BookRoom />
               </CheckToken>
             }
           />
