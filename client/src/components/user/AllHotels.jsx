@@ -6,6 +6,7 @@ import { useTheme } from "../ThemeProvider";
 import { IoSearchOutline } from "react-icons/io5";
 import Autoplay from "embla-carousel-autoplay";
 import { Link } from "react-router-dom";
+import { CiCalendarDate } from "react-icons/ci";
 
 const AllHotels = () => {
   const [hotelData, setHotelData] = useState([]);
@@ -26,7 +27,6 @@ const AllHotels = () => {
   const [city, setCity] = useState([]);
   const [search, setSearch] = useState("");
   const fetchStateData = async () => {
-
     try {
       let res = await axios.get(`${BASE_URL}/states/getAll`);
 
@@ -169,7 +169,11 @@ const AllHotels = () => {
         </div>
       </div> */}
 
-      <section className='h-screen flex flex-col items-start justify-center px-6 md:px-16 lg:px-24 xl:px-32 text-white bg-[url("https://images.unsplash.com/photo-1506059612708-99d6c258160e?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")] bg-no-repeat bg-cover bg-bottom'>
+      <section
+        className={`h-screen flex flex-col items-start justify-center pt-30 px-6 md:px-16 lg:px-24 xl:px-32 text-white bg-[url("https://images.unsplash.com/photo-1506059612708-99d6c258160e?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")] bg-no-repeat bg-cover bg-bottom ${
+          theme === "dark" ? "bg-neutral-900" : "bg-white"
+        }`}
+      >
         <p className="bg-[#49B9FF]/50 px-3.5 py-1 rounded-full mt-20">
           The Ultimate Hotel Experience
         </p>
@@ -181,27 +185,20 @@ const AllHotels = () => {
           hotels and resorts. Start your journey today.
         </p>
 
-        <form className="bg-white text-neutral-700 rounded-2xl px-6 py-4 mt-8 flex flex-col md:flex-row max-md:items-start gap-4 max-md:mx-auto">
+        <form
+          className={` text-neutral-700 rounded-2xl px-6 py-4 mt-8 flex flex-col md:flex-row max-md:items-start gap-4 max-md:mx-auto ${
+            theme === "dark" ? "bg-neutral-700 text-white" : "bg-white"
+          }`}
+        >
           <div>
             <label htmlFor="state">
               <div className="flex items-center gap-2">
-                <svg
-                  className="w-4 h-4 text-gray-800"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 10h16M8 14h8m-4-7V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"
-                  />
-                </svg>
+                <CiCalendarDate
+                  className={` text-lg ${
+                    theme === "dark" ? "text-white" : "text-black"
+                  } `}
+                />
+
                 <span className="font-serif">State</span>
               </div>
               <select
@@ -211,7 +208,16 @@ const AllHotels = () => {
                 required
                 className="mt-1 w-full  px-3 py-1.5 rounded-md font-serif border  border-gray-500 sm:text-sm outline-none "
               >
-                <option value="">Select a state</option>
+                <option
+                  className={`${
+                    theme === "dark"
+                      ? "bg-neutral-600 text-white border-gray-600"
+                      : "bg-white text-black border-gray-300"
+                  }`}
+                  value=""
+                >
+                  Select a state
+                </option>
                 {stateData.map((s, index) => (
                   <option
                     className={`${
@@ -232,23 +238,11 @@ const AllHotels = () => {
           <div className="">
             <label htmlFor="state">
               <div className="flex items-center gap-2">
-                <svg
-                  className="w-4 h-4 text-gray-800"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 10h16M8 14h8m-4-7V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"
-                  />
-                </svg>
+                <CiCalendarDate
+                  className={` text-lg ${
+                    theme === "dark" ? "text-white" : "text-black"
+                  } `}
+                />
                 <span className="font-serif">City</span>
               </div>
               <select
@@ -258,7 +252,16 @@ const AllHotels = () => {
                 required
                 className="mt-1 w-full  px-3 py-1.5 rounded-md font-serif border  border-gray-500 sm:text-sm outline-none "
               >
-                <option value="">Select a City</option>
+                <option
+                  className={`${
+                    theme === "dark"
+                      ? "bg-neutral-600 text-white border-gray-600"
+                      : "bg-white text-black border-gray-300"
+                  }`}
+                  value=""
+                >
+                  Select a City
+                </option>
                 {cityData.map((s, index) => (
                   <option
                     className={`${
@@ -279,7 +282,11 @@ const AllHotels = () => {
           <div className=" ">
             <label htmlFor="state">
               <div className="flex items-center gap-1.5">
-                <IoSearchOutline className="text-black" />
+                <IoSearchOutline
+                  className={` ${
+                    theme === "dark" ? "text-white" : "text-black"
+                  } `}
+                />
                 <span className="font-serif">Search</span>
               </div>
               <div>
@@ -294,122 +301,12 @@ const AllHotels = () => {
               </div>
             </label>
           </div>
-
-          {/* <div>
-            <div className="flex items-center gap-2">
-              <svg
-                className="w-4 h-4 text-gray-800"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 10h16M8 14h8m-4-7V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"
-                />
-              </svg>
-              <label htmlFor="destinationInput" className="font-serif">
-                Destination
-              </label>
-            </div>
-            <input
-              list="destinations"
-              id="destinationInput"
-              type="text"
-              className="mt-1 w-full  px-3 py-1.5 rounded-md font-serif border  border-gray-400 sm:text-sm outline-none "
-              placeholder="Type here"
-              required
-            />
-          </div> */}
-
-          {/* <div>
-            <div className="flex items-center gap-2">
-              <svg
-                className="w-4 h-4 text-gray-800"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 10h16M8 14h8m-4-7V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"
-                />
-              </svg>
-              <label htmlFor="checkIn" className="font-serif">
-                Check in
-              </label>
-            </div>
-            <input
-              id="checkIn"
-              type="date"
-              className="mt-1 w-full  px-3 py-1.5 rounded-md font-serif border  border-gray-400 sm:text-sm outline-none "
-            />
-          </div>
-
-          <div>
-            <div className="flex items-center gap-2">
-              <svg
-                className="w-4 h-4 text-gray-800"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 10h16M8 14h8m-4-7V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"
-                />
-              </svg>
-              <label htmlFor="checkOut" className="font-serif">
-                Check out
-              </label>
-            </div>
-            <input
-              id="checkOut"
-              type="date"
-              className="mt-1 w-full  px-3 py-1.5 rounded-md font-serif border  border-gray-400 sm:text-sm outline-none "
-            />
-          </div> */}
-
-          {/* <div className="flex md:flex-col max-md:gap-2 max-md:items-center">
-            <label htmlFor="guests">Guests</label>
-            <input
-              min={1}
-              max={4}
-              id="guests"
-              type="number"
-              className=" rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none  max-w-16"
-              placeholder="0"
-            />
-          </div> */}
-
-          {/* <button className="flex items-center justify-center gap-1 md:ml-7 rounded-2xl bg-pink-500 hover:bg-pink-600 font-serif py-2 px-4 text-white my-auto cursor-pointer max-md:w-full max-md:py-1">
-            <IoSearchOutline />
-            <span>Search</span>
-          </button> */}
         </form>
       </section>
 
       {/* Featured section  */}
-      <section>
-        <div class="flex flex-col justify-center items-center text-center false mt-10">
+      <section className={`  ${theme === "dark" ? "bg-neutral-900" : ""} `}>
+        <div class="flex flex-col justify-center items-center text-center false pt-10">
           <h1 class=" text-4xl md:text-[40px] font-serif tracking-tight">
             Featured Destination
           </h1>
@@ -426,7 +323,13 @@ const AllHotels = () => {
           </div>
 
           <Link to="/allHotels" onClick={() => window.scrollTo(0, 0)}>
-            <button className="my-10 px-4 py-2 text-sm font-medium border border-gray-400 rounded-xl bg-white hover:bg-gray-100 transition-all cursor-pointer">
+            <button
+              className={`my-10 px-4 py-2 text-sm font-medium border border-gray-400 rounded-xl  transition-all cursor-pointer ${
+                theme === "dark"
+                  ? " text-white "
+                  : "bg-white text-black border-gray-300"
+              } `}
+            >
               View All Destinations
             </button>
           </Link>
@@ -434,14 +337,22 @@ const AllHotels = () => {
       </section>
 
       {/* Offers section  */}
-      <section className="bg-neutral-50 py-10 pb-20">
+      <section
+        className={` ${
+          theme === "dark" ? "bg-neutral-800" : "bg-neutral-100"
+        } py-10 pb-20`}
+      >
         <div class="flex flex-col justify-center items-center text-center false mt-10 ">
           <div class="flex flex-col md:flex-row items-center justify-between w-full px-6 md:px-16 lg:px-24 xl:px-32">
             <div class="flex flex-col justify-center items-center text-center  md:items-start md:text-left">
               <h1 class=" text-4xl md:text-[40px] font-serif tracking-tight">
                 Exclusive Offers
               </h1>
-              <p class="text-sm md:text-base text-neutral-600 tracking-tight mt-2 max-w-174">
+              <p
+                class={`text-sm md:text-base  tracking-tight mt-2 max-w-174 ${
+                  theme === "dark" ? "text-neutral-300" : "text-neutral-600"
+                }`}
+              >
                 Take advantage of our limited-time offers and special packages
                 to enhance your stay and create unforgettable memories.
               </p>
@@ -515,33 +426,37 @@ const AllHotels = () => {
         </div>
       </section>
 
-      <div class=" flex flex-col items-center max-w-5xl lg:w-full rounded-4xl px-4 py-12 md:py-16 mx-2 lg:mx-auto my-30 bg-gray-900 text-white">
-        <div class="flex flex-col justify-center items-center text-center false">
-          <h1 class=" text-4xl md:text-[40px] font-serif">Stay Inspired</h1>
-          <p class="text-sm md:text-base text-gray-500/90 mt-2 max-w-174 tracking-tight">
-            Join our newsletter and be the first to discover new destinations,
-            exclusive offers, and travel inspiration.
+      <div className={`py-30 ${theme === "dark" ? "bg-neutral-900" : "bg-white"}`}>
+        <div
+          class={`flex flex-col items-center max-w-5xl lg:w-full rounded-4xl px-4 py-12 md:py-16 mx-2 lg:mx-auto  bg-gray-900 text-white`}
+        >
+          <div class="flex flex-col justify-center items-center text-center false">
+            <h1 class=" text-4xl md:text-[40px] font-serif">Stay Inspired</h1>
+            <p class="text-sm md:text-base text-gray-500/90 mt-2 max-w-174 tracking-tight">
+              Join our newsletter and be the first to discover new destinations,
+              exclusive offers, and travel inspiration.
+            </p>
+          </div>
+          <div class="flex flex-col md:flex-row items-center justify-center gap-4 mt-6">
+            <input
+              class="bg-white/10 px-4 py-2.5 border border-white/20 rounded-2xl outline-none max-w-66 w-full"
+              placeholder="Enter your email"
+              type="text"
+            />
+            <button class="flex items-center justify-center gap-2 group bg-black px-4 md:px-7 py-2.5 rounded-2xl cursor-pointer active:scale-95 transition-all">
+              Subscribe
+              <img
+                alt="arrow-icon"
+                class="w-3.5 invert group-hover:translate-x-1 transition-all"
+                src="data:image/svg+xml,%3csvg%20width='15'%20height='11'%20viewBox='0%200%2015%2011'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M0.999912%205.5L14.0908%205.5'%20stroke='%23000'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3cpath%20d='M8.94796%201L14.0908%205.5L8.94796%2010'%20stroke='%23000'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/svg%3e"
+              />
+            </button>
+          </div>
+          <p class="text-gray-500 mt-6 text-xs text-center">
+            By subscribing, you agree to our Privacy Policy and consent to
+            receive updates.
           </p>
         </div>
-        <div class="flex flex-col md:flex-row items-center justify-center gap-4 mt-6">
-          <input
-            class="bg-white/10 px-4 py-2.5 border border-white/20 rounded-2xl outline-none max-w-66 w-full"
-            placeholder="Enter your email"
-            type="text"
-          />
-          <button class="flex items-center justify-center gap-2 group bg-black px-4 md:px-7 py-2.5 rounded-2xl cursor-pointer active:scale-95 transition-all">
-            Subscribe
-            <img
-              alt="arrow-icon"
-              class="w-3.5 invert group-hover:translate-x-1 transition-all"
-              src="data:image/svg+xml,%3csvg%20width='15'%20height='11'%20viewBox='0%200%2015%2011'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M0.999912%205.5L14.0908%205.5'%20stroke='%23000'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3cpath%20d='M8.94796%201L14.0908%205.5L8.94796%2010'%20stroke='%23000'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/svg%3e"
-            />
-          </button>
-        </div>
-        <p class="text-gray-500 mt-6 text-xs text-center">
-          By subscribing, you agree to our Privacy Policy and consent to receive
-          updates.
-        </p>
       </div>
     </>
   );

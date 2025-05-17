@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import Autoplay from "embla-carousel-autoplay";
-
-import { Card, CardContent } from "@/components/ui/card";
+import { CiLocationOn } from "react-icons/ci";
 import {
   Carousel,
   CarouselContent,
@@ -14,6 +13,8 @@ import axios from "axios";
 import { useTheme } from "../components/ThemeProvider";
 import { Link } from "react-router-dom";
 import { IoSearchOutline } from "react-icons/io5";
+import { CiLocationArrow1 } from "react-icons/ci";
+
 const RoomsPage = () => {
   const [hotelData, setHotelData] = useState([]);
 
@@ -89,16 +90,27 @@ const RoomsPage = () => {
 
   const { theme } = useTheme();
   const plugin = useRef(Autoplay({ delay: 4000, stopOnInteraction: true }));
-   
 
   return (
-    <div className=" pt-28 md:pt-33 px-4 md:px-16 lg:px-24 xl:px-32 min-h-110">
-      <div className="w-full lg:w-[70%] bg-neutral-50 px-6 py-7 rounded-4xl shadow-[0px_0px_0px_1px_rgba(0,0,0,0.06),0px_1px_1px_-0.5px_rgba(0,0,0,0.06),0px_3px_3px_-1.5px_rgba(0,0,0,0.06),_0px_6px_6px_-3px_rgba(0,0,0,0.06),0px_12px_12px_-6px_rgba(0,0,0,0.06),0px_24px_24px_-12px_rgba(0,0,0,0.06)]">
+    <div
+      className={` pt-28 md:pt-33 px-4 md:px-16 lg:px-24 xl:px-32 min-h-110 ${
+        theme === "dark" ? "bg-neutral-900 text-white" : " text-black"
+      }`}
+    >
+      <div
+        className={`w-full lg:w-[70%]  px-6 py-7 rounded-4xl shadow-[0px_0px_0px_1px_rgba(0,0,0,0.06),0px_1px_1px_-0.5px_rgba(0,0,0,0.06),0px_3px_3px_-1.5px_rgba(0,0,0,0.06),_0px_6px_6px_-3px_rgba(0,0,0,0.06),0px_12px_12px_-6px_rgba(0,0,0,0.06),0px_24px_24px_-12px_rgba(0,0,0,0.06)] ${
+          theme === "dark" ? "bg-neutral-800 text-white" : "bg-white text-black"
+        }`}
+      >
         <div>
           <h1 className="font-serif text-4xl md:text-[40px] tracking-tight">
             Find your perfect stay
           </h1>
-          <p className="text-sm md:text-base text-gray-500/90 mt-2 max-w-174 tracking-tight">
+          <p
+            className={`text-sm md:text-base  mt-2 max-w-174 tracking-tight ${
+              theme === "dark" ? "text-gray-300" : "text-gray-500/90"
+            }`}
+          >
             Take advantage of our limited-time offers and special packages to
             enhance your stay and create unforgettable memories.
           </p>
@@ -115,7 +127,11 @@ const RoomsPage = () => {
               onClick={() => window.scrollTo(0, 0)}
             >
               <div
-                className={`sm:flex sm:flex-row-reverse gap-5  border-b pb-5 border-neutral-500  p-[5px]  bg-white text-black mt-10 justify-center }`}
+                className={`sm:flex sm:flex-row-reverse  gap-5    border-neutral-500  p-[5px]   text-black mt-10 justify-center ${
+                  theme === "dark"
+                    ? "bg-neutral-800 text-white rounded-4xl"
+                    : "bg-white text-black pb-5 border-b"
+                } }`}
               >
                 <div className="">
                   <Carousel
@@ -170,31 +186,23 @@ const RoomsPage = () => {
           ))}
         </div>
 
-        <form className="md:w-[30%]  text-gray-500 rounded-3xl px-6 py-4  flex flex-col  max-md:items-start gap-4 max-md:mx-auto lg:sticky top-25 mb-20 shadow-[0px_0px_0px_1px_rgba(0,0,0,0.06),0px_1px_1px_-0.5px_rgba(0,0,0,0.06),0px_3px_3px_-1.5px_rgba(0,0,0,0.06),_0px_6px_6px_-3px_rgba(0,0,0,0.06),0px_12px_12px_-6px_rgba(0,0,0,0.06),0px_24px_24px_-12px_rgba(0,0,0,0.06)]">
-          <h1 className="font-serif text-2xl tracking-tight text-black">
-            Apply Filters
-          </h1>
+        <form
+          className={`md:w-[30%]  text-gray-500 rounded-3xl px-6 py-4  flex flex-col  max-md:items-start gap-4 max-md:mx-auto lg:sticky top-25 mb-20 shadow-[0px_0px_0px_1px_rgba(0,0,0,0.06),0px_1px_1px_-0.5px_rgba(0,0,0,0.06),0px_3px_3px_-1.5px_rgba(0,0,0,0.06),_0px_6px_6px_-3px_rgba(0,0,0,0.06),0px_12px_12px_-6px_rgba(0,0,0,0.06),0px_24px_24px_-12px_rgba(0,0,0,0.06)] ${
+            theme === "dark"
+              ? "bg-neutral-800 text-white"
+              : "bg-white text-black"
+          }`}
+        >
+          <h1 className="font-serif text-2xl tracking-tight ">Apply Filters</h1>
 
           <div>
             <label htmlFor="state">
               <div className="flex items-center gap-2">
-                <svg
-                  className="w-4 h-4 text-gray-800"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 10h16M8 14h8m-4-7V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"
-                  />
-                </svg>
+                <CiLocationOn
+                  className={` text-lg ${
+                    theme === "dark" ? "text-white" : "text-black"
+                  } `}
+                />
                 <span className="font-serif">State</span>
               </div>
               <select
@@ -202,9 +210,18 @@ const RoomsPage = () => {
                 value={state}
                 onChange={(e) => setState(e.target.value)}
                 required
-                className="mt-1 w-full  px-3 py-1.5 rounded-md font-serif border bg-white  border-gray-500 sm:text-sm outline-none "
+                className="mt-1 w-full  px-3 py-1.5 rounded-md font-serif border   border-gray-500 sm:text-sm outline-none "
               >
-                <option value="">Select a state</option>
+                <option
+                  className={`${
+                    theme === "dark"
+                      ? "bg-neutral-700 text-white border-gray-600"
+                      : "bg-white text-black border-gray-300"
+                  }`}
+                  value=""
+                >
+                  Select a state
+                </option>
                 {stateData.map((s, index) => (
                   <option
                     className={`${
@@ -225,23 +242,11 @@ const RoomsPage = () => {
           <div className="">
             <label htmlFor="state">
               <div className="flex items-center gap-2">
-                <svg
-                  className="w-4 h-4 text-gray-800"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 10h16M8 14h8m-4-7V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"
-                  />
-                </svg>
+                <CiLocationArrow1
+                  className={` text-lg ${
+                    theme === "dark" ? "text-white" : "text-black"
+                  } `}
+                />
                 <span className="font-serif">City</span>
               </div>
               <select
@@ -249,9 +254,18 @@ const RoomsPage = () => {
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
                 required
-                className="mt-1 w-full  px-3 py-1.5 rounded-md font-serif border bg-white border-gray-500 sm:text-sm outline-none "
+                className="mt-1 w-full  px-3 py-1.5 rounded-md font-serif border  border-gray-500 sm:text-sm outline-none "
               >
-                <option value="">Select a City</option>
+                <option
+                  className={`${
+                    theme === "dark"
+                      ? "bg-neutral-700 text-white border-gray-600"
+                      : "bg-white text-black border-gray-300"
+                  }`}
+                  value=""
+                >
+                  Select a City
+                </option>
                 {cityData.map((s, index) => (
                   <option
                     className={`${
@@ -272,7 +286,11 @@ const RoomsPage = () => {
           <div className=" ">
             <label htmlFor="state">
               <div className="flex items-center gap-1.5">
-                <IoSearchOutline className="text-black" />
+                <IoSearchOutline
+                  className={`${
+                    theme === "dark" ? "text-white" : "text-black"
+                  }`}
+                />
                 <span className="font-serif">Search</span>
               </div>
               <div>
@@ -282,7 +300,7 @@ const RoomsPage = () => {
                   onChange={(e) => setSearch(e.target.value)}
                   value={search}
                   required
-                  className="mt-1 w-full  px-3 py-1 rounded-md font-serif border bg-white border-gray-500 sm:text-sm outline-none "
+                  className="mt-1 w-full  px-3 py-1 rounded-md font-serif border  border-gray-500 sm:text-sm outline-none "
                 />
               </div>
             </label>

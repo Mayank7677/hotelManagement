@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 import { ModeToggle } from "../components/modeToggle";
+import { useTheme } from "../components/ThemeProvider";
 
 const NavBar = () => {
   const navLinks = [
@@ -77,11 +78,18 @@ const NavBar = () => {
     navigate("/");
   };
 
+  const isAdminRoute = location.pathname.startsWith("/admin");
+
+    const { theme } = useTheme();
+  
+
   return (
     <nav
       className={`fixed top-0 left-0 w-full flex items-center justify-between px-4 md:px-16 lg:px-24 xl:px-32 transition-all duration-500 z-50 ${
         isScrolled
-          ? "bg-white/80 shadow-md text-gray-700 backdrop-blur-lg py-3 rounded-b-4xl"
+          ? theme === "dark"
+            ? "bg-neutral-800 backdrop-blur-lg py-3 rounded-b-4xl shadow-md text-white border-b border-neutral-500"
+            : "bg-white/80 shadow-md text-gray-700 backdrop-blur-lg py-3 rounded-b-4xl"
           : "py-4 md:py-6"
       }`}
     >
@@ -93,7 +101,11 @@ const NavBar = () => {
       >
         <p
           className={`text-3xl font-serif ${
-            isScrolled ? "text-gray-700" : "text-white"
+            isScrolled
+              ? theme === "dark"
+                ? "text-gray-200"
+                : "text-gray-700"
+              : "text-white"
           }`}
         >
           QuickStays
@@ -102,29 +114,43 @@ const NavBar = () => {
 
       {/* Desktop Nav */}
       <div className="hidden md:flex items-center gap-4 lg:gap-8">
-        {navLinks.map((link, i) => (
-          <Link
-            key={i}
-            to={link.path}
-            onClick={() => window.scrollTo(0, 0)}
-            className={`group flex flex-col gap-0.5 font-serif ${
-              isScrolled ? "text-gray-700" : "text-white"
-            }`}
-          >
-            {link.name}
-            <div
-              className={`$${
-                isScrolled ? "bg-gray-700" : "bg-white"
-              } h-0.5 w-0 group-hover:w-full transition-all duration-300`}
-            />
-          </Link>
-        ))}
+        {!isAdminRoute &&
+          navLinks.map((link, i) => (
+            <Link
+              key={i}
+              to={link.path}
+              onClick={() => window.scrollTo(0, 0)}
+              className={`group  flex flex-col gap-0.5 font-serif ${
+                isScrolled
+                  ? theme === "dark"
+                    ? "text-gray-200"
+                    : "text-gray-700"
+                  : "text-white"
+              }`}
+            >
+              {link.name}
+              <div
+                className={`h-[1px] w-0 group-hover:w-full transition-all duration-300  ${
+                  isScrolled ? "bg-gray-700" : "bg-white"
+                }`}
+              ></div>
+              <div
+                className={`$${
+                  isScrolled ? "bg-gray-700" : "bg-white"
+                } h-0.5 w-0 group-hover:w-full transition-all duration-300`}
+              />
+            </Link>
+          ))}
 
-        {isAdmin && (
+        {isAdmin && !isAdminRoute && (
           <Link to="/admin" onClick={() => window.scrollTo(0, 0)}>
             <button
-              className={`border px-4 py-1 text-sm font-[400] rounded-full cursor-pointer ${
-                isScrolled ? "text-black" : "text-white"
+              className={`border border-gray-400 px-4 py-1 text-sm font-[400] rounded-full cursor-pointer ${
+                isScrolled
+                  ? theme === "dark"
+                    ? "text-gray-200"
+                    : "text-gray-900"
+                  : "text-white"
               } transition-all`}
             >
               Dashboard
@@ -147,7 +173,11 @@ const NavBar = () => {
                 />
                 <p
                   className={`font-serif ${
-                    isScrolled ? "text-gray-700" : "text-white"
+                    isScrolled
+                      ? theme === "dark"
+                        ? "text-gray-200"
+                        : "text-gray-700"
+                      : "text-white"
                   }`}
                 >
                   Hyy, {name}
@@ -199,7 +229,7 @@ const NavBar = () => {
         <ModeToggle />
         <span
           className={`text-xl text-white cursor-pointer ${
-            isScrolled ? "invert" : ""
+            isScrolled ? (theme === "dark" ? "text-gray-200" : "invert") : ""
           }`}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
@@ -209,8 +239,12 @@ const NavBar = () => {
 
       {/* Mobile Menu */}
       <div
-        className={`fixed top-0 left-0 w-full h-screen bg-white flex flex-col md:hidden items-center justify-center gap-6 text-gray-800 transition-all duration-500 ${
-          isMenuOpen ? "translate-x-0" : "-translate-x-full"
+        className={`  fixed top-0 left-0 w-full h-screen  flex flex-col md:hidden items-center justify-center gap-6 text-gray-800 transition-all duration-500 ${
+          isMenuOpen
+            ? theme === "dark"
+              ? "bg-neutral-800 text-white"
+              : "bg-white translate-x-0"
+            : "-translate-x-full"
         }`}
       >
         <button

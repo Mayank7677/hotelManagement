@@ -1,6 +1,16 @@
 import React from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useTheme } from "../ThemeProvider";
+import { TfiHome } from "react-icons/tfi";
+import {
+  CiBookmarkMinus,
+  CiLocationArrow1,
+  CiLocationOn,
+} from "react-icons/ci";
+import { CiHome } from "react-icons/ci";
+import { IoBedOutline } from "react-icons/io5";
+import { PiNewspaperClippingLight } from "react-icons/pi";
+import { SlUserFollowing } from "react-icons/sl";
 
 const Dashboard = () => {
   const dashboardicon = (
@@ -62,85 +72,125 @@ const Dashboard = () => {
   );
 
   const sidebarLinks = [
-    { name: "Add State", path: "/admin", icon: dashboardicon },
-    { name: "Add City", path: "/admin/city", icon: overviewicon },
-    { name: "Add Hotel", path: "/admin/hotel", icon: chaticon },
-    { name: "Add Room", path: "/admin/room", icon: chaticon },
-    { name: "Home", path: "/", icon: chaticon },
+    { name: "Add State", path: "/admin/state", icon: <CiLocationOn /> },
+    { name: "Add City", path: "/admin/city", icon: <CiLocationArrow1 /> },
+    { name: "Add Hotel", path: "/admin/hotel", icon: <CiHome /> },
+    { name: "Add Room", path: "/admin/room", icon: <IoBedOutline /> },
+    {
+      name: "Create Coupons",
+      path: "/admin/coupon",
+      icon: <PiNewspaperClippingLight />,
+    },
   ];
-
   const sidebarLinks2 = [
-    { name: "Bookings", path: "/admin/booking", icon: dashboardicon },
-    { name: "Create Coupons", path: "/admin/coupon", icon: overviewicon },
+    { name: "Bookings", path: "/admin", icon: <CiBookmarkMinus /> },
+    {
+      name: "User Check-In",
+      path: "/admin/userCheck",
+      icon: <SlUserFollowing />,
+    },
+
     // { name: "Add Hotel", path: "/admin/hotel", icon: chaticon },
     // { name: "Add Room", path: "/admin/room", icon: chaticon },
     // { name: "Home", path: "/home", icon: chaticon },
   ];
-      const {theme} = useTheme();
-  
+  const { theme } = useTheme();
 
   return (
     <>
       {/* Sidebar + Main Content */}
-      <div className="flex min-h-screen pt-15 relative ">
+      <div className={`flex min-h-screen pt-15 relative `}>
         {/* Sidebar */}
-        <div className="md:w-55 w-15 h-full fixed  sm:pr-2 text-base  mt-5  gap-2 flex flex-col transition-all duration-300   pt-4  border border-neutral-200 rounded-tr-3xl bg-neutral-100 ">
-          <p className="  py-2 font-serif text-2xl  tracking-tighter text-center rounded-2xl underline">
-            Manage Locations
-          </p>
+        <div
+          className={`md:w-54 w-10 h-full fixed  sm:pr-2 text-base   gap-2 flex flex-col transition-all duration-300 pt-7 border-neutral-200 ${
+            theme === "dark"
+              ? "bg-neutral-900 text-white"
+              : "bg-[#f9fbfc] text-black"
+          }`}
+        >
+          <div className="border-b border-neutral-300 flex flex-col gap-1 pt-2 pb-3 ">
+            {sidebarLinks2.map((item, index) => (
+              <NavLink
+                to={item.path}
+                key={index}
+                end={item.path === "/admin"}
+                className={({ isActive }) =>
+                  `flex items-center font-serif gap-2 py-1 px-2  transition-colors duration-200 ${
+                    isActive
+                      ? theme === "dark"
+                        ? "bg-neutral-800 text-white"
+                        : "bg-white border-r-7 border-y border-gray-300  text-black"
+                      : theme === "dark"
+                      ? "text-neutral-300 hover:bg-neutral-800 hover:text-white"
+                      : "text-black hover:bg-white hover:text-black"
+                  }`
+                }
+              >
+                <p
+                  className={` text-xl  ${
+                    theme === "dark"
+                      ? "text-white hover:bg-neutral-800 hover:"
+                      : "text-black hover:bg-white"
+                  } `}
+                >
+                  {item.icon}
+                </p>
+                <p className="md:block hidden text-center ">{item.name}</p>
+              </NavLink>
+            ))}
+          </div>
 
-          {sidebarLinks.map((item, index) => (
-            <NavLink
-              to={item.path}
-              key={index}
-              end={item.path === "/admin"}
-              className={({ isActive }) =>
-                `flex items-center font-serif gap-2 p-2 rounded-r-4xl transition-colors duration-200 ${
-                  isActive
-                    ? theme === "dark"
-                      ? "bg-neutral-900 text-white"
-                      : "bg-white text-black"
-                    : theme === "dark"
-                    ? "text-gray-400 hover:bg-neutral-800 hover:text-white"
-                    : "text-black hover:bg-gray-100 hover:text-black"
-                }`
-              }
-            >
-              {item.icon}
-              <p className="md:block hidden text-center">{item.name}</p>
-            </NavLink>
-          ))}
+          <div className="border-b border-neutral-300 flex flex-col gap-1 pb-3 ">
+            {sidebarLinks.map((item, index) => (
+              <NavLink
+                to={item.path}
+                key={index}
+                end={item.path === "/admin"}
+                className={({ isActive }) =>
+                  `flex items-center font-serif gap-1.5 py-1 px-2  transition-colors duration-200 ${
+                    isActive
+                      ? theme === "dark"
+                        ? "bg-neutral-800 text-white"
+                        : "bg-white  border-y border-gray-300  text-black border-r-7"
+                      : theme === "dark"
+                      ? "text-neutral-300 hover:bg-neutral-800 hover:text-white"
+                      : "text-black hover:bg-white hover:text-black "
+                  }`
+                }
+              >
+                <p
+                  className={` text-xl ${
+                    theme === "dark" ? "text-white" : "text-black"
+                  } `}
+                >
+                  {item.icon}
+                </p>
+                <p className="md:block hidden text-center">{item.name}</p>
+              </NavLink>
+            ))}
+          </div>
 
-          <p className="  py-2 font-serif text-2xl  tracking-tighter text-center mt-2 rounded-2xl underline">
-            Manage Booking
-          </p>
-
-          {sidebarLinks2.map((item, index) => (
-            <NavLink
-              to={item.path}
-              key={index}
-              end={item.path === "/admin"}
-              className={({ isActive }) =>
-                `flex items-center font-serif gap-2 p-2 rounded-r-4xl transition-colors duration-200 ${
-                  isActive
-                    ? theme === "dark"
-                      ? "bg-neutral-900 text-white"
-                      : "bg-white text-black"
-                    : theme === "dark"
-                    ? "text-gray-400 hover:bg-neutral-800 hover:text-white"
-                    : "text-black hover:bg-gray-100 hover:text-black"
-                }`
-              }
-            >
-              {item.icon}
-              <p className="md:block hidden text-center">{item.name}</p>
-            </NavLink>
-          ))}
+          <div className="py-2">
+            <Link to="/" onClick={() => window.scrollTo(0, 0)}>
+              <div
+                className={`flex items-center font-serif cursor-pointer gap-2 py-1 px-2 rounded-r-4xl transition-colors duration-200 ${
+                  theme === "dark"
+                    ? "text-neutral-300 hover:bg-neutral-800 hover:text-white"
+                    : "text-black hover:bg-white hover:text-black"
+                }`}
+              >
+                <p className="text-lg">
+                  <TfiHome />
+                </p>
+                <p className="max-md:hidden">View</p>
+              </div>
+            </Link>
+          </div>
         </div>
 
         {/* Main Content */}
         <div
-          className={`flex-1 p-6 pb-10 rounded-t-3xl mt-5 border border-neutral-200  md:ml-58 ml-16  w-[85vw]  h-full fixed overflow-scroll ${
+          className={`flex-1 p-7 pb-10  border border-neutral-200  md:ml-52 ml-10  w-[87vw]  h-full fixed overflow-scroll ${
             theme === "dark"
               ? "bg-neutral-900 text-white  border-neutral-500"
               : "bg-white text-black border-gray-300"

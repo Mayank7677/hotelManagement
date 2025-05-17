@@ -116,10 +116,10 @@ const BookRoom = () => {
   const { theme } = useTheme();
 
   return (
-    <div className="min-h-screen pt-30 sm:pt-25 px-1  sm:px-15 pb-15  ">
-      <h1 className="text-4xl  tracking-tight font-serif pl-[9%]">Book Room</h1>
+    <div className={`min-h-screen pt-30 sm:pt-25 px-1  sm:px-15 pb-15 ${theme === "dark" ? "bg-neutral-900 text-white" : " text-black"}`}>
+      <h1 className="text-4xl  tracking-tight font-serif pl-[8%]">Book Room</h1>
 
-      <div className="mt-10 sm:px-5  ">
+      <div className=" sm:px-5  ">
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col sm:flex-row gap-10 justify-evenly items-center">
             {/* left side */}
@@ -226,7 +226,7 @@ const BookRoom = () => {
             <div
               className={`flex flex-col gap-5 justify-center rounded-4xl  border p-10 ${
                 theme === "dark"
-                  ? "bg-neutral-900 text-white border-gray-500"
+                  ? "bg-neutral-800 text-white border-neutral-500"
                   : "bg-white text-black border-gray-300"
               }`}
             >

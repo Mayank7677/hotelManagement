@@ -56,8 +56,9 @@ const RoomDetails = () => {
   const handleBookNow = () => {
     const userData = JSON.parse(localStorage.getItem("data"));
     if (!userData) {
+      window.scrollTo(0, 0);
       // send them to login and remember where they came from
-      navigate("/login", { replace: true, state: { from: pathname } });
+      navigate("/login",  { replace: true, state: { from: pathname } });
       return;
     }
 
@@ -91,7 +92,11 @@ const RoomDetails = () => {
    * TEMPLATE
    * ------------------------*/
   return (
-    <div className="pt-24 pb-24 px-4 sm:px-10 md:px-40 lg:px-52 flex flex-col gap-10">
+    <div
+      className={`pt-24 pb-24 px-4 sm:px-10 md:px-40 lg:px-52 flex flex-col gap-10 ${
+        theme === "dark" ? "bg-neutral-900 text-white" : " text-black"
+      }`}
+    >
       {/* Header */}
       <header className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-3xl sm:text-4xl font-serif tracking-tight">
@@ -130,7 +135,7 @@ const RoomDetails = () => {
           <address
             className={`not-italic whitespace-pre-line font-serif border rounded-2xl p-4 ${
               theme === "dark"
-                ? "bg-neutral-900 text-white border-gray-600"
+                ? "bg-neutral-800 text-white border-neutral-500"
                 : "bg-white border-gray-300"
             }`}
           >
@@ -141,7 +146,9 @@ const RoomDetails = () => {
       </section>
 
       {/* Booking card */}
-      <section className="border-t border-gray-300 pt-10 flex justify-between items-center">
+      <section
+        className={`border-t border-gray-300 pt-10 flex justify-between items-center`}
+      >
         <div className=" flex flex-col gap-8">
           <div className="flex gap-5 items-center">
             <div>
@@ -212,7 +219,7 @@ const RoomDetails = () => {
         <div
           className={` max-w-md border rounded-2xl px-8 py-6 flex flex-col gap-6 ${
             theme === "dark"
-              ? "bg-neutral-900 text-white border-gray-600"
+              ? "bg-neutral-800 text-white border-neutral-500"
               : "bg-white text-black border-gray-300"
           }`}
         >

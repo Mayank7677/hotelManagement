@@ -19,7 +19,7 @@ const RoomCard = ({ room }) => {
   return (
     <div
       className={`w-fit overflow-hidden p-2 pb-5 border rounded-3xl ${
-        theme === "dark" ? "border-gray-600 bg-neutral-900" : "border-gray-300 "
+        theme === "dark" ? "border-gray-600 bg-neutral-800" : "border-gray-300 "
       }`}
     >
       <Link to={`/roomsdetail/${room._id}`} state={{ roomData: room }} onClick={() => window.scrollTo(0, 0)}>

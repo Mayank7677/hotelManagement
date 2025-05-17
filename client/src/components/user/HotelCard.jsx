@@ -24,8 +24,7 @@ const imgArr = [
 const HotelCard = ({ hotel }) => {
   const plugin = useRef(Autoplay({ delay: 4000, stopOnInteraction: true }));
 
-     const {theme} = useTheme();
-   
+  const { theme } = useTheme();
 
   return (
     <Link
@@ -90,7 +89,13 @@ const HotelCard = ({ hotel }) => {
         </div>
       </div> */}
 
-      <div className=" rounded-3xl pb-4 w-fit sm:w-80 shadow-[0px_0px_0px_1px_rgba(0,0,0,0.06),0px_1px_1px_-0.5px_rgba(0,0,0,0.06),0px_3px_3px_-1.5px_rgba(0,0,0,0.06),_0px_6px_6px_-3px_rgba(0,0,0,0.06),0px_12px_12px_-6px_rgba(0,0,0,0.06),0px_24px_24px_-12px_rgba(0,0,0,0.06)]">
+      <div
+        className={`  rounded-3xl pb-4 w-fit sm:w-80 shadow-[0px_0px_0px_1px_rgba(0,0,0,0.06),0px_1px_1px_-0.5px_rgba(0,0,0,0.06),0px_3px_3px_-1.5px_rgba(0,0,0,0.06),_0px_6px_6px_-3px_rgba(0,0,0,0.06),0px_12px_12px_-6px_rgba(0,0,0,0.06),0px_24px_24px_-12px_rgba(0,0,0,0.06)] ${
+          theme === "dark"
+            ? "bg-neutral-800 text-white border border-neutral-700"
+            : "bg-white text-black border-gray-300"
+        }`}
+      >
         <div>
           <Carousel
             plugins={[plugin.current]}

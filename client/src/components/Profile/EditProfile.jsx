@@ -80,7 +80,7 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="font-serif ">
+    <div className="font-serif pb-20">
       <h1 className="font-medium mt-5 text-3xl tracking-tighter">
         Edit Profile
       </h1>

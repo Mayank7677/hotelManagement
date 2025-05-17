@@ -127,6 +127,7 @@ exports.login = async (req, res) => {
 };
 
 exports.verifyOtp = async (req, res) => {
+  console.log(req.body);
   try {
     const { email, otp } = req.body;
 
@@ -134,6 +135,9 @@ exports.verifyOtp = async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: "OTP not found or expired" });
     }
+
+    // console.log(user.otp)
+    // console.log(Number(otp) === Number(user.otp));
 
     const currTime = moment(); // current moment
 
@@ -143,7 +147,7 @@ exports.verifyOtp = async (req, res) => {
         .json({ message: "OTP expired. Please login again." });
     }
 
-    if (toString(otp) !== toString(user.otp)) {
+    if (Number(otp) !== Number(user.otp)) {
       return res.status(400).json({ message: "Invalid OTP" });
     }
 

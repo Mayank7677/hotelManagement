@@ -32,7 +32,9 @@ const RoomPage = () => {
   const { theme } = useTheme();
 
   return (
-    <div className="pt-25 px-6 md:px-16 lg:px-24 xl:px-32 flex flex-col   pb-25 ">
+    <div
+      className={`pt-25 px-6 md:px-16 lg:px-24 xl:px-32 flex flex-col   pb-25  ${theme === "dark" ? "bg-neutral-900 text-white" : " text-black"}`}
+    >
       <div
         className=" w-full mb-5 border-b pb-7 border-gray-400 p-4 rounded-2xl bg-cover bg-center"
         // style={{
@@ -53,7 +55,7 @@ const RoomPage = () => {
         <p
           className={`tracking-tight font-serif mt-4 border p-3 rounded-2xl w-fit ${
             theme === "dark"
-              ? "bg-neutral-900 text-white border-gray-500"
+              ? "bg-neutral-800 text-white border-gray-500"
               : "bg-white text-black border-gray-300"
           }`}
         >

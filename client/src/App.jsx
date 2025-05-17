@@ -29,70 +29,74 @@ import YourBookings from "./components/Profile/YourBookings";
 import ForgetPass from "./components/Profile/ForgetPass";
 import RoomsPage from "./Pages/RoomsPage";
 import ManageBookings from "./components/Profile/ManageBookings";
+import UserCheckIn from "./components/admin/UserCheckIn/UserCheckIn";
+import { useTheme } from "./components/ThemeProvider";
 
 const App = () => {
+  const theme = useTheme();
   return (
-    <BrowserRouter>
-      <Toaster />
+      <BrowserRouter>
+        <Toaster />
 
-      <Routes>
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/reset" element={<ResetPassPage />} />
+        <Routes>
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/reset" element={<ResetPassPage />} />
 
-        <Route element={<MainLayout />}>
-          <Route path="/" element={<AllHotels />} />
-          <Route path="/allHotels" element={<RoomsPage />} />
-          <Route path="/roomPage/:id" element={<RoomPage />} />
-          <Route path="/roomsdetail/:id" element={<RoomDetails />} />
-          <Route
-            path="/bookRoom"
-            element={
-              <CheckToken>
-                <BookRoom />
-              </CheckToken>
-            }
-          />
+          <Route element={<MainLayout />}>
+            <Route path="/" element={<AllHotels />} />
+            <Route path="/allHotels" element={<RoomsPage />} />
+            <Route path="/roomPage/:id" element={<RoomPage />} />
+            <Route path="/roomsdetail/:id" element={<RoomDetails />} />
+            <Route
+              path="/bookRoom"
+              element={
+                <CheckToken>
+                  <BookRoom />
+                </CheckToken>
+              }
+            />
 
-          {/* Profile routes */}
-          <Route
-            path="/profile"
-            element={
-              <CheckToken>
-                <ProfilePage />
-              </CheckToken>
-            }
-          >
-            <Route index element={<EditProfile />} />
-            <Route path="reset" element={<ForgetPass />} />
-            <Route path="yourbookings" element={<YourBookings />} />
-            <Route path="bookings" element={<ManageBookings />} />
+            {/* Profile routes */}
+            <Route
+              path="/profile"
+              element={
+                <CheckToken>
+                  <ProfilePage />
+                </CheckToken>
+              }
+            >
+              <Route index element={<EditProfile />} />
+              <Route path="reset" element={<ForgetPass />} />
+              <Route path="yourbookings" element={<YourBookings />} />
+              <Route path="bookings" element={<ManageBookings />} />
+            </Route>
+
+            {/* Admin routes  */}
+            <Route
+              path="/admin"
+              element={
+                <AdminRoutes>
+                  <Dashboard />
+                </AdminRoutes>
+              }
+            >
+              <Route index element={<ManageBooking />} />
+              <Route path="state" element={<CreateState />} />
+              <Route path="state/edit/:id" element={<EditState />} />
+              <Route path="city" element={<CreateCity />} />
+              <Route path="city/edit/:id" element={<EditCity />} />
+              <Route path="hotel" element={<CreateHotels />} />
+              <Route path="hotel/edit/:id" element={<EditHotel />} />
+              <Route path="room" element={<CreateRoom />} />
+              <Route path="room/edit/:id" element={<EditRoom />} />
+              <Route path="userCheck" element={<UserCheckIn />} />
+              <Route path="coupon" element={<CreateCouponForm />} />
+              <Route path="coupon/edit/:id" element={<EditCoupon />} />
+            </Route>
           </Route>
-
-          {/* Admin routes  */}
-          <Route
-            path="/admin"
-            element={
-              <AdminRoutes>
-                <Dashboard />
-              </AdminRoutes>
-            }
-          >
-            <Route index element={<CreateState />} />
-            <Route path="state/edit/:id" element={<EditState />} />
-            <Route path="city" element={<CreateCity />} />
-            <Route path="city/edit/:id" element={<EditCity />} />
-            <Route path="hotel" element={<CreateHotels />} />
-            <Route path="hotel/edit/:id" element={<EditHotel />} />
-            <Route path="room" element={<CreateRoom />} />
-            <Route path="room/edit/:id" element={<EditRoom />} />
-            <Route path="booking" element={<ManageBooking />} />
-            <Route path="coupon" element={<CreateCouponForm />} />
-            <Route path="coupon/edit/:id" element={<EditCoupon />} />
-          </Route>
-        </Route>
-      </Routes>
-    </BrowserRouter>
+        </Routes>
+      </BrowserRouter>
   );
 };
 

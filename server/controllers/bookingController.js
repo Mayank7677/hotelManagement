@@ -89,7 +89,7 @@ exports.getAll = async (req, res) => {
       )
       .populate(
         "roomId",
-        "name address status totalRoom description contactNumber contactEmail roomNumber"
+        "name address status totalRoom description contactNumber contactEmail roomNumber images"
       )
       .populate("userId", "name email age phone role status");
 

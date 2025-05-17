@@ -2,6 +2,16 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Link } from "react-router-dom";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { useTheme } from "../../ThemeProvider";
 
 const CreateCouponForm = () => {
   const [formData, setFormData] = useState({
@@ -96,7 +106,9 @@ const CreateCouponForm = () => {
     } catch (error) {
       console.log(error?.response?.data?.message);
     }
-  }
+  };
+
+  const {theme} = useTheme()
 
   return (
     <div className="pb-10 font-serif">
@@ -193,51 +205,77 @@ const CreateCouponForm = () => {
             Active Coupons
           </h2>
 
-          <div className="flex flex-col sm:flex-row gap-5 mt-10 sm:px-5 max-sm:w-full sm:w-3/4">
-            {couponData
-              .filter((coupon) => coupon.isActive)
-              .map((coupon) => (
-                <div className="card  border border-gray-400 p-3 w-fit rounded-2xl">
-                  <div className="flex gap-6 ">
-                    <div>
-                      <h1>Coupon Code </h1>
-                      <h1>Starting Date </h1>
-                      <h1>Expiry Date </h1>
-                      <h1>Discount </h1>
-                    </div>
-
-                    <div>
-                      <p>:</p>
-                      <p>:</p>
-                      <p>:</p>
-                      <p>:</p>
-                    </div>
-                    <div>
-                      <p>{coupon.code}</p>
-                      <p>{coupon.startDate.slice(0, 10)}</p>
-                      <p>{coupon.endDate.slice(0, 10)}</p>
-                      <p>{coupon.discount}%</p>
-                    </div>
-                  </div>
-
-                  <div className="mt-4 flex gap-5">
-                    <Link to={`/admin/coupon/edit/${coupon._id}`} state={{ stateData: coupon }}>
-                      <button className="px-4 py-1 rounded-3xl bg-yellow-500 text-white">
-                        Edit
-                      </button>
-                    </Link>
-                    <button
-                      onClick={() => handleActive(coupon._id)}
-                      className="px-4 py-1 rounded-3xl bg-blue-500 text-white"
+          <div className="mt-5  sm:border border-gray-300 sm:rounded-2xl sm:p-3">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="font-serif text-lg font-[500] w-[100px] ">
+                    S.NO.
+                  </TableHead>
+                  <TableHead className="font-serif text-lg font-[500] ">
+                    Discount (%)
+                  </TableHead>
+                  <TableHead className="font-serif text-lg font-[500] ">
+                    Check-In Date
+                  </TableHead>
+                  <TableHead className="font-serif text-lg font-[500] ">
+                    Check-Out Date
+                  </TableHead>
+                  <TableHead className="font-serif text-lg font-[500] text-end pr-[7%] ">
+                    Manage
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {couponData
+                  .filter((coupon) => coupon.isActive)
+                  .map((coupon, i) => (
+                    <TableRow
+                      className={` ${
+                        theme === "dark"
+                          ? "bg-neutral-800 text-white"
+                          : "bg-white text-neutral-700"
+                      } `}
                     >
-                      Inactive
-                    </button>
-                    <button className="px-4 py-1 rounded-3xl bg-red-500 text-white">
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              ))}
+                      <TableCell className="font-serif"> {i + 1} </TableCell>
+                      <TableCell className="font-serif">
+                        {coupon.discount}
+                      </TableCell>
+                      <TableCell className="font-serif">
+                        {" "}
+                        {new Date(coupon.startDate).toDateString()}{" "}
+                      </TableCell>
+                      <TableCell className="font-serif">
+                        {new Date(coupon.endDate).toDateString()}
+                      </TableCell>
+                      <TableCell className="flex gap-4 justify-end">
+                        <Link
+                          to={`/admin/coupon/edit/${coupon._id}`}
+                          state={{ stateData: coupon }}
+                        >
+                          <p className="px-1.5 py-0.5 rounded-lg font-serif bg-yellow-500 text-white w-fit cursor-pointer">
+                            {/* <FiEdit2 /> */}
+                            Edit
+                          </p>
+                        </Link>
+                        <p
+                          onClick={() => handleActive(coupon._id)}
+                          className="px-1.5 py-0.5 rounded-lg font-serif bg-blue-500 text-white w-fit cursor-pointer"
+                        >
+                          Inactive
+                        </p>
+                        <p
+                          // onClick={() => handleDelete(state._id)}
+                          className="px-1.5 py-0.5 rounded-lg font-serif bg-red-500 text-white w-fit cursor-pointer"
+                        >
+                          {/* <FiEdit2 /> */}
+                          Delete
+                        </p>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
           </div>
         </TabsContent>
 
@@ -246,55 +284,77 @@ const CreateCouponForm = () => {
             Inactive Coupons
           </h2>
 
-          <div className="flex flex-col sm:flex-row gap-5 mt-10 sm:px-5 max-sm:w-full sm:w-3/4">
-            {couponData
-              .filter((coupon) => !coupon.isActive)
-              .map((coupon) => (
-                <div className="card  border border-gray-400 p-3 w-fit rounded-2xl">
-                  <div className="flex gap-6 ">
-                    <div>
-                      <h1>Coupon Code </h1>
-                      <h1>Starting Date </h1>
-                      <h1>Expiry Date </h1>
-                      <h1>Discount </h1>
-                    </div>
-
-                    <div>
-                      <p>:</p>
-                      <p>:</p>
-                      <p>:</p>
-                      <p>:</p>
-                    </div>
-                    <div>
-                      <p>{coupon.code}</p>
-                      <p>{coupon.startDate.slice(0, 10)}</p>
-                      <p>{coupon.endDate.slice(0, 10)}</p>
-                      <p>{coupon.discount}%</p>
-                    </div>
-                  </div>
-
-                  <div className="mt-4 flex gap-5">
-                    <Link
-                      to={`/admin/coupon/edit/${coupon._id}`}
-                      state={{ stateData: coupon }}
+          <div className="mt-5  sm:border border-gray-300 sm:rounded-2xl sm:p-3">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="font-serif text-lg font-[500] w-[100px] ">
+                    S.NO.
+                  </TableHead>
+                  <TableHead className="font-serif text-lg font-[500] ">
+                    Discount (%)
+                  </TableHead>
+                  <TableHead className="font-serif text-lg font-[500] ">
+                    Check-In Date
+                  </TableHead>
+                  <TableHead className="font-serif text-lg font-[500] ">
+                    Check-Out Date
+                  </TableHead>
+                  <TableHead className="font-serif text-lg font-[500] text-end pr-[7%] ">
+                    Manage
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {couponData
+                  .filter((coupon) => !coupon.isActive)
+                  .map((coupon, i) => (
+                    <TableRow
+                      className={` ${
+                        theme === "dark"
+                          ? "bg-neutral-800 text-white"
+                          : "bg-white text-neutral-700"
+                      } `}
                     >
-                      <button className="px-4 py-1 rounded-3xl bg-yellow-500 text-white">
-                        {/* <FiEdit2 /> */}
-                        Edit
-                      </button>
-                    </Link>
-                    <button
-                      onClick={() => handleActive(coupon._id)}
-                      className="px-4 py-1 rounded-3xl bg-blue-500 text-white"
-                    >
-                      Active
-                    </button>
-                    <button className="px-4 py-1 rounded-3xl bg-red-500 text-white">
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              ))}
+                      <TableCell className="font-serif"> {i + 1} </TableCell>
+                      <TableCell className="font-serif">
+                        {coupon.discount}
+                      </TableCell>
+                      <TableCell className="font-serif">
+                        {" "}
+                        {new Date(coupon.startDate).toDateString()}{" "}
+                      </TableCell>
+                      <TableCell className="font-serif">
+                        {new Date(coupon.endDate).toDateString()}
+                      </TableCell>
+                      <TableCell className="flex gap-4 justify-end">
+                        <Link
+                          to={`/admin/coupon/edit/${coupon._id}`}
+                          state={{ stateData: coupon }}
+                        >
+                          <p className="px-1.5 py-0.5 rounded-lg font-serif bg-yellow-500 text-white w-fit cursor-pointer">
+                            {/* <FiEdit2 /> */}
+                            Edit
+                          </p>
+                        </Link>
+                        <p
+                          onClick={() => handleActive(coupon._id)}
+                          className="px-1.5 py-0.5 rounded-lg font-serif bg-blue-500 text-white w-fit cursor-pointer"
+                        >
+                          Active
+                        </p>
+                        <p
+                          // onClick={() => handleDelete(state._id)}
+                          className="px-1.5 py-0.5 rounded-lg font-serif bg-red-500 text-white w-fit cursor-pointer"
+                        >
+                          {/* <FiEdit2 /> */}
+                          Delete
+                        </p>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
           </div>
         </TabsContent>
       </Tabs>

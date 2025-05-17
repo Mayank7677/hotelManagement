@@ -10,7 +10,7 @@ import { HiOutlineMail } from "react-icons/hi";
 import { CgSmartphone } from "react-icons/cg";
 import { BiUser } from "react-icons/bi";
 
-const ManageBooking = () => {
+const UserCheckIn = () => {
   const [bookingData, setBookingData] = useState([]);
 
   const fetchData = async () => {
@@ -91,16 +91,16 @@ const ManageBooking = () => {
   const { theme } = useTheme();
   return (
     <div className="font-serif">
-      <Tabs defaultValue="pending">
+      <Tabs defaultValue="booked">
         <TabsList>
+          <TabsTrigger value="booked">Confirm</TabsTrigger>
           <TabsTrigger value="pending">Pending</TabsTrigger>
-          <TabsTrigger value="booked">Booked</TabsTrigger>
           <TabsTrigger value="cancelled">Cancelled</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="pending">
+        <TabsContent value="booked">
           <h1 className="font-medium mt-5 text-3xl tracking-tighter">
-            Pending Requests
+            Confirm Checked-In by Users
           </h1>
 
           <div className="mt-8 w-full ">
@@ -108,11 +108,11 @@ const ManageBooking = () => {
               <div className="">Hotel Details</div>
               <div className="">Date & Timings</div>
               <div className="">User Details</div>
-              <div className="pl-[3%]">Manage</div>
+              <div className="pl-[3%]">Status</div>
             </div>
 
             {bookingData
-              .filter((data) => data.status === "pending")
+              .filter((data) => data.status === "booked" && data.isChecking === "confirm")
               .map((dets) => (
                 <div className="grid grid-cols-1 max-md:gap-5 md:grid-cols-[3fr_2fr_2fr_1fr] w-full border-b border-gray-300 py-6 first:border-t ">
                   <div className="flex flex-col md:flex-row ">
@@ -242,33 +242,30 @@ const ManageBooking = () => {
                     </div>
                   </div>
 
-                  <div className="flex flex-col w-fit md:items-center">
-                    <>
-                      <button
-                        onClick={() => approvedReq(dets._id)}
-                        class="px-4 py-1.5 mt-4 text-xs border border-blue-500 text-blue-500 rounded-full hover:bg-gray-50 transition-all cursor-pointer font-serif"
-                      >
-                        Confirm
-                      </button>
-                      <button
-                        onClick={() => cancelledReq(dets._id)}
-                        class="px-4 py-1.5 mt-4 text-xs border border-red-500 text-red-500 rounded-full hover:bg-gray-50 transition-all cursor-pointer font-serif"
-                      >
-                        Cancell
-                      </button>
-                      {/* <button class="px-4 py-1.5 mt-4 text-xs border border-yellow-400 text-yellow-400 rounded-full hover:bg-gray-50 transition-all cursor-pointer font-serif">
-                        Pending
-                      </button> */}
-                    </>
+                  <div class="flex flex-row md:items-center md:gap-12 gap-8">
+                    <div className="flex flex-col w-fit md:items-center">
+                      <>
+                        <div className="flex items-center gap-2">
+                          <div
+                            className={`h-3 w-3 rounded-full bg-blue-500`}
+                          ></div>
+                          <p
+                            className={`text-sm font-serif rounded-full text-blue-500`}
+                          >
+                            Confirmed
+                          </p>
+                        </div>
+                      </>
+                    </div>{" "}
                   </div>
                 </div>
               ))}
           </div>
         </TabsContent>
 
-        <TabsContent value="booked">
+        <TabsContent value="pending">
           <h1 className="font-medium mt-5 text-3xl tracking-tighter">
-            Booked Requests
+            Request Pending by Users
           </h1>
 
           <div className="mt-8 w-full ">
@@ -276,11 +273,14 @@ const ManageBooking = () => {
               <div className="">Hotel Details</div>
               <div className="">Date & Timings</div>
               <div className="">User Details</div>
-              <div className="pl-[3%]">Manage</div>
+              <div className="pl-[3%]">Status</div>
             </div>
 
             {bookingData
-              .filter((data) => data.status === "booked")
+              .filter(
+                (data) =>
+                  data.status === "booked" && data.isChecking === "pending"
+              )
               .map((dets) => (
                 <div className="grid grid-cols-1 max-md:gap-5 md:grid-cols-[3fr_2fr_2fr_1fr] w-full border-b border-gray-300 py-6 first:border-t ">
                   <div className="flex flex-col md:flex-row ">
@@ -410,243 +410,30 @@ const ManageBooking = () => {
                     </div>
                   </div>
 
-                  <div className="flex flex-col w-fit md:items-center">
-                    <>
-                      {/* <button
-                        onClick={() => approvedReq(dets._id)}
-                        class="px-4 py-1.5 mt-4 text-xs border border-blue-500 text-blue-500 rounded-full hover:bg-gray-50 transition-all cursor-pointer font-serif"
-                      >
-                        Confirm
-                      </button> */}
-                      <button
-                        onClick={() => cancelledReq(dets._id)}
-                        class="px-4 py-1.5 mt-4 text-xs border border-red-500 text-red-500 rounded-full hover:bg-gray-50 transition-all cursor-pointer font-serif"
-                      >
-                        Cancell
-                      </button>
-
-                      <button
-                        onClick={() => pendingReq(dets._id)}
-                        class="px-4 py-1.5 mt-4 text-xs border border-yellow-400 text-yellow-400 rounded-full hover:bg-gray-50 transition-all cursor-pointer font-serif"
-                      >
-                        Pending
-                      </button>
-                    </>
+                  <div class="flex flex-row md:items-center md:gap-12 gap-8">
+                    <div className="flex flex-col w-fit md:items-center">
+                      <>
+                        <div className="flex items-center gap-2">
+                          <div
+                            className={`h-3 w-3 rounded-full bg-yellow-400`}
+                          ></div>
+                          <p
+                            className={`text-sm font-serif rounded-full text-yellow-400`}
+                          >
+                            Pending
+                          </p>
+                        </div>
+                      </>
+                    </div>{" "}
                   </div>
                 </div>
               ))}
           </div>
-
-          {/* <h1 className="font-medium mt-10 text-xl tracking-tighter">
-            Checked via Users :
-          </h1> */}
-
-          {/* <div className="mt-3  ">
-            <Tabs defaultValue="check">
-              <TabsList>
-                <TabsTrigger value="check">Checked-In</TabsTrigger>
-                <TabsTrigger value="pending">Pending</TabsTrigger>
-                <TabsTrigger value="rejected">Rejected</TabsTrigger>
-              </TabsList>
-              <TabsContent value="check">
-                <div className="mt-8 grid sm:grid-cols-3 ">
-                  {bookingData
-                    .filter(
-                      (data) =>
-                        data.status === "booked" &&
-                        data.isChecking === "confirm"
-                    )
-                    .map((dets) => (
-                      <div className="w-fit flex flex-col gap-5 py-4 px-7 rounded-3xl  border border-gray-400">
-                        <h1 className="text-xl tracking-tight">
-                          Booking for {dets.userName}
-                        </h1>
-
-                        <div>
-                          <div className="flex gap-6">
-                            <div>
-                              <h1>User Number </h1>
-                              <h1>User Email </h1>
-                              <h1>Room Number </h1>
-                              <h1>Total Members </h1>
-                              <h1>Check in Date </h1>
-                              <h1>Check out Date </h1>
-                              <h1>Total Amount</h1>
-                            </div>
-                            <div>
-                              <p>:</p>
-                              <p>:</p>
-                              <p>:</p>
-                              <p>:</p>
-                              <p>:</p>
-                              <p>:</p>
-                              <p>:</p>
-                            </div>
-                            <div>
-                              <p>{dets.userPhone}</p>
-                              <p>{dets.userId.email}</p>
-                              <p>{dets.roomId.roomNumber}</p>
-                              <p>{dets.numberOfGuests}</p>
-                              <p>{dets.checkInDate.slice(0, 10)}</p>
-                              <p>{dets.checkOutDate.slice(0, 10)}</p>
-                              <p>₹{dets.totalAmount}</p>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="flex gap-5">
-                          <button
-                            onClick={() => pendingReq(dets._id)}
-                            className="px-4 py-1 rounded-3xl bg-yellow-500 text-white"
-                          >
-                            Pending
-                          </button>
-                          <button
-                            onClick={() => cancelledReq(dets._id)}
-                            className="px-4 py-1 rounded-3xl bg-red-500 text-white"
-                          >
-                            Canelled
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                </div>
-              </TabsContent>
-              <TabsContent value="pending">
-                <div className="mt-8 grid sm:grid-cols-3 ">
-                  {bookingData
-                    .filter(
-                      (data) =>
-                        data.status === "booked" &&
-                        data.isChecking === "pending"
-                    )
-                    .map((dets) => (
-                      <div className="w-fit flex flex-col gap-5 py-4 px-7 rounded-3xl  border border-gray-400">
-                        <h1 className="text-xl tracking-tight">
-                          Booking for {dets.userName}
-                        </h1>
-
-                        <div>
-                          <div className="flex gap-6">
-                            <div>
-                              <h1>User Number </h1>
-                              <h1>User Email </h1>
-                              <h1>Room Number </h1>
-                              <h1>Total Members </h1>
-                              <h1>Check in Date </h1>
-                              <h1>Check out Date </h1>
-                              <h1>Total Amount</h1>
-                            </div>
-                            <div>
-                              <p>:</p>
-                              <p>:</p>
-                              <p>:</p>
-                              <p>:</p>
-                              <p>:</p>
-                              <p>:</p>
-                              <p>:</p>
-                            </div>
-                            <div>
-                              <p>{dets.userPhone}</p>
-                              <p>{dets.userId.email}</p>
-                              <p>{dets.roomId.roomNumber}</p>
-                              <p>{dets.numberOfGuests}</p>
-                              <p>{dets.checkInDate.slice(0, 10)}</p>
-                              <p>{dets.checkOutDate.slice(0, 10)}</p>
-                              <p>₹{dets.totalAmount}</p>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="flex gap-5">
-                          <button
-                            onClick={() => pendingReq(dets._id)}
-                            className="px-4 py-1 rounded-3xl bg-yellow-500 text-white"
-                          >
-                            Pending
-                          </button>
-                          <button
-                            onClick={() => cancelledReq(dets._id)}
-                            className="px-4 py-1 rounded-3xl bg-red-500 text-white"
-                          >
-                            Canelled
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                </div>
-              </TabsContent>
-              <TabsContent value="rejected">
-                <div className="mt-8 grid sm:grid-cols-3 ">
-                  {bookingData
-                    .filter(
-                      (data) =>
-                        data.status === "booked" &&
-                        data.isChecking === "cancelled"
-                    )
-                    .map((dets) => (
-                      <div className="w-fit flex flex-col gap-5 py-4 px-7 rounded-3xl  border border-gray-400">
-                        <h1 className="text-xl tracking-tight">
-                          Booking for {dets.userName}
-                        </h1>
-
-                        <div>
-                          <div className="flex gap-6">
-                            <div>
-                              <h1>User Number </h1>
-                              <h1>User Email </h1>
-                              <h1>Room Number </h1>
-                              <h1>Total Members </h1>
-                              <h1>Check in Date </h1>
-                              <h1>Check out Date </h1>
-                              <h1>Total Amount</h1>
-                            </div>
-                            <div>
-                              <p>:</p>
-                              <p>:</p>
-                              <p>:</p>
-                              <p>:</p>
-                              <p>:</p>
-                              <p>:</p>
-                              <p>:</p>
-                            </div>
-                            <div>
-                              <p>{dets.userPhone}</p>
-                              <p>{dets.userId.email}</p>
-                              <p>{dets.roomId.roomNumber}</p>
-                              <p>{dets.numberOfGuests}</p>
-                              <p>{dets.checkInDate.slice(0, 10)}</p>
-                              <p>{dets.checkOutDate.slice(0, 10)}</p>
-                              <p>₹{dets.totalAmount}</p>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="flex gap-5">
-                          <button
-                            onClick={() => pendingReq(dets._id)}
-                            className="px-4 py-1 rounded-3xl bg-yellow-500 text-white"
-                          >
-                            Pending
-                          </button>
-                          <button
-                            onClick={() => cancelledReq(dets._id)}
-                            className="px-4 py-1 rounded-3xl bg-red-500 text-white"
-                          >
-                            Canelled
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                </div>
-              </TabsContent>
-            </Tabs>
-          </div> */}
         </TabsContent>
 
         <TabsContent value="cancelled">
           <h1 className="font-medium mt-5 text-3xl tracking-tighter">
-            Cancelled Requests
+            Request Cancelled by Users
           </h1>
 
           <div className="mt-8 w-full ">
@@ -654,11 +441,14 @@ const ManageBooking = () => {
               <div className="">Hotel Details</div>
               <div className="">Date & Timings</div>
               <div className="">User Details</div>
-              <div className="pl-[3%]">Manage</div>
+              <div className="pl-[3%]">Status</div>
             </div>
 
             {bookingData
-              .filter((data) => data.status === "cancelled")
+              .filter(
+                (data) =>
+                  data.status === "booked" && data.isChecking === "cancelled"
+              )
               .map((dets) => (
                 <div className="grid grid-cols-1 max-md:gap-5 md:grid-cols-[3fr_2fr_2fr_1fr] w-full border-b border-gray-300 py-6 first:border-t ">
                   <div className="flex flex-col md:flex-row ">
@@ -788,28 +578,21 @@ const ManageBooking = () => {
                     </div>
                   </div>
 
-                  <div className="flex flex-col w-fit md:items-center">
-                    <>
-                      <button
-                        onClick={() => approvedReq(dets._id)}
-                        class="px-4 py-1.5 mt-4 text-xs border border-blue-500 text-blue-500 rounded-full hover:bg-gray-50 transition-all cursor-pointer font-serif"
-                      >
-                        Confirm
-                      </button>
-                      {/* <button
-                        onClick={() => cancelledReq(dets._id)}
-                        class="px-4 py-1.5 mt-4 text-xs border border-red-500 text-red-500 rounded-full hover:bg-gray-50 transition-all cursor-pointer font-serif"
-                      >
-                        Cancell
-                      </button> */}
-
-                      <button
-                        onClick={() => pendingReq(dets._id)}
-                        class="px-4 py-1.5 mt-4 text-xs border border-yellow-400 text-yellow-400 rounded-full hover:bg-gray-50 transition-all cursor-pointer font-serif"
-                      >
-                        Pending
-                      </button>
-                    </>
+                  <div class="flex flex-row md:items-center md:gap-12 gap-8">
+                    <div className="flex flex-col w-fit md:items-center">
+                      <>
+                        <div className="flex items-center gap-2">
+                          <div
+                            className={`h-3 w-3 rounded-full bg-red-500`}
+                          ></div>
+                          <p
+                            className={`text-sm font-serif rounded-full text-red-500`}
+                          >
+                            Cancelled
+                          </p>
+                        </div>
+                      </>
+                    </div>{" "}
                   </div>
                 </div>
               ))}
@@ -820,4 +603,4 @@ const ManageBooking = () => {
   );
 };
 
-export default ManageBooking;
+export default UserCheckIn;
