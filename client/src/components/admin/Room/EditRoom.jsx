@@ -62,7 +62,7 @@ const EditRoom = () => {
   };
 
   return (
-    <div className="pb-15">
+    <div className="pb-15 font-serif">
       <Link to="/admin/room">
         <h1 className="font-medium  text-md text-blue-500 tracking-tighter">
           Back

@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
+import { useTheme } from "../ThemeProvider";
 
 const Dashboard = () => {
   const dashboardicon = (
@@ -65,16 +66,26 @@ const Dashboard = () => {
     { name: "Add City", path: "/admin/city", icon: overviewicon },
     { name: "Add Hotel", path: "/admin/hotel", icon: chaticon },
     { name: "Add Room", path: "/admin/room", icon: chaticon },
-    { name: "Home", path: "/home", icon: chaticon },
+    { name: "Home", path: "/", icon: chaticon },
   ];
+
+  const sidebarLinks2 = [
+    { name: "Bookings", path: "/admin/booking", icon: dashboardicon },
+    { name: "Create Coupons", path: "/admin/coupon", icon: overviewicon },
+    // { name: "Add Hotel", path: "/admin/hotel", icon: chaticon },
+    // { name: "Add Room", path: "/admin/room", icon: chaticon },
+    // { name: "Home", path: "/home", icon: chaticon },
+  ];
+      const {theme} = useTheme();
+  
 
   return (
     <>
       {/* Sidebar + Main Content */}
       <div className="flex min-h-screen pt-15 relative ">
         {/* Sidebar */}
-        <div className="md:w-64 w-16 h-full fixed  sm:pr-2 text-base  mt-4  gap-2 flex flex-col transition-all duration-300 bg-[#f7fcfe]  pt-4   ">
-          <p className="bg-blue-600 text-white py-2 font-bold text-xl  tracking-tighter text-center  mb-3 rounded-2xl">
+        <div className="md:w-55 w-15 h-full fixed  sm:pr-2 text-base  mt-5  gap-2 flex flex-col transition-all duration-300   pt-4  border border-neutral-200 rounded-tr-3xl bg-neutral-100 ">
+          <p className="  py-2 font-serif text-2xl  tracking-tighter text-center rounded-2xl underline">
             Manage Locations
           </p>
 
@@ -84,10 +95,40 @@ const Dashboard = () => {
               key={index}
               end={item.path === "/admin"}
               className={({ isActive }) =>
-                `flex items-center py-2 border border-gray-300 rounded-r-3xl  gap-2 text-md font-semibold tracking-tight transition-colors duration-200 ${
+                `flex items-center font-serif gap-2 p-2 rounded-r-4xl transition-colors duration-200 ${
                   isActive
-                    ? " text-gray-800  bg-blue-200"
-                    : " text-gray-800 bg-white"
+                    ? theme === "dark"
+                      ? "bg-neutral-900 text-white"
+                      : "bg-white text-black"
+                    : theme === "dark"
+                    ? "text-gray-400 hover:bg-neutral-800 hover:text-white"
+                    : "text-black hover:bg-gray-100 hover:text-black"
+                }`
+              }
+            >
+              {item.icon}
+              <p className="md:block hidden text-center">{item.name}</p>
+            </NavLink>
+          ))}
+
+          <p className="  py-2 font-serif text-2xl  tracking-tighter text-center mt-2 rounded-2xl underline">
+            Manage Booking
+          </p>
+
+          {sidebarLinks2.map((item, index) => (
+            <NavLink
+              to={item.path}
+              key={index}
+              end={item.path === "/admin"}
+              className={({ isActive }) =>
+                `flex items-center font-serif gap-2 p-2 rounded-r-4xl transition-colors duration-200 ${
+                  isActive
+                    ? theme === "dark"
+                      ? "bg-neutral-900 text-white"
+                      : "bg-white text-black"
+                    : theme === "dark"
+                    ? "text-gray-400 hover:bg-neutral-800 hover:text-white"
+                    : "text-black hover:bg-gray-100 hover:text-black"
                 }`
               }
             >
@@ -98,7 +139,13 @@ const Dashboard = () => {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 p-6 pb-10 rounded-tl-3xl mt-3 border border-neutral-200  md:ml-64 ml-16 bg-white w-[85vw]  h-full fixed overflow-scroll">
+        <div
+          className={`flex-1 p-6 pb-10 rounded-t-3xl mt-5 border border-neutral-200  md:ml-58 ml-16  w-[85vw]  h-full fixed overflow-scroll ${
+            theme === "dark"
+              ? "bg-neutral-900 text-white  border-neutral-500"
+              : "bg-white text-black border-gray-300"
+          }`}
+        >
           <Outlet />
         </div>
       </div>

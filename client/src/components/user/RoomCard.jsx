@@ -9,14 +9,20 @@ import {
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import { Link } from "react-router-dom";
+import { useTheme } from "../ThemeProvider";
 
 const RoomCard = ({ room }) => {
     const pluginRef = useRef(Autoplay({ delay: 3000, stopOnInteraction: false }));
     
+     const {theme} = useTheme();
 
   return (
-    <div className="w-fit overflow-hidden p-2 pb-5 rounded-3xl bg-white shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] ">
-      <Link to={`/roomsdetail/${room._id}`} state={{ roomData: room }}>
+    <div
+      className={`w-fit overflow-hidden p-2 pb-5 border rounded-3xl ${
+        theme === "dark" ? "border-gray-600 bg-neutral-900" : "border-gray-300 "
+      }`}
+    >
+      <Link to={`/roomsdetail/${room._id}`} state={{ roomData: room }} onClick={() => window.scrollTo(0, 0)}>
         <Carousel
           plugins={[pluginRef.current]}
           className="w-full max-w-xs overflow-hidden"
@@ -48,8 +54,8 @@ const RoomCard = ({ room }) => {
           {/* <p className="text-sm tracking-tight text-gray-600 font-[450] truncate">
           {room.description}
         </p> */}
-          <p className="text-sm text-gray-600 font-[400] mt-3 font-serif">
-            <span className="underline text-black text-[17px] font-mono tracking-tighter">
+          <p className="text-sm  font-[400] mt-3 font-serif">
+            <span className="underline  text-[17px] font-mono tracking-tighter">
               ₹{room.pricePerNight}
             </span>{" "}
             for 1 night

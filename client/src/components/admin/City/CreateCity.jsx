@@ -15,6 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Link } from "react-router-dom";
+import { useTheme } from "../../ThemeProvider";
 
 const topCitiesByState = {
   "Andhra Pradesh": [
@@ -278,17 +279,25 @@ const CreateCity = () => {
     }
   });
 
+  const {theme} = useTheme();
+
   return (
     <div className="pb-15">
       <Tabs defaultValue="create">
         <TabsList>
-          <TabsTrigger value="create">Create</TabsTrigger>
-          <TabsTrigger value="active">Active</TabsTrigger>
-          <TabsTrigger value="inactive">Inactive</TabsTrigger>
+          <TabsTrigger className="font-serif" value="create">
+            Create
+          </TabsTrigger>
+          <TabsTrigger className="font-serif" value="active">
+            Active
+          </TabsTrigger>
+          <TabsTrigger className="font-serif" value="inactive">
+            Inactive
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="create">
-          <h1 className="font-medium mt-5 text-3xl tracking-tighter">
+          <h1 className="font-serif mt-5 text-3xl tracking-tighter">
             Add a City
           </h1>
 
@@ -296,7 +305,7 @@ const CreateCity = () => {
             <form onSubmit={handleSubmit}>
               <div>
                 <label htmlFor="state">
-                  <span className="text-lg font-medium tracking-tight">
+                  <span className="text-lg font-serif tracking-tight">
                     Select State
                   </span>
                   <select
@@ -304,11 +313,19 @@ const CreateCity = () => {
                     value={city.state}
                     onChange={handleChange}
                     required
-                    className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
+                    className="mt-1 w-full  px-3 py-2  rounded-md font-serif border border-gray-400 sm:text-sm outline-none "
                   >
                     <option value="">Select a state</option>
                     {stateData.map((s, index) => (
-                      <option key={index} value={s.name}>
+                      <option
+                        className={`${
+                          theme === "dark"
+                            ? "bg-neutral-900 text-white border-gray-600"
+                            : "bg-white text-black border-gray-300"
+                        }`}
+                        key={index}
+                        value={s.name}
+                      >
                         {s.name}
                       </option>
                     ))}
@@ -318,7 +335,7 @@ const CreateCity = () => {
 
               <div className="mt-7">
                 <label htmlFor="name">
-                  <span className="text-lg font-medium tracking-tight">
+                  <span className="text-lg font-serif tracking-tight">
                     Enter City
                   </span>
 
@@ -327,11 +344,19 @@ const CreateCity = () => {
                     value={city.name}
                     onChange={handleChange}
                     required
-                    className="mt-1 w-full px-3 py-2 rounded-md font-normal border border-gray-400 sm:text-sm outline-none"
+                    className="mt-1 w-full px-3 py-2 rounded-md font-serif border border-gray-400 sm:text-sm outline-none"
                   >
                     <option value="">Select a city</option>
                     {suggestedCities.map((c, index) => (
-                      <option key={index} value={c}>
+                      <option
+                        className={`${
+                          theme === "dark"
+                            ? "bg-neutral-900 text-white border-gray-600"
+                            : "bg-white text-black border-gray-300"
+                        }`}
+                        key={index}
+                        value={c}
+                      >
                         {c}
                       </option>
                     ))}
@@ -341,7 +366,7 @@ const CreateCity = () => {
 
               <div className="mt-7">
                 <label htmlFor="code">
-                  <span className="text-lg font-medium tracking-tight">
+                  <span className="text-lg font-serif tracking-tight">
                     Enter City-code
                   </span>
 
@@ -352,7 +377,7 @@ const CreateCity = () => {
                     value={city.code}
                     onChange={handleChange}
                     required
-                    className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
+                    className="mt-1 w-full  px-3 py-2  rounded-md font-serif border border-gray-400 sm:text-sm outline-none "
                   />
                 </label>
               </div>
@@ -360,7 +385,7 @@ const CreateCity = () => {
               <div className="mt-7">
                 <button
                   type="submit"
-                  className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white cursor-pointer hover:opacity-90 transition-opacity rounded-md"
+                  className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 font-serif text-white cursor-pointer hover:opacity-90 transition-opacity rounded-md"
                 >
                   Submit
                 </button>
@@ -372,7 +397,7 @@ const CreateCity = () => {
         <TabsContent value="active">
           <div className="mt-5 ">
             <div className="flex-row gap-5 sm:flex justify-between pr-10 w-full">
-              <h1 className="font-medium text-2xl sm:text-3xl tracking-tight">
+              <h1 className="font-serif text-2xl sm:text-3xl tracking-tight">
                 Cities ( Active ){" "}
               </h1>
 
@@ -384,13 +409,13 @@ const CreateCity = () => {
                     onChange={(e) => setSearch(e.target.value)}
                     value={search}
                     required
-                    className="mt-1 w-full px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
+                    className="mt-1 w-full px-3 py-2  rounded-md font-serif border border-gray-400 sm:text-sm outline-none "
                   />
                 </div>
                 <div>
                   <select
                     onChange={(e) => setClick(e.target.value)}
-                    className="mt-1 w-full px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none"
+                    className="mt-1 w-full px-3 py-2  rounded-md font-serif border border-gray-400 sm:text-sm outline-none"
                   >
                     <option value="asc">Sort by: A to Z</option>
                     <option value="dsc">Sort by: Z to A</option>
@@ -401,15 +426,17 @@ const CreateCity = () => {
               </div>
             </div>
 
-            <div className="sm:border border-gray-300 sm:rounded-2xl sm:p-3 mt-5 ">
+            <div className="sm:border border-gray-300 font-serif sm:rounded-2xl sm:p-3 mt-5 ">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[100px] ">S.NO.</TableHead>
-                    <TableHead className="">City</TableHead>
-                    <TableHead className="">State</TableHead>
-                    <TableHead className="">Created by</TableHead>
-                    <TableHead className="text-end pr-[7%] ">Manage</TableHead>
+                    <TableHead className="text-lg w-[100px] ">S.NO.</TableHead>
+                    <TableHead className="text-lg ">City</TableHead>
+                    <TableHead className="text-lg ">State</TableHead>
+                    <TableHead className="text-lg ">Created by</TableHead>
+                    <TableHead className="text-lg text-end pr-[7%] ">
+                      Manage
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -456,7 +483,7 @@ const CreateCity = () => {
         </TabsContent>
 
         <TabsContent value="inactive">
-          <div className="mt-5 pb-10">
+          <div className="mt-5 font-serif pb-10">
             <div className="flex-row gap-5 sm:flex justify-between pr-10 w-full">
               <h1 className="font-medium text-2xl sm:text-3xl tracking-tight">
                 Cities ( Inactive ){" "}
@@ -491,11 +518,13 @@ const CreateCity = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[100px] ">S.NO.</TableHead>
-                    <TableHead className="">City</TableHead>
-                    <TableHead className="">State</TableHead>
-                    <TableHead className="">Created by</TableHead>
-                    <TableHead className="text-end pr-[7%] ">Manage</TableHead>
+                    <TableHead className="text-lg w-[100px] ">S.NO.</TableHead>
+                    <TableHead className="text-lg ">City</TableHead>
+                    <TableHead className="text-lg ">State</TableHead>
+                    <TableHead className="text-lg ">Created by</TableHead>
+                    <TableHead className="text-lg text-end pr-[7%] ">
+                      Manage
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
 

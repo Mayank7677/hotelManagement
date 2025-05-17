@@ -4,29 +4,88 @@ const bcrypt = require("bcrypt");
 const secretKey = "gsdgengnntneazfehhtht";
 const moment = require("moment");
 const sentOtpEmail = require("../utils/otpMail");
+const { uploadProfilePicture } = require("../utils/helper");
+
+// exports.signup = async (req, res) => {
+//   try {
+//     const { name, email, age, phone, password , role } = req.body;
+
+//     const checkUser = await userModel.findOne({ email });
+//     if (checkUser) {
+//       return res.status(400).json({ message: "User already exists" });
+//     }
+//     const salt = bcrypt.genSaltSync(10);
+//     const hash = bcrypt.hashSync(password, salt);
+
+//     const profileImg = req.files ? req.files   : "";
+//     console.log(profileImg);
+
+//     // Upload the image to Cloudinary
+//     const imageData = await uploadProfilePicture(profileImg);
+
+
+//     const user = new userModel({
+//       name,
+//       email,
+//       age,
+//       phone,
+//       password: hash,
+//       role,
+//       profileImg: imageData ? imageData.url : "",
+//     });
+
+    
+
+
+//     const userData = new userModel(user);
+//     const data = await userData.save();
+//     res.status(201).json({ message: "User created successfully" });
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
 
 exports.signup = async (req, res) => {
   try {
-    const { name, email, age, phone, password , role } = req.body;
+    const { name, email, age, phone, password, role } = req.body;
 
     const checkUser = await userModel.findOne({ email });
     if (checkUser) {
       return res.status(400).json({ message: "User already exists" });
     }
+
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(password, salt);
 
-    const user = new userModel({
+    // Extract file data if any
+    let profileImgUrl = "";
+
+    if (req.files && req.files.profileImg) {
+      // Assuming the field name is 'profileImg'
+      const file = req.files.profileImg;
+
+      // file.data is the buffer containing the image file, convert it to base64 string
+      const base64Data = `data:${file.mimetype};base64,${file.data.toString(
+        "base64"
+      )}`;
+
+      // You can pass the user id after creation, but since user id is not available before saving,
+      // you can use email or a timestamp as public_id or skip public_id and let Cloudinary generate one.
+      profileImgUrl = await uploadProfilePicture(base64Data, email);
+    }
+
+    const newUser = new userModel({
       name,
       email,
       age,
       phone,
       password: hash,
-      role
+      role,
+      profileImg: profileImgUrl || "",
     });
 
-    const userData = new userModel(user);
-    const data = await userData.save();
+    await newUser.save();
+
     res.status(201).json({ message: "User created successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -169,3 +228,70 @@ exports.newPassword = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
+exports.editProfile = async (req, res) => {
+  console.log(req.body);
+  try {
+    const { name, email, age, phone } = req.body;
+    const { id } = req.query;
+
+    const user = await userModel.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Extract file data if any
+    let profileImgUrl = "";
+
+    if (req.files && req.files.profileImg) {
+      // Assuming the field name is 'profileImg'
+      const file = req.files.profileImg;
+
+      // file.data is the buffer containing the image file, convert it to base64 string
+      const base64Data = `data:${file.mimetype};base64,${file.data.toString(
+        "base64"
+      )}`;
+
+      // You can pass the user id after creation, but since user id is not available before saving,
+      // you can use email or a timestamp as public_id or skip public_id and let Cloudinary generate one.
+      profileImgUrl = await uploadProfilePicture(base64Data, email);
+    }
+
+    const updatedUser = await userModel.findByIdAndUpdate(
+      id,
+      {
+        name,
+        email,
+        age,
+        phone,
+        profileImg: profileImgUrl || user.profileImg,
+      },
+      { new: true }
+    );
+
+    res
+      .status(200)
+      .json({ message: "Profile updated successfully", data: updatedUser });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+exports.getUser = async (req, res) => {
+  console.log("efw")
+  try {
+    const data = req.user
+    console.log(data)
+
+    const user = await userModel.findById(data._id).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}

@@ -15,6 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Link } from "react-router-dom";
+import { useTheme } from "../../ThemeProvider";
 
 const CreateHotels = () => {
   const [hotel, setHotel] = useState({
@@ -228,8 +229,10 @@ const CreateHotels = () => {
     }
   });
 
+  const { theme } = useTheme();
+
   return (
-    <div className="pb-15">
+    <div className="pb-15 font-serif">
       <Tabs defaultValue="create">
         <TabsList>
           <TabsTrigger value="create">Create</TabsTrigger>
@@ -258,7 +261,15 @@ const CreateHotels = () => {
                     >
                       <option value="">Select a state</option>
                       {stateData.map((s, index) => (
-                        <option key={index} value={s.name}>
+                        <option
+                          className={`${
+                            theme === "dark"
+                              ? "bg-neutral-900 text-white border-gray-600"
+                              : "bg-white text-black border-gray-300"
+                          }`}
+                          key={index}
+                          value={s.name}
+                        >
                           {s.name}
                         </option>
                       ))}
@@ -280,7 +291,15 @@ const CreateHotels = () => {
                     >
                       <option value="">Select a city</option>
                       {cityData.map((s, index) => (
-                        <option key={index} value={s.name}>
+                        <option
+                          className={`${
+                            theme === "dark"
+                              ? "bg-neutral-900 text-white border-gray-600"
+                              : "bg-white text-black border-gray-300"
+                          }`}
+                          key={index}
+                          value={s.name}
+                        >
                           {s.name}
                         </option>
                       ))}
@@ -476,14 +495,16 @@ const CreateHotels = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[100px] ">S.NO.</TableHead>
-                    <TableHead className="">Hotel</TableHead>
-                    <TableHead className="">City</TableHead>
-                    <TableHead className="">State</TableHead>
-                    <TableHead className="">Contact Number</TableHead>
-                    <TableHead className="">Contact Email</TableHead>
-                    <TableHead className="">Created by</TableHead>
-                    <TableHead className="text-end pr-[7%] ">Manage</TableHead>
+                    <TableHead className="text-lg w-[100px] ">S.NO.</TableHead>
+                    <TableHead className="text-lg ">Hotel</TableHead>
+                    <TableHead className="text-lg ">City</TableHead>
+                    <TableHead className="text-lg ">State</TableHead>
+                    <TableHead className="text-lg ">Contact Number</TableHead>
+                    <TableHead className="text-lg ">Contact Email</TableHead>
+                    <TableHead className="text-lg ">Created by</TableHead>
+                    <TableHead className="text-lg text-end pr-[7%] ">
+                      Manage
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -569,14 +590,20 @@ const CreateHotels = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[100px] ">S.NO.</TableHead>
-                    <TableHead className="">Hotel</TableHead>
-                    <TableHead className="">City</TableHead>
-                    <TableHead className="">State</TableHead>
-                    <TableHead className="">Contact Number</TableHead>
-                    <TableHead className="">Contact Email</TableHead>
-                    <TableHead className="">Created by</TableHead>
-                    <TableHead className="text-end pr-[7%] ">Manage</TableHead>
+                    <TableHead className="font-serif w-[100px] ">
+                      S.NO.
+                    </TableHead>
+                    <TableHead className="font-serif ">Hotel</TableHead>
+                    <TableHead className="font-serif ">City</TableHead>
+                    <TableHead className="font-serif ">State</TableHead>
+                    <TableHead className="font-serif ">
+                      Contact Number
+                    </TableHead>
+                    <TableHead className="font-serif ">Contact Email</TableHead>
+                    <TableHead className="font-serif ">Created by</TableHead>
+                    <TableHead className="font-serif text-end pr-[7%] ">
+                      Manage
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>

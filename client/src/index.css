@@ -15,6 +15,26 @@ grid-row-gap: 5px;
 .div4 { grid-area: 3 / 7 / 5 / 9; }
 .div5 { grid-area: 1 / 1 / 5 / 5; }
 
+@theme inline {
+  --animate-aurora: aurora 60s linear infinite;
+  @keyframes aurora {
+    from {
+      background-position:
+        50% 50%,
+        50% 50%;
+    }
+    to {
+      background-position:
+        350% 50%,
+        350% 50%;
+    }
+  }
+}
+
+.text-stroke {
+  -webkit-text-stroke: 0px black;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

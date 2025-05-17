@@ -3,6 +3,8 @@ const jwt = require("jsonwebtoken");
 const secretKey = "gsdgengnntneazfehhtht";
 
 module.exports = async (req, res, next) => {
+  console.log("auth middleware");
+  console.log(req.headers.authorization);
   try {
     const bearerToken = req.headers.authorization;
     if (!bearerToken) {

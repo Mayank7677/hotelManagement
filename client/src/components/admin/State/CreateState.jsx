@@ -16,6 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Link } from "react-router-dom";
+import { useTheme } from "../../ThemeProvider";
 
 const indianStates = [
   "Andhra Pradesh",
@@ -202,16 +203,25 @@ const CreateState = () => {
     }
   });
 
+         const {theme} = useTheme();
+  
+
   return (
     <div className="pb-15">
       <Tabs defaultValue="create">
         <TabsList>
-          <TabsTrigger value="create">Create</TabsTrigger>
-          <TabsTrigger value="active">Active</TabsTrigger>
-          <TabsTrigger value="inactive">Inactive</TabsTrigger>
+          <TabsTrigger className="font-serif" value="create">
+            Create
+          </TabsTrigger>
+          <TabsTrigger className="font-serif" value="active">
+            Active
+          </TabsTrigger>
+          <TabsTrigger className="font-serif" value="inactive">
+            Inactive
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="create">
-          <h1 className="font-medium mt-5 text-3xl tracking-tighter">
+          <h1 className="font-serif mt-5 text-3xl tracking-tighter">
             Choose a State
           </h1>
 
@@ -220,7 +230,7 @@ const CreateState = () => {
               <div className="flex flex-col items-center gap-5 sm:px-5 max-sm:w-full w-1/2">
                 <div className="w-full">
                   <label htmlFor="name">
-                    <span className="text-lg font-medium tracking-tight">
+                    <span className="text-lg font-serif tracking-tight">
                       Select State
                     </span>
                     <select
@@ -228,11 +238,19 @@ const CreateState = () => {
                       value={state.name}
                       onChange={handleChange}
                       required
-                      className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
+                      className="mt-1 w-full  px-3 py-2  rounded-md font-serif border border-gray-400 sm:text-sm outline-none "
                     >
                       <option value="">Select a state</option>
                       {indianStates.map((s, index) => (
-                        <option key={index} value={s}>
+                        <option
+                          className={`${
+                            theme === "dark"
+                              ? "bg-neutral-900 text-white border-gray-600"
+                              : "bg-white text-black border-gray-300"
+                          }`}
+                          key={index}
+                          value={s}
+                        >
                           {s}
                         </option>
                       ))}
@@ -242,7 +260,7 @@ const CreateState = () => {
 
                 <div className="w-full">
                   <label htmlFor="code">
-                    <span className="text-lg font-medium tracking-tight">
+                    <span className="text-lg font-serif tracking-tight">
                       Enter zip-code
                     </span>
 
@@ -253,7 +271,7 @@ const CreateState = () => {
                       value={state.code}
                       onChange={handleChange}
                       required
-                      className="mt-1 w-full px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
+                      className="mt-1 w-full px-3 py-2 font-serif rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
                     />
                   </label>
                 </div>
@@ -262,7 +280,7 @@ const CreateState = () => {
               <div className="mt-7 sm:px-5">
                 <button
                   type="submit"
-                  className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white cursor-pointer hover:opacity-90 transition-opacity rounded-md"
+                  className="px-3 py-1.5 bg-blue-600 font-serif hover:bg-blue-700 text-white cursor-pointer hover:opacity-90 transition-opacity rounded-md"
                 >
                   Submit
                 </button>
@@ -274,7 +292,7 @@ const CreateState = () => {
         <TabsContent value="active">
           <div className="mt-5">
             <div className="flex-row gap-5 sm:flex justify-between pr-10 w-full">
-              <h1 className="font-medium text-2xl sm:text-3xl tracking-tight">
+              <h1 className="font-serif text-2xl sm:text-3xl tracking-tight">
                 States ( Active ){" "}
               </h1>
 
@@ -286,13 +304,13 @@ const CreateState = () => {
                     onChange={(e) => setSearch(e.target.value)}
                     value={search}
                     required
-                    className="mt-1 w-full px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
+                    className="mt-1 w-full px-3 py-2  rounded-md font-serif border border-gray-400 sm:text-sm outline-none "
                   />
                 </div>
                 <div>
                   <select
                     onChange={(e) => setClick(e.target.value)}
-                    className="mt-1 w-full px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none"
+                    className="mt-1 w-full px-3 py-2  rounded-md font-serif border border-gray-400 sm:text-sm outline-none"
                   >
                     <option value="asc">Sort by: A to Z</option>
                     <option value="dsc">Sort by: Z to A</option>
@@ -307,11 +325,21 @@ const CreateState = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className=" w-[100px] ">S.NO.</TableHead>
-                    <TableHead className=" ">State Name</TableHead>
-                    <TableHead className=" ">State Code</TableHead>
-                    <TableHead className=" ">Created by</TableHead>
-                    <TableHead className=" text-end pr-[7%] ">Manage</TableHead>
+                    <TableHead className="font-serif text-lg font-[500] w-[100px] ">
+                      S.NO.
+                    </TableHead>
+                    <TableHead className="font-serif text-lg font-[500] ">
+                      State Name
+                    </TableHead>
+                    <TableHead className="font-serif text-lg font-[500] ">
+                      State Code
+                    </TableHead>
+                    <TableHead className="font-serif text-lg font-[500] ">
+                      Created by
+                    </TableHead>
+                    <TableHead className="font-serif text-lg font-[500] text-end pr-[7%] ">
+                      Manage
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -319,12 +347,16 @@ const CreateState = () => {
                     .filter((state) => state.status === "active")
                     .map((state, index) => (
                       <TableRow key={index}>
-                        <TableCell className="font-medium">
+                        <TableCell className="font-serif">
                           {index + 1}
                         </TableCell>
-                        <TableCell className="">{state.name}</TableCell>
-                        <TableCell className="">{state.code}</TableCell>
-                        <TableCell className="">
+                        <TableCell className="font-serif">
+                          {state.name}
+                        </TableCell>
+                        <TableCell className="font-serif">
+                          {state.code}
+                        </TableCell>
+                        <TableCell className="font-serif">
                           {state.assignedBy.email}
                         </TableCell>
                         <TableCell className="flex gap-4 justify-end">
@@ -332,20 +364,20 @@ const CreateState = () => {
                             to={`/admin/state/edit/${state._id}`}
                             state={{ stateData: state }}
                           >
-                            <p className="px-1.5 py-0.5 rounded-lg font-medium bg-yellow-500 text-white w-fit cursor-pointer">
+                            <p className="px-1.5 py-0.5 rounded-lg font-serif bg-yellow-500 text-white w-fit cursor-pointer">
                               {/* <FiEdit2 /> */}
                               Edit
                             </p>
                           </Link>
                           <p
                             onClick={() => handleStatusChange(state._id)}
-                            className="px-1.5 py-0.5 rounded-lg font-medium bg-blue-500 text-white w-fit cursor-pointer"
+                            className="px-1.5 py-0.5 rounded-lg font-serif bg-blue-500 text-white w-fit cursor-pointer"
                           >
                             Inactive
                           </p>
                           <p
                             onClick={() => handleDelete(state._id)}
-                            className="px-1.5 py-0.5 rounded-lg font-medium bg-red-500 text-white w-fit cursor-pointer"
+                            className="px-1.5 py-0.5 rounded-lg font-serif bg-red-500 text-white w-fit cursor-pointer"
                           >
                             {/* <FiEdit2 /> */}
                             Delete
@@ -362,7 +394,7 @@ const CreateState = () => {
         <TabsContent value="inactive">
           <div className="mt-5">
             <div className="flex-row gap-5 sm:flex justify-between pr-10 w-full">
-              <h1 className="font-medium text-2xl sm:text-3xl tracking-tight">
+              <h1 className="font-serif text-2xl sm:text-3xl tracking-tight">
                 States ( Inactive ){" "}
               </h1>
 
@@ -374,13 +406,13 @@ const CreateState = () => {
                     onChange={(e) => setSearchInactive(e.target.value)}
                     value={searchInactive}
                     required
-                    className="mt-1 w-full px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
+                    className="mt-1 w-full px-3 py-2  rounded-md font-serif border border-gray-400 sm:text-sm outline-none "
                   />
                 </div>
                 <div>
                   <select
                     onChange={(e) => setClickInactive(e.target.value)}
-                    className="mt-1 w-full px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none"
+                    className="mt-1 w-full px-3 py-2  rounded-md font-serif border border-gray-400 sm:text-sm outline-none"
                   >
                     <option value="asc">Sort by: A to Z</option>
                     <option value="dsc">Sort by: Z to A</option>
@@ -395,11 +427,21 @@ const CreateState = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[100px] ">S.NO.</TableHead>
-                    <TableHead className="">State Name</TableHead>
-                    <TableHead className="">State Code</TableHead>
-                    <TableHead className="">Created by</TableHead>
-                    <TableHead className="text-end pr-[7%] ">Manage</TableHead>
+                    <TableHead className="font-serif text-lg w-[100px] ">
+                      S.NO.
+                    </TableHead>
+                    <TableHead className="font-serif text-lg ">
+                      State Name
+                    </TableHead>
+                    <TableHead className="font-serif text-lg ">
+                      State Code
+                    </TableHead>
+                    <TableHead className="font-serif text-lg ">
+                      Created by
+                    </TableHead>
+                    <TableHead className="font-serif text-lg text-end pr-[7%] ">
+                      Manage
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -407,31 +449,37 @@ const CreateState = () => {
                     .filter((state) => state.status === "inactive")
                     .map((state, index) => (
                       <TableRow key={index}>
-                        <TableCell className="font-medium">
+                        <TableCell className="font-serif">
                           {index + 1}
                         </TableCell>
-                        <TableCell>{state.name}</TableCell>
-                        <TableCell>{state.code}</TableCell>
-                        <TableCell>{state.assignedBy.email}</TableCell>
+                        <TableCell className="font-serif">
+                          {state.name}
+                        </TableCell>
+                        <TableCell className="font-serif">
+                          {state.code}
+                        </TableCell>
+                        <TableCell className="font-serif">
+                          {state.assignedBy.email}
+                        </TableCell>
                         <TableCell className="flex gap-4 justify-end">
                           <Link
                             to={`/admin/state/edit/${state._id}`}
                             state={{ stateData: state }}
                           >
-                            <p className="px-1.5 py-0.5 rounded-lg font-medium bg-yellow-500 text-white w-fit cursor-pointer">
+                            <p className="px-1.5 py-0.5 rounded-lg font-serif bg-yellow-500 text-white w-fit cursor-pointer">
                               {/* <FiEdit2 /> */}
                               Edit
                             </p>
                           </Link>
                           <p
                             onClick={() => handleStatusChange(state._id)}
-                            className="px-1.5 py-0.5 rounded-lg font-medium bg-blue-500 text-white w-fit cursor-pointer"
+                            className="px-1.5 py-0.5 rounded-lg font-serif bg-blue-500 text-white w-fit cursor-pointer"
                           >
                             Active
                           </p>
                           <p
                             onClick={() => handleDelete(state._id)}
-                            className="px-1.5 py-0.5 rounded-lg font-medium bg-red-500 text-white w-fit cursor-pointer"
+                            className="px-1.5 py-0.5 rounded-lg font-serif bg-red-500 text-white w-fit cursor-pointer"
                           >
                             {/* <FiEdit2 /> */}
                             Delete

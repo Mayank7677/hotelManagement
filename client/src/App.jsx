@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SignupPage from "./auth/SignupPage";
 import LoginPage from "./auth/LoginPage";
 import Dashboard from "./components/admin/Dashboard";
-import HomePage from "./components/user/RoomPage";
+import RoomPage from "./components/user/RoomPage";
 import { Toaster } from "sonner";
 import ResetPassPage from "./auth/ResetPassPage";
 import CreateState from "./components/admin/State/CreateState";
@@ -20,42 +20,31 @@ import EditRoom from "./components/admin/Room/EditRoom";
 import RoomDetails from "./components/user/RoomDetails";
 import AllHotels from "./components/user/AllHotels";
 import BookRoom from "./components/user/BookRoom";
+import ManageBooking from "./components/admin/Bookings/ManageBooking";
+import CreateCouponForm from "./components/admin/Coupon/CreateCouponForm";
+import EditCoupon from "./components/admin/Coupon/EditCoupon";
+import ProfilePage from "./components/Profile/ProfilePage";
+import EditProfile from "./components/Profile/EditProfile";
+import YourBookings from "./components/Profile/YourBookings";
+import ForgetPass from "./components/Profile/ForgetPass";
+import RoomsPage from "./Pages/RoomsPage";
+import ManageBookings from "./components/Profile/ManageBookings";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Toaster />
+
       <Routes>
         <Route path="/signup" element={<SignupPage />} />
-        <Route path="/" element={<LoginPage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/reset" element={<ResetPassPage />} />
 
         <Route element={<MainLayout />}>
-          <Route
-            path="/home"
-            element={
-              <CheckToken>
-                <AllHotels />
-              </CheckToken>
-            }
-          />
-          <Route
-            path="/roomPage/:id"
-            element={
-              <CheckToken>
-                <HomePage />
-              </CheckToken>
-            }
-          />
-
-          <Route
-            path="/roomsdetail/:id"
-            element={
-              <CheckToken>
-                <RoomDetails />
-              </CheckToken>
-            }
-          />
+          <Route path="/" element={<AllHotels />} />
+          <Route path="/allHotels" element={<RoomsPage />} />
+          <Route path="/roomPage/:id" element={<RoomPage />} />
+          <Route path="/roomsdetail/:id" element={<RoomDetails />} />
           <Route
             path="/bookRoom"
             element={
@@ -65,6 +54,22 @@ const App = () => {
             }
           />
 
+          {/* Profile routes */}
+          <Route
+            path="/profile"
+            element={
+              <CheckToken>
+                <ProfilePage />
+              </CheckToken>
+            }
+          >
+            <Route index element={<EditProfile />} />
+            <Route path="reset" element={<ForgetPass />} />
+            <Route path="yourbookings" element={<YourBookings />} />
+            <Route path="bookings" element={<ManageBookings />} />
+          </Route>
+
+          {/* Admin routes  */}
           <Route
             path="/admin"
             element={
@@ -81,6 +86,9 @@ const App = () => {
             <Route path="hotel/edit/:id" element={<EditHotel />} />
             <Route path="room" element={<CreateRoom />} />
             <Route path="room/edit/:id" element={<EditRoom />} />
+            <Route path="booking" element={<ManageBooking />} />
+            <Route path="coupon" element={<CreateCouponForm />} />
+            <Route path="coupon/edit/:id" element={<EditCoupon />} />
           </Route>
         </Route>
       </Routes>

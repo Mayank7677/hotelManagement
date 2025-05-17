@@ -38,7 +38,7 @@ const EditCity = () => {
   };
 
   return (
-    <div>
+    <div className="font-serif">
       <Link to="/admin/city">
         <h1 className="font-medium  text-md text-blue-500 tracking-tighter">
           Back

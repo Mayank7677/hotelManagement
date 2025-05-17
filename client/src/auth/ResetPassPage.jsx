@@ -46,21 +46,7 @@ const ResetPassPage = () => {
     }
   };
 
-  //   const handleOtpSubmit = async (e) => {
-  //     e.preventDefault();
 
-  //     try {
-  //       const res = await axios.post("http://localhost:7070/users/verifyOtp", {
-  //         email: emailForOtp,
-  //         otp: userData.otp,
-  //       });
-
-  //       console.log(res.data);
-  //       setStep("pass");
-  //     } catch (error) {
-  //       toast.error(error.response?.data?.message || "OTP verification failed");
-  //     }
-  //   };
 
   const changePassword = async (e) => {
     e.preventDefault();
@@ -91,16 +77,16 @@ const ResetPassPage = () => {
           />
         </div> */}
 
-        <div class="w-full flex flex-col items-center justify-center ">
+        <div class="w-full flex flex-col items-center justify-center  ">
           <form
             onSubmit={step === "login" ? handleLoginSubmit : changePassword}
             class="md:w-96 w-80 flex flex-col items-center justify-center p-5"
           >
-            <h2 class="text-4xl text-gray-800 font-semibold">Reset Password</h2>
+            <h2 class="text-4xl text-gray-800 font-serif">Reset Password</h2>
 
             <div class="flex items-center gap-4 w-full my-5">
               <div class="w-full h-px bg-gray-500"></div>
-              <p class="w-full text-nowrap text-sm text-gray-800">
+              <p class="w-full text-nowrap text-sm text-gray-800 font-serif">
                 Verify with OTP
               </p>
               <div class="w-full h-px bg-gray-500"></div>
@@ -129,7 +115,7 @@ const ResetPassPage = () => {
                     name="email"
                     onChange={handleChange}
                     value={userData.email}
-                    class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full"
+                    class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full font-serif"
                     required
                   />
                 </div>
@@ -159,7 +145,7 @@ const ResetPassPage = () => {
                     name="otp"
                     onChange={handleChange}
                     value={userData.otp}
-                    class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full"
+                    class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full font-serif"
                     required
                   />
                 </div>
@@ -183,7 +169,7 @@ const ResetPassPage = () => {
                     name="password"
                     onChange={handleChange}
                     value={userData.password}
-                    class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full"
+                    class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full font-serif"
                     required
                   />
                 </div>
@@ -192,13 +178,13 @@ const ResetPassPage = () => {
 
             <button
               type="submit"
-              class="mt-8 w-full h-11 rounded-full text-white bg-indigo-500 hover:bg-indigo-600 cursor-pointer hover:opacity-90 transition-opacity"
+              class="mt-8 w-full h-11 font-serif rounded-full text-white bg-indigo-500 hover:bg-indigo-600 cursor-pointer hover:opacity-90 transition-opacity"
             >
               {step === "login" ? "Send OTP" : "Reset Password"}
             </button>
 
-            <p class="text-gray-700 text-sm font-semibold mt-4">
-              <Link class="text-indigo-600 hover:underline" to="/">
+            <p class="text-gray-700 text-sm font-serif mt-4">
+              <Link class="text-indigo-600 hover:underline" to="/login">
                 Back to login page{" "}
               </Link>
             </p>

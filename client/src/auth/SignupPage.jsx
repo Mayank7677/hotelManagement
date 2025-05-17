@@ -17,6 +17,8 @@ const SignupPage = () => {
     age: "",
   });
 
+  const [profileImg, setProfileImg] = useState();
+
   const handleChange = (e) => {
     setUserData({
       ...userData,
@@ -29,9 +31,24 @@ const SignupPage = () => {
     e.preventDefault();
 
     try {
+
+      const formData = new FormData();
+      formData.append("name", userData.name);
+      formData.append("email", userData.email);
+      formData.append("password", userData.password);
+      formData.append("phone", userData.phone);
+      formData.append("age", userData.age);
+      formData.append("profileImg", profileImg);
+
+
+      console.log(formData)
+      console.log(userData)
+      console.log(profileImg)
+      
+      
       const res = await axios.post(
         "http://localhost:7070/users/signup",
-        userData
+        formData,
       );
 
       // console.log(res.data)
@@ -56,7 +73,7 @@ const SignupPage = () => {
   };
 
   return (
-    <section className="flex items-center justify-center h-screen">
+    <section className="flex items-center justify-center h-screen ">
       <div class="flex   gap-10   rounded-4xl py-10  border-zinc-900 items-center">
         {/* <div class="w-full hidden md:inline-block">
           <img
@@ -71,8 +88,8 @@ const SignupPage = () => {
             onSubmit={handleSubmit}
             class="md:w-96 w-80 flex flex-col items-center justify-center p-5"
           >
-            <h2 class="text-4xl text-gray-800 font-bold">Sign up</h2>
-            <p class="text-sm text-gray-800 mt-2">
+            <h2 class="text-4xl text-gray-800 font-serif">Sign up</h2>
+            <p class="text-sm text-gray-800 mt-2 font-serif">
               Welcome Please sign up to continue
             </p>
 
@@ -88,7 +105,7 @@ const SignupPage = () => {
 
             <div class="flex items-center gap-4 w-full my-5">
               <div class="w-full h-px bg-gray-600"></div>
-              <p class="w-full text-nowrap text-sm text-gray-800">
+              <p class="w-full text-nowrap text-sm text-gray-800 font-serif">
                 or create an account
               </p>
               <div class="w-full h-px bg-gray-600"></div>
@@ -104,7 +121,7 @@ const SignupPage = () => {
                 value={userData.name}
                 onChange={handleChange}
                 placeholder="Full Name"
-                class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full"
+                class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full font-serif"
                 required
               />
             </div>
@@ -119,7 +136,7 @@ const SignupPage = () => {
                 name="phone"
                 value={userData.phone}
                 onChange={handleChange}
-                class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full"
+                class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full font-serif"
                 required
               />
             </div>
@@ -134,7 +151,7 @@ const SignupPage = () => {
                 name="age"
                 value={userData.age}
                 onChange={handleChange}
-                class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full"
+                class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full font-serif"
                 required
               />
             </div>
@@ -160,7 +177,7 @@ const SignupPage = () => {
                 name="email"
                 value={userData.email}
                 onChange={handleChange}
-                class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full"
+                class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full font-serif"
                 required
               />
             </div>
@@ -184,20 +201,45 @@ const SignupPage = () => {
                 name="password"
                 value={userData.password}
                 onChange={handleChange}
-                class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full"
+                class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full font-serif"
+                required
+              />
+            </div>
+            <div class="flex items-center justify-center mt-4 w-full bg-transparent border border-gray-500 h-12 rounded-full overflow-hidden pl-6 gap-2">
+              <svg
+                width="13"
+                height="17"
+                viewBox="0 0 13 17"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M13 8.5c0-.938-.729-1.7-1.625-1.7h-.812V4.25C10.563 1.907 8.74 0 6.5 0S2.438 1.907 2.438 4.25V6.8h-.813C.729 6.8 0 7.562 0 8.5v6.8c0 .938.729 1.7 1.625 1.7h9.75c.896 0 1.625-.762 1.625-1.7zM4.063 4.25c0-1.406 1.093-2.55 2.437-2.55s2.438 1.144 2.438 2.55V6.8H4.061z"
+                  fill="#6B7280"
+                />
+              </svg>
+              <input
+                type="file"
+                // placeholder="Password"
+                name="profileImg"
+                // onChange={(e) => setImage(e.target.files[0])}
+                // value={profileImg}
+                accept="image/*"
+                onChange={(e) => setProfileImg(e.target.files[0])}
+                className="bg-transparent text-gray-500 placeholder-gray-500 outline-none text-sm  w-full  font-serif"
                 required
               />
             </div>
 
             <button
               type="submit"
-              class="mt-8 w-full h-11 rounded-full text-white bg-indigo-500 hover:bg-indigo-600 cursor-pointer hover:opacity-90 transition-opacity"
+              class="mt-8 w-full h-11 font-serif rounded-full text-white bg-indigo-500 hover:bg-indigo-600 cursor-pointer hover:opacity-90 transition-opacity"
             >
               Create
             </button>
-            <p class="text-gray-600 text-sm font-medium mt-4">
+            <p class="text-gray-600 text-sm font-serif mt-4">
               Already have an account?{" "}
-              <Link class="text-indigo-600 hover:underline" to="/">
+              <Link class="text-indigo-600 hover:underline" to="/login">
                 Sign in
               </Link>
             </p>

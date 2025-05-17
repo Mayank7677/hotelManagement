@@ -16,7 +16,7 @@ const bookingSchema = mongoose.Schema(
     },
     checkInDate: {
       type: Date,
-      required: true, 
+      required: true,
     },
     checkOutDate: {
       type: Date,
@@ -37,6 +37,16 @@ const bookingSchema = mongoose.Schema(
     userPhone: {
       type: Number,
       required: true,
+    },
+    status: {
+      type: String,
+      enum: ["booked", "cancelled", "pending"],
+      default: "pending",
+    },
+    isChecking: {
+      type: String, 
+      enum: ["confirm", "cancelled", "pending"],
+      default: "pending",
     },
   },
   { timestamps: true, versionKey: false }

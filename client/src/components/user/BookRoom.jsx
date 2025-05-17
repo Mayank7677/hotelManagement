@@ -1,11 +1,13 @@
 import React, { use, useEffect, useState } from "react";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { DatePickerWithRange } from "../ui/Datepicker";
 import BASE_URL from "../../utils/api";
 import { toast } from "sonner";
+import { useTheme } from "../ThemeProvider";
 
 const BookRoom = () => {
+  let navigate = useNavigate();
   const [userName, setUserName] = useState("");
   const [userPhone, setUserPhone] = useState("");
   const [numberOfGuests, setNumberOfGuests] = useState(1);
@@ -54,21 +56,56 @@ const BookRoom = () => {
     let token = JSON.parse(localStorage.getItem("data")).token;
 
     try {
-      const res = await axios.post(`${BASE_URL}/bookings/bookRoom`, {
-        hotelId: roomData.hotelId._id,
-        roomId: roomData._id,
-        checkInDate: checkIn,
-        checkOutDate: checkOut,
-        numberOfGuests,
-        totalAmount,
-        userName,
-        userPhone,
-      } , {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const res = await axios.post(
+        `${BASE_URL}/bookings/bookRoom`,
+        {
+          hotelId: roomData.hotelId._id,
+          roomId: roomData._id,
+          checkInDate: checkIn,
+          checkOutDate: checkOut,
+          numberOfGuests,
+          totalAmount : discount > 0 ? discount : totalAmount,
+          userName,
+          userPhone,
         },
-      });
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
+      toast.success(res.data.message);
+      navigate('/profile/bookings')
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+      console.log(error);
+    }
+  };
+
+  // -----------------------------------------------------------------------------------------
+
+  const [couponCode, setCouponCode] = useState("");
+  const [discount, setDiscount] = useState(0);
+  const applyCoupon = async (e) => {
+    e.preventDefault();
+
+    let token = JSON.parse(localStorage.getItem("data")).token;
+
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/coupons/apply`,
+        { code: couponCode },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const discountedAmount =
+      totalAmount - (totalAmount * res.data.discount) / 100;
+      // setTotalAmount(discountedAmount);
+      setDiscount(discountedAmount);
       toast.success(res.data.message);
     } catch (error) {
       toast.error(error?.response?.data?.message);
@@ -76,13 +113,15 @@ const BookRoom = () => {
     }
   };
 
+  const { theme } = useTheme();
+
   return (
-    <div className="min-h-screen pt-20 sm:pt-25 px-1  sm:px-15 pb-15  ">
+    <div className="min-h-screen pt-30 sm:pt-25 px-1  sm:px-15 pb-15  ">
       <h1 className="text-4xl  tracking-tight font-serif pl-[9%]">Book Room</h1>
 
-      <div className="mt-5 sm:px-5  ">
+      <div className="mt-10 sm:px-5  ">
         <form onSubmit={handleSubmit}>
-          <div className="flex justify-evenly items-center">
+          <div className="flex flex-col sm:flex-row gap-10 justify-evenly items-center">
             {/* left side */}
             <div className="flex flex-col gap-5">
               <div className="flex flex-col sm:flex-row items-center gap-5 w-full">
@@ -119,7 +158,7 @@ const BookRoom = () => {
                       value={roomData.roomNumber}
                       // onChange={handleChange}
                       required
-                      className="mt-1 w-full  px-3 py-2  rounded-md font-serif border border-gray-400 sm:text-sm outline-none "
+                      className="mt-1 w-full  px-3 py-2   rounded-md font-serif border border-gray-400 sm:text-sm outline-none "
                     />
                   </label>
                 </div>
@@ -137,7 +176,7 @@ const BookRoom = () => {
                     value={userName}
                     onChange={(e) => setUserName(e.target.value)}
                     required
-                    className="mt-1 w-full  px-3 py-2  rounded-md font-serif border border-gray-400 sm:text-sm outline-none "
+                    className="mt-1 w-full  px-3 py-2   rounded-md font-serif border border-gray-400 sm:text-sm outline-none "
                   />
                 </label>
               </div>
@@ -176,7 +215,7 @@ const BookRoom = () => {
                     required
                     className="mt-1 w-full  px-3 py-2  rounded-md font-serif border border-gray-400 sm:text-sm outline-none "
                   />
-                  <span className="font-serif text-sm text-gray-700">
+                  <span className="font-serif text-sm ">
                     Maximum Capacity {roomData.totalPersons}
                   </span>
                 </label>
@@ -184,13 +223,19 @@ const BookRoom = () => {
             </div>
 
             {/* right side */}
-            <div className="flex flex-col gap-5 justify-center rounded-4xl bg-white border p-10">
+            <div
+              className={`flex flex-col gap-5 justify-center rounded-4xl  border p-10 ${
+                theme === "dark"
+                  ? "bg-neutral-900 text-white border-gray-500"
+                  : "bg-white text-black border-gray-300"
+              }`}
+            >
               <div className="flex gap-10">
                 <div className="flex flex-col ">
                   <span className="text-lg font-serif tracking-tight">
                     Check In Date
                   </span>
-                  <span className="font-serif text-sm text-gray-700">
+                  <span className="font-serif text-sm ">
                     {checkIn ? checkIn.slice(0, 10) : "N/A"}
                   </span>
                 </div>
@@ -198,7 +243,7 @@ const BookRoom = () => {
                   <span className="text-lg font-serif tracking-tight">
                     Check Out Date
                   </span>
-                  <span className="font-serif text-sm text-gray-700">
+                  <span className="font-serif text-sm ">
                     {checkOut ? checkOut.slice(0, 10) : "N/A"}
                   </span>
                 </div>
@@ -206,9 +251,7 @@ const BookRoom = () => {
                   <span className="text-lg font-serif tracking-tight">
                     Total Days
                   </span>
-                  <span className="font-serif text-sm text-gray-700">
-                    {totalDays} Days
-                  </span>
+                  <span className="font-serif text-sm ">{totalDays} Days</span>
                 </div>
               </div>
 
@@ -223,14 +266,54 @@ const BookRoom = () => {
                 />
               </div>
 
-              <div className="flex flex-col border-t pt-10">
-                <span className="text-lg font-serif tracking-tight">
-                  Your Total :
-                </span>
-                <pre className="text-lg font-serif tracking-tight flex gap-5 items-center">
-                  ₹{roomData.pricePerNight} x {totalDays} Days :{" "}
-                  <span className="text-[20px]">₹{totalAmount}</span>
-                </pre>
+              <div className="flex flex-col border-t pt-7  gap-4">
+                <div className="w-full">
+                  <label htmlFor="name">
+                    <span className="text-lg font-serif tracking-tight">
+                      Have an Coupon?
+                    </span>
+
+                    <div className="flex gap-5 items-center">
+                      <input
+                        type="text"
+                        id="name"
+                        placeholder="Add here"
+                        value={couponCode}
+                        onChange={(e) => setCouponCode(e.target.value)}
+                        className="mt-1 w-full  px-3 py-2 
+                         rounded-md font-serif border  border-gray-400 sm:text-sm outline-none "
+                      />
+
+                      <button
+                        onClick={applyCoupon}
+                        className="text-white bg-pink-500 hover:bg-pink-600 font-serif rounded-lg text-sm px-5 py-2 text-center w-fit"
+                      >
+                        Apply
+                      </button>
+                    </div>
+                  </label>
+                </div>
+                <div>
+                  <span className="text-lg font-serif tracking-tight">
+                    Your Total :
+                  </span>
+                  <pre className="text-lg font-serif tracking-tight flex gap-5 items-center">
+                    ₹{roomData.pricePerNight} x {totalDays} Days :{" "}
+                    <span className="text-[20px]">₹{totalAmount}</span>
+                  </pre>
+                </div>
+
+                {discount > 0 && (
+                  <div>
+                    <pre className="text-lg font-serif tracking-tight flex gap-5 items-center">
+                      {/* ₹{roomData.pricePerNight} x {totalDays} Days :{" "} */}
+                      <span className="text-lg font-serif tracking-tight">
+                        After Discount :
+                      </span>{" "}
+                      <span className="text-[20px]">₹{discount}</span>
+                    </pre>
+                  </div>
+                )}
               </div>
 
               <div>

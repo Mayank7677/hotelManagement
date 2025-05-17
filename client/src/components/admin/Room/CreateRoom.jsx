@@ -14,6 +14,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Link } from "react-router-dom";
+import { useTheme } from "../../ThemeProvider";
 
 const CreateRoom = () => {
   const [images, setImages] = useState([]);
@@ -312,8 +313,10 @@ const CreateRoom = () => {
     }
   };
 
+  const { theme } = useTheme();
+
   return (
-    <div className="pb-10">
+    <div className="pb-10 font-serif">
       <Tabs defaultValue="create">
         <TabsList>
           <TabsTrigger value="create">Create</TabsTrigger>
@@ -340,9 +343,26 @@ const CreateRoom = () => {
                       required
                       className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
                     >
-                      <option value="">Select a state</option>
+                      <option
+                        className={`${
+                          theme === "dark"
+                            ? "bg-neutral-900 text-white border-gray-600"
+                            : "bg-white text-black border-gray-300"
+                        }`}
+                        value=""
+                      >
+                        Select a state
+                      </option>
                       {stateData.map((s, index) => (
-                        <option key={index} value={s.name}>
+                        <option
+                          className={`${
+                            theme === "dark"
+                              ? "bg-neutral-900 text-white border-gray-600"
+                              : "bg-white text-black border-gray-300"
+                          }`}
+                          key={index}
+                          value={s.name}
+                        >
                           {s.name}
                         </option>
                       ))}
@@ -362,9 +382,26 @@ const CreateRoom = () => {
                       required
                       className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
                     >
-                      <option value="">Select a city</option>
+                      <option
+                        className={`${
+                          theme === "dark"
+                            ? "bg-neutral-900 text-white border-gray-600"
+                            : "bg-white text-black border-gray-300"
+                        }`}
+                        value=""
+                      >
+                        Select a city
+                      </option>
                       {cityData.map((s, index) => (
-                        <option key={index} value={s.name}>
+                        <option
+                          className={`${
+                            theme === "dark"
+                              ? "bg-neutral-900 text-white border-gray-600"
+                              : "bg-white text-black border-gray-300"
+                          }`}
+                          key={index}
+                          value={s.name}
+                        >
                           {s.name}
                         </option>
                       ))}
@@ -386,9 +423,26 @@ const CreateRoom = () => {
                       required
                       className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
                     >
-                      <option value="">Select Hotel</option>
+                      <option
+                        className={`${
+                          theme === "dark"
+                            ? "bg-neutral-900 text-white border-gray-600"
+                            : "bg-white text-black border-gray-300"
+                        }`}
+                        value=""
+                      >
+                        Select Hotel
+                      </option>
                       {hotelData.map((s, index) => (
-                        <option key={index} value={s.name}>
+                        <option
+                          className={`${
+                            theme === "dark"
+                              ? "bg-neutral-900 text-white border-gray-600"
+                              : "bg-white text-black border-gray-300"
+                          }`}
+                          key={index}
+                          value={s.name}
+                        >
                           {s.name}
                         </option>
                       ))}
@@ -408,7 +462,16 @@ const CreateRoom = () => {
                       required
                       className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
                     >
-                      <option value="">Select</option>
+                      <option
+                        className={`${
+                          theme === "dark"
+                            ? "bg-neutral-900 text-white border-gray-600"
+                            : "bg-white text-black border-gray-300"
+                        }`}
+                        value=""
+                      >
+                        Select
+                      </option>
                       {[
                         "Deluxe",
                         "Suite",
@@ -417,7 +480,15 @@ const CreateRoom = () => {
                         "Single",
                         "Double",
                       ].map((s, index) => (
-                        <option key={index} value={s}>
+                        <option
+                          className={`${
+                            theme === "dark"
+                              ? "bg-neutral-900 text-white border-gray-600"
+                              : "bg-white text-black border-gray-300"
+                          }`}
+                          key={index}
+                          value={s}
+                        >
                           {s}
                         </option>
                       ))}
@@ -621,16 +692,18 @@ const CreateRoom = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[60px] ">S.NO.</TableHead>
-                    <TableHead className="">Room No.</TableHead>
-                    <TableHead className="">Hotel</TableHead>
-                    <TableHead className="">City</TableHead>
-                    <TableHead className="">State</TableHead>
-                    <TableHead className="">Type</TableHead>
-                    <TableHead className="">Capacity</TableHead>
-                    <TableHead className="">Price</TableHead>
-                    <TableHead className="">Created by</TableHead>
-                    <TableHead className="text-end pr-[7%] ">Manage</TableHead>
+                    <TableHead className="text-lg w-[60px] ">S.NO.</TableHead>
+                    <TableHead className="text-lg ">Room No.</TableHead>
+                    <TableHead className="text-lg ">Hotel</TableHead>
+                    <TableHead className="text-lg ">City</TableHead>
+                    <TableHead className="text-lg ">State</TableHead>
+                    <TableHead className="text-lg ">Type</TableHead>
+                    <TableHead className="text-lg ">Capacity</TableHead>
+                    <TableHead className="text-lg ">Price</TableHead>
+                    <TableHead className="text-lg ">Created by</TableHead>
+                    <TableHead className="text-lg text-end pr-[7%] ">
+                      Manage
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -654,7 +727,10 @@ const CreateRoom = () => {
                         <TableCell>{state.pricePerNight}</TableCell>
                         <TableCell>{state.assignedBy.email}</TableCell>
                         <TableCell className="flex gap-4 justify-end">
-                          <Link to={`/admin/room/edit/${state._id}`} state={{stateData: state}}>
+                          <Link
+                            to={`/admin/room/edit/${state._id}`}
+                            state={{ stateData: state }}
+                          >
                             <p className="px-1.5 py-0.5 rounded-lg font-medium bg-yellow-500 text-white w-fit cursor-pointer">
                               {/* <FiEdit2 /> */}
                               Edit
@@ -717,16 +793,18 @@ const CreateRoom = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[60px] ">S.NO.</TableHead>
-                    <TableHead className="">Room No.</TableHead>
-                    <TableHead className="">Hotel</TableHead>
-                    <TableHead className="">City</TableHead>
-                    <TableHead className="">State</TableHead>
-                    <TableHead className="">Type</TableHead>
-                    <TableHead className="">Capacity</TableHead>
-                    <TableHead className="">Price</TableHead>
-                    <TableHead className="">Created by</TableHead>
-                    <TableHead className="text-end pr-[7%] ">Manage</TableHead>
+                    <TableHead className="text-lg w-[60px] ">S.NO.</TableHead>
+                    <TableHead className="text-lg ">Room No.</TableHead>
+                    <TableHead className="text-lg ">Hotel</TableHead>
+                    <TableHead className="text-lg ">City</TableHead>
+                    <TableHead className="text-lg ">State</TableHead>
+                    <TableHead className="text-lg ">Type</TableHead>
+                    <TableHead className="text-lg ">Capacity</TableHead>
+                    <TableHead className="text-lg ">Price</TableHead>
+                    <TableHead className="text-lg ">Created by</TableHead>
+                    <TableHead className="text-lg text-end pr-[7%] ">
+                      Manage
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>

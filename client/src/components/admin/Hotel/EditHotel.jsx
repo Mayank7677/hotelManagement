@@ -54,7 +54,7 @@ const EditHotel = () => {
   };
 
   return (
-    <div className="pb-20">
+    <div className="pb-20 font-serif">
       <Link to="/admin/hotel">
         <h1 className="font-medium  text-md text-blue-500 tracking-tighter">
           Back

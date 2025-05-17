@@ -1,10 +1,16 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // where to go after successful login –
+  // if someone sent us here with state.from, use that; otherwise home
+  const from = location.state?.from;
+
   const [step, setStep] = useState("login"); // step: login | otp
   const [emailForOtp, setEmailForOtp] = useState("");
 
@@ -63,18 +69,23 @@ const LoginPage = () => {
       const { token, user } = res.data;
       localStorage.setItem("data", JSON.stringify({ token, user }));
 
-      if (user.role === "admin") {
-        navigate("/admin/state");
-      } else {
-        navigate("/home");
+      console.log(from);
+      if (from && from !== "/") {
+        return navigate(from);
       }
+
+      if (user.role === "admin") {
+        return navigate("/admin");
+      }
+
+      navigate("/");
     } catch (error) {
       toast.error(error.response?.data?.message || "OTP verification failed");
     }
   };
 
   return (
-    <section className="flex items-center justify-center h-screen">
+    <section className="flex items-center justify-center h-screen ">
       <div class="flex  gap-10   rounded-4xl py-10  border-zinc-700 items-center">
         {/* <div class="w-full hidden md:inline-block">
           <img
@@ -89,8 +100,8 @@ const LoginPage = () => {
             onSubmit={step === "login" ? handleLoginSubmit : handleOtpSubmit}
             class="md:w-96 w-80 flex flex-col items-center justify-center p-5"
           >
-            <h2 class="text-4xl text-gray-800 font-bold">Sign in</h2>
-            <p class="text-sm text-gray-800 mt-3">
+            <h2 class="text-4xl text-gray-800 font-serif">Sign in</h2>
+            <p class="text-sm text-gray-800 mt-3 font-serif">
               Welcome back! Please sign in to continue
             </p>
 
@@ -106,7 +117,7 @@ const LoginPage = () => {
 
             <div class="flex items-center gap-4 w-full my-5">
               <div class="w-full h-px bg-gray-800"></div>
-              <p class="w-full text-nowrap text-sm text-gray-800">
+              <p class="w-full text-nowrap text-sm text-gray-800 font-serif">
                 or sign in with email
               </p>
               <div class="w-full h-px bg-gray-800"></div>
@@ -135,7 +146,7 @@ const LoginPage = () => {
                     name="email"
                     onChange={handleChange}
                     value={userData.email}
-                    class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full"
+                    class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full font-serif"
                     required
                   />
                 </div>
@@ -159,7 +170,7 @@ const LoginPage = () => {
                     name="password"
                     onChange={handleChange}
                     value={userData.password}
-                    class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full"
+                    class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full font-serif"
                     required
                   />
                 </div>
@@ -167,7 +178,7 @@ const LoginPage = () => {
                 <div class="w-full flex items-center justify-between mt-8 text-gray-500/80">
                   <div class="flex items-center gap-2"></div>
                   <Link
-                    class="text-sm  text-indigo-600 hover:underline"
+                    class="text-sm  text-indigo-600 hover:underline font-serif"
                     to="/reset"
                   >
                     Forgot password?
@@ -199,7 +210,7 @@ const LoginPage = () => {
                     name="otp"
                     onChange={handleChange}
                     value={userData.otp}
-                    class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full"
+                    class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full font-serif"
                     required
                   />
                 </div>
@@ -208,13 +219,13 @@ const LoginPage = () => {
 
             <button
               type="submit"
-              class="mt-8 w-full h-11 rounded-full text-white bg-indigo-500 hover:bg-indigo-600 cursor-pointer hover:opacity-90 transition-opacity"
+              class="mt-8 w-full h-11 rounded-full text-white bg-indigo-500 hover:bg-indigo-600 cursor-pointer hover:opacity-90 transition-opacity font-serif"
             >
               {step === "login" ? "Send OTP" : "Verify OTP"}
             </button>
 
             {step === "login" && (
-              <p class="text-gray-700 text-sm font-semibold mt-4">
+              <p class="text-gray-700 text-sm font-serif mt-4">
                 Don’t have an account?{" "}
                 <Link class="text-indigo-600 hover:underline" to="/signup">
                   Create
