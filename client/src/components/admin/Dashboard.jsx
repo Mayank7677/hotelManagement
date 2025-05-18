@@ -11,6 +11,7 @@ import { CiHome } from "react-icons/ci";
 import { IoBedOutline } from "react-icons/io5";
 import { PiNewspaperClippingLight } from "react-icons/pi";
 import { SlUserFollowing } from "react-icons/sl";
+import { RxDashboard } from "react-icons/rx";
 
 const Dashboard = () => {
   const dashboardicon = (
@@ -83,7 +84,12 @@ const Dashboard = () => {
     },
   ];
   const sidebarLinks2 = [
-    { name: "Bookings", path: "/admin", icon: <CiBookmarkMinus /> },
+    { name: "Dashboard", path: "/admin", icon: <RxDashboard /> },
+    {
+      name: "Bookings",
+      path: "/admin/manageBookings",
+      icon: <CiBookmarkMinus />,
+    },
     {
       name: "User Check-In",
       path: "/admin/userCheck",
@@ -99,7 +105,7 @@ const Dashboard = () => {
   return (
     <>
       {/* Sidebar + Main Content */}
-      <div className={`flex min-h-screen pt-15 relative `}>
+      <div className={`flex min-h-screen pt-12 relative `}>
         {/* Sidebar */}
         <div
           className={`md:w-54 w-10 h-full fixed  sm:pr-2 text-base   gap-2 flex flex-col transition-all duration-300 pt-7 border-neutral-200 ${
@@ -170,7 +176,7 @@ const Dashboard = () => {
             ))}
           </div>
 
-          <div className="py-2">
+          <div className="pb-2 border-b border-neutral-300">
             <Link to="/" onClick={() => window.scrollTo(0, 0)}>
               <div
                 className={`flex items-center font-serif cursor-pointer gap-2 py-1 px-2 rounded-r-4xl transition-colors duration-200 ${
@@ -190,7 +196,7 @@ const Dashboard = () => {
 
         {/* Main Content */}
         <div
-          className={`flex-1 p-7 pb-10  border border-neutral-200  md:ml-52 ml-10  w-[87vw]  h-full fixed overflow-scroll ${
+          className={`flex-1 p-7 max-sm:py-7 max-sm:px-2 pb-10  border border-neutral-200  md:ml-52 ml-10  max-[450px]:w-[86vw] max-sm:w-[90vw] md:w-[78vw] lg:w-[83vw] xl:w-[88vw]  h-full fixed overflow-scroll ${
             theme === "dark"
               ? "bg-neutral-900 text-white  border-neutral-500"
               : "bg-white text-black border-gray-300"

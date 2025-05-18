@@ -1,5 +1,5 @@
 const bookingModel = require("../models/bookingModel");
-
+const moment = require("moment");
 exports.bookRoom = async (req, res) => {
   console.log(req.body);
   try {
@@ -23,11 +23,13 @@ exports.bookRoom = async (req, res) => {
           checkOutDate: { $gt: new Date(checkInDate) },
         },
       ],
-    }); 
-    console.log( 'bjjb' ,conflict)
+    });
+    console.log("bjjb", conflict);
 
     if (conflict) {
-      return res.status(200).json({ message: "Room is already booked for these dates" });
+      return res
+        .status(200)
+        .json({ message: "Room is already booked for these dates" });
     }
 
     const booking = new bookingModel({
@@ -40,7 +42,7 @@ exports.bookRoom = async (req, res) => {
       userName,
       userPhone,
       userId: req.user._id,
-    });    
+    });
     const save = await booking.save();
     res.status(201).json({ message: "Room Booked Successfully" });
   } catch (error) {
@@ -49,32 +51,31 @@ exports.bookRoom = async (req, res) => {
 };
 
 exports.checkAvailability = async (req, res) => {
-  console.log(req.body)
+  console.log(req.body);
   try {
     const { roomId, checkInDate, checkOutDate } = req.body;
-    console.log(new Date(checkInDate), new Date(checkOutDate))
-    
+    console.log(new Date(checkInDate), new Date(checkOutDate));
+
     const bookings = await bookingModel.find({
       roomId: roomId,
     });
     console.log(bookings);
 
-
     const conflict = await bookingModel.findOne({
-      roomId,  
+      roomId,
       status: "booked",
       checkInDate: { $lt: new Date(checkOutDate) },
       checkOutDate: { $gt: new Date(checkInDate) },
-    } )
-    console.log( 'dfwvwsfrsfswf--------------------', conflict)
+    });
+    console.log("dfwvwsfrsfswf--------------------", conflict);
 
     if (conflict) {
       return res.status(200).json({ available: false });
     }
-    console.log('------------------')
+    console.log("------------------");
 
     res.status(200).json({ available: true });
-  } catch (error) {        
+  } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
@@ -102,7 +103,7 @@ exports.getAll = async (req, res) => {
 // for admin
 
 exports.approved = async (req, res) => {
-  console.log(req.query)
+  console.log(req.query);
   try {
     const { id } = req.query;
     const approved = await bookingModel.findByIdAndUpdate(
@@ -153,7 +154,6 @@ exports.cancelled = async (req, res) => {
   }
 };
 
-
 // --------------------------------------------------
 
 exports.getUserBookings = async (req, res) => {
@@ -161,23 +161,29 @@ exports.getUserBookings = async (req, res) => {
     const userId = req.user._id;
     const bookings = await bookingModel
       .find({ userId })
-      .populate("hotelId", "name address status totalRoom description contactNumber contactEmail")
-      .populate("roomId", "name address status totalRoom description contactNumber contactEmail roomNumber images")
+      .populate(
+        "hotelId",
+        "name address status totalRoom description contactNumber contactEmail"
+      )
+      .populate(
+        "roomId",
+        "name address status totalRoom description contactNumber contactEmail roomNumber images"
+      )
       .populate("userId", "name email age phone role status");
 
     res.status(200).json(bookings);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-}
+};
 
-exports.  confirmBookingUser = async (req, res) => {
+exports.confirmBookingUser = async (req, res) => {
   // console.log(req.headers)
   // console.log(req.query)
   try {
     const { id } = req.query;
     const confirm = await bookingModel.findByIdAndUpdate(
-      id,   
+      id,
       {
         isChecking: "confirm",
       },
@@ -188,7 +194,7 @@ exports.  confirmBookingUser = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-}
+};
 
 exports.cancelBookingUser = async (req, res) => {
   try {
@@ -205,4 +211,175 @@ exports.cancelBookingUser = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+};
+
+// ---------------------------------------------------
+
+exports.analytics = async (req, res) => {
+  try {
+    const bookings = await bookingModel.find({
+      $or: [
+        { checkInDate: { $gte: new Date(getLastSunday()) } },
+        { checkOutDate: { $gte: new Date(getLastSunday()) } },
+      ],
+    });
+    // console.log("fwfwfwegverwgvergvegvebvebv")
+    // console.log(bookings)
+    // console.log("fwfwfwegverwgvergvegvebvebv")
+
+    const days = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    const chartData = days.map((day) => ({ day, checkin: 0, checkout: 0 }));
+    // console.log("chartData", chartData);
+
+    bookings.forEach((booking) => {
+      const checkinDay = new Date(booking.checkInDate).getDay();
+      const checkoutDay = new Date(booking.checkOutDate).getDay();
+
+      chartData[checkinDay].checkin += 1;
+      chartData[checkoutDay].checkout += 1;
+    });
+
+    // console.log("chartData2", chartData);
+    res.json(chartData);
+  } catch (err) {
+    console.error("Analytics fetch failed:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Utility to get last Sunday's date
+function getLastSunday() {
+  const today = new Date();
+  const lastSunday = new Date(today);
+  lastSunday.setDate(today.getDate() - today.getDay());
+  lastSunday.setHours(0, 0, 0, 0);
+  console.log("lastSunday", lastSunday);
+  return lastSunday;
 }
+
+exports.weeklyRevenue = async (req, res) => {
+  try {
+    const bookings = await bookingModel.find();
+
+    // Initialize revenue data for each day of the week
+    const revenueByDay = {
+      Sunday: 0,
+      Monday: 0,
+      Tuesday: 0,
+      Wednesday: 0,
+      Thursday: 0,
+      Friday: 0,
+      Saturday: 0,
+    };
+
+    // Fill revenue by matching day from createdAt
+    bookings.forEach((booking) => {
+      const dayName = new Date(booking.createdAt).toLocaleDateString("en-US", {
+        weekday: "long",
+      });
+      revenueByDay[dayName] += booking.totalAmount;
+    });
+
+    // Convert object to array format for chart
+    const chartData = Object.entries(revenueByDay).map(([day, revenue]) => ({
+      day,
+      revenue,
+    }));
+
+    res.status(200).json(chartData);
+  } catch (error) {
+    console.error("Error fetching revenue:", error.message);
+    res.status(500).json({ message: "Failed to get weekly revenue" });
+  }
+};
+
+exports.getWeeklyBookingCounts = async (req, res) => {
+  try {
+    const startOfWeek = moment().startOf("week").startOf("day").toDate(); // Sunday
+    const endOfWeek = moment().endOf("week").endOf("day").toDate(); // Saturday
+
+    const bookings = await bookingModel.find({
+      createdAt: { $gte: startOfWeek, $lte: endOfWeek },
+    });
+
+    // Initialize counts with 0 for each day
+    const weekDays = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    const dayCounts = weekDays.map((day) => ({
+      day,
+      bookings: 0,
+    }));
+
+    // Count bookings per day
+    bookings.forEach((booking) => {
+      const dayIndex = new Date(booking.createdAt).getDay(); // 0=Sun, 6=Sat
+      dayCounts[dayIndex].bookings += 1;
+    });
+
+    res.status(200).json(dayCounts);
+  } catch (error) {
+    console.error("Error in weekly bookings:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+exports.bookingCount = async (req, res) => {
+  try {
+    let data = await bookingModel.find();
+
+    let confirmBookings = 0;
+    let pendingBookings = 0;
+    let cancelledBookings = 0;
+
+    data.forEach((booking) => {
+      if (booking.status === "booked" && booking.isChecking === "confirm") {
+        confirmBookings += 1;
+      } else if (
+        booking.status === "pending" ||
+        (booking.isChecking === "pending" && booking.status !== "cancelled")
+      ) {
+        pendingBookings += 1;
+      } else if (
+        booking.status === "cancelled" ||
+        booking.isChecking === "cancelled"
+      ) {
+        cancelledBookings += 1;
+      }
+    });
+
+    const chartData = [
+      { browser: "booked", visitors: confirmBookings, fill: "#2b7fff" },
+      {
+        browser: "cancelled",
+        visitors: cancelledBookings,
+        fill: "#f0b100",
+      },
+      {
+        browser: "pending",
+        visitors: pendingBookings,
+        fill: "#fb2c36",
+      },
+    ];
+
+    console.log(chartData);
+
+    res.status(200).json({ chartData });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

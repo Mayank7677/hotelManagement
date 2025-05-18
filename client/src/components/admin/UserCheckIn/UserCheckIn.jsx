@@ -96,6 +96,7 @@ const UserCheckIn = () => {
           <TabsTrigger value="booked">Confirm</TabsTrigger>
           <TabsTrigger value="pending">Pending</TabsTrigger>
           <TabsTrigger value="cancelled">Cancelled</TabsTrigger>
+          <TabsTrigger value="complete">Completed</TabsTrigger>
         </TabsList>
 
         <TabsContent value="booked">
@@ -112,7 +113,10 @@ const UserCheckIn = () => {
             </div>
 
             {bookingData
-              .filter((data) => data.status === "booked" && data.isChecking === "confirm")
+              .filter(
+                (data) =>
+                  data.status === "booked" && data.isChecking === "confirm"
+              )
               .map((dets) => (
                 <div className="grid grid-cols-1 max-md:gap-5 md:grid-cols-[3fr_2fr_2fr_1fr] w-full border-b border-gray-300 py-6 first:border-t ">
                   <div className="flex flex-col md:flex-row ">
@@ -589,6 +593,171 @@ const UserCheckIn = () => {
                             className={`text-sm font-serif rounded-full text-red-500`}
                           >
                             Cancelled
+                          </p>
+                        </div>
+                      </>
+                    </div>{" "}
+                  </div>
+                </div>
+              ))}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="complete">
+          <h1 className="font-medium mt-5 text-3xl tracking-tighter">
+            Completed Bookings
+          </h1>
+
+          <div className="mt-8 w-full ">
+            <div className="hidden md:grid md:grid-cols-[3fr_2fr_2fr_1fr] w-full border-b border-gray-300 font-medium text-base py-3 ">
+              <div className="">Hotel Details</div>
+              <div className="">Date & Timings</div>
+              <div className="">User Details</div>
+              <div className="pl-[3%]">Status</div>
+            </div>
+
+            {bookingData
+              .filter((data) => data.status === "completed" && data.isChecking === "checked-out")
+              .map((dets) => (
+                <div className="grid grid-cols-1 max-md:gap-5 md:grid-cols-[3fr_2fr_2fr_1fr] w-full border-b border-gray-300 py-6 first:border-t ">
+                  <div className="flex flex-col md:flex-row ">
+                    <img
+                      className="min-md:w-44 rounded-2xl shadow object-cover"
+                      src={dets.roomId.images[0].url}
+                      alt=""
+                    />
+                    <div className="flex flex-col gap-1.5 max-md:mt-3 min-md:ml-4">
+                      <p className="text-2xl font-serif tracking-tight">
+                        {dets.hotelId.name} ,
+                        <span className="text-[15px]">
+                          ({dets.roomId.roomNumber})
+                        </span>{" "}
+                      </p>
+                      <div class="flex items-center gap-1 text-sm  tracking-tight font-serif">
+                        <CiLocationOn
+                          className={` text-lg ${
+                            theme === "dark" ? "text-white" : "text-black"
+                          } `}
+                        />
+                        <span
+                          className={`${
+                            theme === "dark"
+                              ? "text-neutral-300"
+                              : "text-gray-700"
+                          }`}
+                        >
+                          {dets.hotelId.address}
+                        </span>
+                      </div>
+                      <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
+                        <LuUsersRound
+                          className={` text-lg ${
+                            theme === "dark" ? "text-neutral-400" : "text-black"
+                          } `}
+                        />
+                        <span
+                          className={`${
+                            theme === "dark"
+                              ? "text-neutral-300"
+                              : "text-gray-700"
+                          }`}
+                        >
+                          Guests: {dets.numberOfGuests}
+                        </span>
+                      </div>
+                      <p class="font-serif">Total: ₹13000</p>
+                    </div>
+                  </div>
+
+                  <div class="flex flex-col mt-3 gap-3">
+                    <div>
+                      <p className="font-serif">Check-In:</p>
+                      <p
+                        class={` text-sm font-serif ${
+                          theme === "dark"
+                            ? "text-neutral-400"
+                            : "text-gray-700"
+                        }`}
+                      >
+                        {new Date(dets.checkInDate).toDateString()}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="font-serif">Check-Out:</p>
+                      <p
+                        class={` text-sm font-serif ${
+                          theme === "dark"
+                            ? "text-neutral-400"
+                            : "text-gray-700"
+                        }`}
+                      >
+                        {new Date(dets.checkOutDate).toDateString()}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-1.5 max-md:mt-3 mt-5">
+                    <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
+                      <BiUser
+                        className={` text-lg ${
+                          theme === "dark" ? "text-neutral-400" : "text-black"
+                        } `}
+                      />
+                      <span
+                        className={`${
+                          theme === "dark"
+                            ? "text-neutral-300"
+                            : "text-gray-700"
+                        }`}
+                      >
+                        Name: {dets.userName}
+                      </span>
+                    </div>
+                    <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
+                      <HiOutlineMail
+                        className={` text-lg ${
+                          theme === "dark" ? "text-neutral-400" : "text-black"
+                        } `}
+                      />
+                      <span
+                        className={`${
+                          theme === "dark"
+                            ? "text-neutral-300"
+                            : "text-gray-700"
+                        }`}
+                      >
+                        Email: {dets.userId.email}
+                      </span>
+                    </div>
+                    <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
+                      <CgSmartphone
+                        className={` text-lg ${
+                          theme === "dark" ? "text-neutral-400" : "text-black"
+                        } `}
+                      />
+                      <span
+                        className={`${
+                          theme === "dark"
+                            ? "text-neutral-300"
+                            : "text-gray-700"
+                        }`}
+                      >
+                        Phone: {dets.userPhone}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="flex flex-row md:items-center md:gap-12 gap-8">
+                    <div className="flex flex-col w-fit md:items-center">
+                      <>
+                        <div className="flex items-center gap-2">
+                          <div
+                            className={`h-3 w-3 rounded-full bg-green-500`}
+                          ></div>
+                          <p
+                            className={`text-sm font-serif rounded-full text-green-600`}
+                          >
+                            Completed
                           </p>
                         </div>
                       </>

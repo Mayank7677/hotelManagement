@@ -192,11 +192,9 @@ const ManageBookings = () => {
                 {booking.isChecking === "confirm" &&
                   booking.status === "booked" && (
                     <div className="flex items-center gap-2">
-                      <div
-                        className={`h-3 w-3 rounded-full bg-green-500`}
-                      ></div>
+                      <div className={`h-3 w-3 rounded-full bg-blue-500`}></div>
                       <p
-                        className={`text-sm font-serif rounded-full text-green-500`}
+                        className={`text-sm font-serif rounded-full text-blue-500`}
                       >
                         Booked
                       </p>
@@ -219,6 +217,32 @@ const ManageBookings = () => {
                     </p>
                   </div>
                 )}
+
+                {booking.isChecking === "checked-in" &&
+                  booking.status === "booked" && (
+                    <div className="flex items-center gap-2">
+                      <div
+                        className={`h-3 w-3 rounded-full bg-neutral-500`}
+                      ></div>
+                      <p
+                        className={`text-sm font-serif rounded-full text-neutral-500`}
+                      >
+                        Checked In
+                      </p>
+                    </div>
+                  )}
+
+                {booking.isChecking === "checked-out" &&
+                  booking.status === "completed" && (
+                    <div className="flex items-center gap-2">
+                      <div className={`h-3 w-3 rounded-full bg-green-500`}></div>
+                      <p
+                        className={`text-sm font-serif rounded-full text-green-500`}
+                      >
+                        Completed
+                      </p>
+                    </div>
+                  )}
 
                 {booking.status === "booked" &&
                   booking.isChecking === "pending" && (

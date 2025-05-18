@@ -13,4 +13,11 @@ router.put("/confirmBookingUser", auth, bookingController.confirmBookingUser);
 router.put("/cancelBookingUser", auth, bookingController.cancelBookingUser);
 router.get("/getUserBookings", auth, bookingController.getUserBookings);
 
+router.get('/analytics', auth, bookingController.analytics);
+router.get("/weekly-revenue", auth, bookingController.weeklyRevenue);
+router.get("/weekly-booking-counts", auth, bookingController.getWeeklyBookingCounts);
+router.get("/booking-counts", auth, bookingController.bookingCount);
+
+
+
 module.exports = router;
