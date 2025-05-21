@@ -16,6 +16,11 @@ import {
 } from "@/components/ui/table";
 import { Link } from "react-router-dom";
 import { useTheme } from "../../ThemeProvider";
+import { CgSmartphone } from "react-icons/cg";
+import { BiUser } from "react-icons/bi";
+import { LuUsersRound } from "react-icons/lu";
+import { CiLocationOn } from "react-icons/ci";
+import { HiOutlineMail } from "react-icons/hi";
 
 const CreateHotels = () => {
   const [hotel, setHotel] = useState({
@@ -43,9 +48,23 @@ const CreateHotels = () => {
     console.log(token);
 
     try {
-      console.log(hotel);
+      const formData = new FormData();
 
-      const res = await axios.post(`${BASE_URL}/hotels/create`, hotel, {
+      formData.append("state", hotel.state);
+      formData.append("city", hotel.city);
+      formData.append("name", hotel.name);
+      formData.append("address", hotel.address);
+      formData.append("totalRoom", hotel.totalRoom);
+      formData.append("description", hotel.description);
+      formData.append("contactNumber", hotel.contactNumber);
+      formData.append("contactEmail", hotel.contactEmail);
+
+      formData.append("hotelImages", hotelImages.image1);
+      formData.append("hotelImages", hotelImages.image2);
+      formData.append("hotelImages", hotelImages.image3);
+      formData.append("hotelImages", hotelImages.image4);
+
+      const res = await axios.post(`${BASE_URL}/hotels/create`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -64,6 +83,13 @@ const CreateHotels = () => {
         description: "",
         contactNumber: "",
         contactEmail: "",
+      });
+
+      setHotelImages({
+        image1: "",
+        image2: "",
+        image3: "",
+        image4: "",
       });
     } catch (err) {
       console.error(err);
@@ -227,6 +253,15 @@ const CreateHotels = () => {
     } else {
       return 0; // No sorting
     }
+  });
+
+  // ---------------------------------------------------------
+
+  const [hotelImages, setHotelImages] = useState({
+    image1: null,
+    image2: null,
+    image3: null,
+    image4: null,
   });
 
   const { theme } = useTheme();
@@ -402,38 +437,45 @@ const CreateHotels = () => {
                 </label>
               </div>
 
-              {/* <div className="mt-7">
-            <label htmlFor="description">
-              <span className="text-lg font-medium tracking-tight">
-                Enter Hotel Description
-              </span>
+              <div className="mt-7">
+                <span className="text-lg font-medium tracking-tight">
+                  Enter Hotel Images
+                </span>
 
-              <input
-                type="text"
-                id="description"
-                value={hotel.description}
-                onChange={handleChange}
-                required
-                className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
-              />
-            </label>
-          </div> */}
+                <div className="grid grid-cols-2 sm:flex gap-4 my-2 flex-wrap">
+                  {Object.keys(hotelImages).map((key) => (
+                    <label htmlFor={`images-${key}`} key={key}>
+                      <img
+                        className="max-h-13 cursor-pointer opacity-80"
+                        src={
+                          hotelImages[key]
+                            ? URL.createObjectURL(hotelImages[key])
+                            : `/assets/uploadArea.svg`
+                        }
+                        alt=""
+                      />
+                      <input
+                        type="file"
+                        accept="image/*"
+                        id={`images-${key}`}
+                        hidden
+                        onChange={(e) =>
+                          setHotelImages({
+                            ...hotelImages,
+                            [key]: e.target.files[0],
+                          })
+                        }
+                      />
+                    </label>
+                  ))}
+                </div>
+              </div>
 
               <div className="mt-7">
                 <label htmlFor="description">
                   <span className="text-lg font-medium tracking-tight">
                     Enter Hotel Description
                   </span>
-
-                  {/* <input
-                type="text"
-                id="description"
-                placeholder="Hotel Description"
-                value={hotel.description}
-                onChange={handleChange}
-                required
-                className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
-              /> */}
 
                   <textarea
                     value={hotel.description}
@@ -491,65 +533,163 @@ const CreateHotels = () => {
                 </div>
               </div>
             </div>
-            <div className="sm:border border-gray-300 sm:rounded-2xl sm:p-3 mt-5 ">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="text-lg w-[100px] ">S.NO.</TableHead>
-                    <TableHead className="text-lg ">Hotel</TableHead>
-                    <TableHead className="text-lg ">City</TableHead>
-                    <TableHead className="text-lg ">State</TableHead>
-                    <TableHead className="text-lg ">Contact Number</TableHead>
-                    <TableHead className="text-lg ">Contact Email</TableHead>
-                    <TableHead className="text-lg ">Created by</TableHead>
-                    <TableHead className="text-lg text-end pr-[7%] ">
-                      Manage
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {sortedData
-                    .filter((state) => state.status === "active")
-                    .map((state, index) => (
-                      <TableRow key={index}>
-                        <TableCell className="font-medium">
-                          {index + 1}
-                        </TableCell>
-                        <TableCell>{state.name}</TableCell>
-                        <TableCell>{state.locationId.name}</TableCell>
-                        <TableCell>{state.stateId.name}</TableCell>
-                        <TableCell>{state.contactNumber}</TableCell>
-                        <TableCell>{state.contactEmail}</TableCell>
-                        <TableCell>{state.assignedBy.email}</TableCell>
-                        <TableCell className="flex gap-4 justify-end">
-                          <Link
-                            to={`/admin/hotel/edit/${state._id}`}
-                            state={{ stateData: state }}
-                          >
-                            <p className="px-1.5 py-0.5 rounded-lg font-medium bg-yellow-500 text-white w-fit cursor-pointer">
-                              {/* <FiEdit2 /> */}
-                              Edit
-                            </p>
-                          </Link>
-                          <p
-                            onClick={() => handleStatusChange(state._id)}
-                            className="px-1.5 py-0.5 rounded-lg font-medium bg-blue-500 text-white w-fit cursor-pointer"
-                          >
-                            Inactive
-                          </p>
-                          <p
-                            onClick={() => handleDelete(state._id)}
-                            className="px-1.5 py-0.5 rounded-lg font-medium bg-red-500 text-white w-fit cursor-pointer"
-                          >
-                            {/* <FiEdit2 /> */}
-                            Delete
-                          </p>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
+          </div>
+          <div className="mt-8 w-full ">
+            <div className="hidden md:grid md:grid-cols-[3fr_2fr_2fr_1fr] w-full border-b border-gray-300 font-medium text-base py-3 ">
+              <div className="">Hotel Details</div>
+              <div className="">Contact Info</div>
+              <div className="">Created By</div>
+              <div className="pl-[3%]">Manage</div>
             </div>
+
+            {sortedData
+              .filter((state) => state.status === "active")
+              .map((dets, index) => (
+                <div className="grid grid-cols-1 max-md:gap-5 md:grid-cols-[3fr_2fr_2fr_1fr] w-full border-b border-gray-300 py-6 first:border-t ">
+                  <div className="flex flex-col md:flex-row ">
+                    <img
+                      className="min-md:w-44 rounded-2xl shadow object-cover"
+                      src={dets.hotelImages[0]?.url || dets.hotelImages[0]}
+                      alt=""
+                    />
+                    <div className="flex flex-col gap-1.5 max-md:mt-3 min-md:ml-4">
+                      <p className="text-2xl font-serif tracking-tight">
+                        {dets.name}
+                      </p>
+                      <div class="flex items-center gap-1 text-sm  tracking-tight font-serif">
+                        <CiLocationOn
+                          className={` text-lg ${
+                            theme === "dark" ? "text-white" : "text-black"
+                          } `}
+                        />
+                        <span
+                          className={`${
+                            theme === "dark"
+                              ? "text-neutral-300"
+                              : "text-gray-700"
+                          }`}
+                        >
+                          {dets.address}
+                        </span>
+                      </div>
+
+                      <p class="font-serif">Rooms: {dets.totalRoom}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-1.5 max-md:mt-3 mt-5">
+                    <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
+                      <HiOutlineMail
+                        className={` text-lg ${
+                          theme === "dark" ? "text-neutral-400" : "text-black"
+                        } `}
+                      />
+                      <span
+                        className={`${
+                          theme === "dark"
+                            ? "text-neutral-300"
+                            : "text-gray-700"
+                        }`}
+                      >
+                        Email: {dets.contactEmail}
+                      </span>
+                    </div>
+                    <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
+                      <CgSmartphone
+                        className={` text-lg ${
+                          theme === "dark" ? "text-neutral-400" : "text-black"
+                        } `}
+                      />
+                      <span
+                        className={`${
+                          theme === "dark"
+                            ? "text-neutral-300"
+                            : "text-gray-700"
+                        }`}
+                      >
+                        Phone: {dets.contactNumber}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-1.5 max-md:mt-3 mt-5">
+                    <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
+                      <BiUser
+                        className={` text-lg ${
+                          theme === "dark" ? "text-neutral-400" : "text-black"
+                        } `}
+                      />
+                      <span
+                        className={`${
+                          theme === "dark"
+                            ? "text-neutral-300"
+                            : "text-gray-700"
+                        }`}
+                      >
+                        Name: {dets.assignedBy.name}
+                      </span>
+                    </div>
+                    <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
+                      <HiOutlineMail
+                        className={` text-lg ${
+                          theme === "dark" ? "text-neutral-400" : "text-black"
+                        } `}
+                      />
+                      <span
+                        className={`${
+                          theme === "dark"
+                            ? "text-neutral-300"
+                            : "text-gray-700"
+                        }`}
+                      >
+                        Email: {dets.assignedBy.email}
+                      </span>
+                    </div>
+                    <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
+                      <CgSmartphone
+                        className={` text-lg ${
+                          theme === "dark" ? "text-neutral-400" : "text-black"
+                        } `}
+                      />
+                      <span
+                        className={`${
+                          theme === "dark"
+                            ? "text-neutral-300"
+                            : "text-gray-700"
+                        }`}
+                      >
+                        Phone: {dets.assignedBy.phone}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col w-fit md:items-center">
+                    <>
+                      <Link
+                        to={`/admin/hotel/edit/${dets._id}`}
+                        onClick={() => window.scrollTo(0, 0)}
+                        state={{ stateData: dets }}
+                      >
+                        <button class="px-4 py-1.5 mt-4 text-xs border border-yellow-400 text-yellow-400 rounded-full hover:bg-gray-50 transition-all cursor-pointer font-serif">
+                          Edit
+                        </button>
+                      </Link>
+                      <button
+                        onClick={() => handleStatusChange(dets._id)}
+                        class="px-4 py-1.5 mt-4 text-xs border border-blue-500 text-blue-500 rounded-full hover:bg-gray-50 transition-all cursor-pointer font-serif"
+                      >
+                        Inactive
+                      </button>
+                      <button
+                        onClick={() => handleDelete(dets._id)}
+                        class="px-4 py-1.5 mt-4 text-xs border border-red-500 text-red-500 rounded-full hover:bg-gray-50 transition-all cursor-pointer font-serif"
+                      >
+                        Delete
+                      </button>
+                    </>
+                  </div>
+                </div>
+              ))}
           </div>
         </TabsContent>
 
@@ -585,70 +725,163 @@ const CreateHotels = () => {
                 </div>
               </div>
             </div>
-
-            <div className="sm:border border-gray-300 sm:rounded-2xl sm:p-3 mt-5 ">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="font-serif w-[100px] ">
-                      S.NO.
-                    </TableHead>
-                    <TableHead className="font-serif ">Hotel</TableHead>
-                    <TableHead className="font-serif ">City</TableHead>
-                    <TableHead className="font-serif ">State</TableHead>
-                    <TableHead className="font-serif ">
-                      Contact Number
-                    </TableHead>
-                    <TableHead className="font-serif ">Contact Email</TableHead>
-                    <TableHead className="font-serif ">Created by</TableHead>
-                    <TableHead className="font-serif text-end pr-[7%] ">
-                      Manage
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {sortedDataInactive
-                    .filter((state) => state.status === "inactive")
-                    .map((state, index) => (
-                      <TableRow key={index}>
-                        <TableCell className="font-medium">
-                          {index + 1}
-                        </TableCell>
-                        <TableCell>{state.name}</TableCell>
-                        <TableCell>{state.locationId.name}</TableCell>
-                        <TableCell>{state.stateId.name}</TableCell>
-                        <TableCell>{state.contactNumber}</TableCell>
-                        <TableCell>{state.contactEmail}</TableCell>
-                        <TableCell>{state.assignedBy.email}</TableCell>
-                        <TableCell className="flex gap-4 justify-end">
-                          <Link
-                            to={`/admin/hotel/edit/${state._id}`}
-                            state={{ stateData: state }}
-                          >
-                            <p className="px-1.5 py-0.5 rounded-lg font-medium bg-yellow-500 text-white w-fit cursor-pointer">
-                              {/* <FiEdit2 /> */}
-                              Edit
-                            </p>
-                          </Link>
-                          <p
-                            onClick={() => handleStatusChange(state._id)}
-                            className="px-1.5 py-0.5 rounded-lg font-medium bg-blue-500 text-white w-fit cursor-pointer"
-                          >
-                            Active
-                          </p>
-                          <p
-                            onClick={() => handleDelete(state._id)}
-                            className="px-1.5 py-0.5 rounded-lg font-medium bg-red-500 text-white w-fit cursor-pointer"
-                          >
-                            {/* <FiEdit2 /> */}
-                            Delete
-                          </p>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
+          </div>
+          <div className="mt-8 w-full ">
+            <div className="hidden md:grid md:grid-cols-[3fr_2fr_2fr_1fr] w-full border-b border-gray-300 font-medium text-base py-3 ">
+              <div className="">Hotel Details</div>
+              <div className="">Contact Details</div>
+              <div className="">Created By</div>
+              <div className="pl-[3%]">Manage</div>
             </div>
+
+            {sortedDataInactive
+              .filter((state) => state.status === "inactive")
+              .map((dets, index) => (
+                <div className="grid grid-cols-1 max-md:gap-5 md:grid-cols-[3fr_2fr_2fr_1fr] w-full border-b border-gray-300 py-6 first:border-t ">
+                  <div className="flex flex-col md:flex-row ">
+                    <img
+                      className="min-md:w-44 rounded-2xl shadow object-cover"
+                      src={dets.hotelImages[0]?.url || dets.hotelImages[0]}
+                      alt=""
+                    />
+                    <div className="flex flex-col gap-1.5 max-md:mt-3 min-md:ml-4">
+                      <p className="text-2xl font-serif tracking-tight">
+                        {dets.name}
+                      </p>
+                      <div class="flex items-center gap-1 text-sm  tracking-tight font-serif">
+                        <CiLocationOn
+                          className={` text-lg ${
+                            theme === "dark" ? "text-white" : "text-black"
+                          } `}
+                        />
+                        <span
+                          className={`${
+                            theme === "dark"
+                              ? "text-neutral-300"
+                              : "text-gray-700"
+                          }`}
+                        >
+                          {dets.address}
+                        </span>
+                      </div>
+
+                      <p class="font-serif">Rooms: {dets.totalRoom}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-1.5 max-md:mt-3 mt-5">
+                    <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
+                      <HiOutlineMail
+                        className={` text-lg ${
+                          theme === "dark" ? "text-neutral-400" : "text-black"
+                        } `}
+                      />
+                      <span
+                        className={`${
+                          theme === "dark"
+                            ? "text-neutral-300"
+                            : "text-gray-700"
+                        }`}
+                      >
+                        Email: {dets.contactEmail}
+                      </span>
+                    </div>
+                    <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
+                      <CgSmartphone
+                        className={` text-lg ${
+                          theme === "dark" ? "text-neutral-400" : "text-black"
+                        } `}
+                      />
+                      <span
+                        className={`${
+                          theme === "dark"
+                            ? "text-neutral-300"
+                            : "text-gray-700"
+                        }`}
+                      >
+                        Phone: {dets.contactNumber}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-1.5 max-md:mt-3 mt-5">
+                    <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
+                      <BiUser
+                        className={` text-lg ${
+                          theme === "dark" ? "text-neutral-400" : "text-black"
+                        } `}
+                      />
+                      <span
+                        className={`${
+                          theme === "dark"
+                            ? "text-neutral-300"
+                            : "text-gray-700"
+                        }`}
+                      >
+                        Name: {dets.assignedBy.name}
+                      </span>
+                    </div>
+                    <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
+                      <HiOutlineMail
+                        className={` text-lg ${
+                          theme === "dark" ? "text-neutral-400" : "text-black"
+                        } `}
+                      />
+                      <span
+                        className={`${
+                          theme === "dark"
+                            ? "text-neutral-300"
+                            : "text-gray-700"
+                        }`}
+                      >
+                        Email: {dets.assignedBy.email}
+                      </span>
+                    </div>
+                    <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
+                      <CgSmartphone
+                        className={` text-lg ${
+                          theme === "dark" ? "text-neutral-400" : "text-black"
+                        } `}
+                      />
+                      <span
+                        className={`${
+                          theme === "dark"
+                            ? "text-neutral-300"
+                            : "text-gray-700"
+                        }`}
+                      >
+                        Phone: {dets.assignedBy.phone}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col w-fit md:items-center">
+                    <>
+                      <Link
+                        to={`/admin/hotel/edit/${dets._id}`}
+                        onClick={() => window.scrollTo(0, 0)}
+                        state={{ stateData: dets }}
+                      >
+                        <button class="px-4 py-1.5 mt-4 text-xs border border-yellow-400 text-yellow-400 rounded-full hover:bg-gray-50 transition-all cursor-pointer font-serif">
+                          Edit
+                        </button>
+                      </Link>
+                      <button
+                        onClick={() => handleStatusChange(dets._id)}
+                        class="px-4 py-1.5 mt-4 text-xs border border-blue-500 text-blue-500 rounded-full hover:bg-gray-50 transition-all cursor-pointer font-serif"
+                      >
+                        Active
+                      </button>
+                      <button
+                        onClick={() => handleDelete(dets._id)}
+                        class="px-4 py-1.5 mt-4 text-xs border border-red-500 text-red-500 rounded-full hover:bg-gray-50 transition-all cursor-pointer font-serif"
+                      >
+                        Delete
+                      </button>
+                    </>
+                  </div>
+                </div>
+              ))}
           </div>
         </TabsContent>
       </Tabs>

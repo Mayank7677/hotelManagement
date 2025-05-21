@@ -33,7 +33,7 @@ const RoomCard = ({ room }) => {
                 <div className="rounded-3xl overflow-hidden h-60 sm:w-80">
                   <img
                     className="h-full w-full object-cover"
-                    src={img.url}
+                    src={img?.url || img}
                     alt=""
                   />
                 </div>

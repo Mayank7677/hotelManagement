@@ -10,6 +10,7 @@ const EditHotel = () => {
   const location = useLocation();
   const { stateData } = location.state || {}; // fallback in case state is undefined
   console.log(stateData);
+  // console.log(stateData.hotelImages[0].url);
 
   const [name, setName] = useState(stateData.name || "");
   const [address, setAddress] = useState(stateData.address || "");
@@ -21,22 +22,41 @@ const EditHotel = () => {
   const [contactEmail, setContactEmail] = useState(
     stateData.contactEmail || ""
   );
+  const [hotelImages, setHotelImages] = useState({
+    image1: stateData?.hotelImages[0]?.url || stateData.hotelImages[0],
+    image2: stateData?.hotelImages[1]?.url || stateData.hotelImages[1],
+    image3: stateData?.hotelImages[2]?.url || stateData.hotelImages[2],
+    image4: stateData?.hotelImages[3]?.url || stateData.hotelImages[3],
+  });
 
   const handleUpdate = async (e) => {
     e.preventDefault();
     let token = JSON.parse(localStorage.getItem("data")).token;
+
     // Handle form submission logic here
     try {
-      let res = await axios.put(
+      const formData = new FormData();
+
+      formData.append("name", name);
+      formData.append("address", address);
+      formData.append("totalRoom", totalRoom);
+      formData.append("description", description);
+      formData.append("contactNumber", contactNumber); 
+      formData.append("contactEmail", contactEmail);
+      console.log("egvdeg");
+      console.log(formData);
+
+      Object.values(hotelImages).forEach((img) => {
+        if (img instanceof File) {
+          formData.append("hotelImages", img); // new file
+        } else if (typeof img === "string") {
+          formData.append("existingImages", img); // old image URL
+        }
+      });
+
+      const res = await axios.put(
         `${BASE_URL}/hotels/update?id=${id}`,
-        {
-          name,
-          address,
-          totalRoom,
-          description,
-          contactNumber,
-          contactEmail,
-        },
+        formData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -190,6 +210,42 @@ const EditHotel = () => {
                 className="mt-1 w-full  px-3 py-2  rounded-md font-normal border border-gray-400 sm:text-sm outline-none "
               />
             </label>
+          </div>
+
+          <div className="mt-7">
+            <span className="text-lg font-medium tracking-tight">
+              Enter Hotel Images
+            </span>
+
+            <div className="grid grid-cols-2 sm:flex gap-4 my-2 flex-wrap">
+              {Object.keys(hotelImages).map((key) => (
+                <label htmlFor={`images-${key}`} key={key}>
+                  <img
+                    className="max-h-13 cursor-pointer opacity-80"
+                    src={
+                      hotelImages[key]
+                        ? typeof hotelImages[key] === "string"
+                          ? hotelImages[key] // already a URL string from backend
+                          : URL.createObjectURL(hotelImages[key]) // File object from input
+                        : "/assets/uploadArea.svg"
+                    }
+                    alt=""
+                  />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    id={`images-${key}`}
+                    hidden
+                    onChange={(e) =>
+                      setHotelImages({
+                        ...hotelImages,
+                        [key]: e.target.files[0],
+                      })
+                    }
+                  />
+                </label>
+              ))}
+            </div>
           </div>
 
           <div className="mt-7">

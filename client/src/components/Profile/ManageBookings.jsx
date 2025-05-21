@@ -112,7 +112,7 @@ const ManageBookings = () => {
               <div className="flex flex-col md:flex-row">
                 <img
                   className="min-md:w-44 rounded-2xl shadow object-cover"
-                  src={booking.roomId.images[0].url}
+                  src={booking?.roomId?.images[0]?.url || booking?.roomId?.images[0]}
                   alt=""
                 />
                 <div className="flex flex-col gap-1.5 max-md:mt-3 min-md:ml-4">

@@ -9,7 +9,15 @@ const EditRoom = () => {
   const location = useLocation();
   let navigate = useNavigate();
   const { stateData } = location.state || {}; // fallback in case state is undefined
-  // console.log(stateData);
+  console.log(stateData);
+
+  const [images, setImages] = useState({
+    image1: stateData?.images[0]?.url || stateData.images[0],
+    image2: stateData?.images[1]?.url || stateData.images[1],
+    image3: stateData?.images[2]?.url || stateData.images[2],
+    image4: stateData?.images[3]?.url || stateData.images[3],
+    image5: stateData?.images[4]?.url || stateData.images[4],
+  });
 
   const [roomNumber, setRoomNumber] = useState(stateData.roomNumber || "");
   const [pricePerNight, setPricePerNight] = useState(
@@ -35,16 +43,27 @@ const EditRoom = () => {
     });
 
     try {
+
+      const formData = new FormData();
+
+      formData.append("roomNumber", roomNumber);
+      formData.append("pricePerNight", pricePerNight);
+      formData.append("description", description);
+      formData.append("totalPersons", totalPersons);
+      formData.append("amenities", amenities);
+      formData.append("roomType", roomType);
+
+      Object.values(images).forEach((img) => {
+        if (img instanceof File) {
+          formData.append("images", img); // new file
+        } else if (typeof img === "string") {
+          formData.append("existingImages", img); // old image URL
+        }
+      });
+
       let res = await axios.put(
         `${BASE_URL}/rooms/update?id=${id}`,
-        {
-          roomNumber,
-          pricePerNight,
-          description,
-          totalPersons,
-          amenities,
-          roomType,
-        },
+        formData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -60,7 +79,7 @@ const EditRoom = () => {
       toast.error(error?.response?.data?.message || "Something went wrong");
     }
   };
-
+ 
   return (
     <div className="pb-15 font-serif">
       <Link to="/admin/room">
@@ -281,6 +300,42 @@ const EditRoom = () => {
                 id="description"
               ></textarea>
             </label>
+          </div>
+
+          <div className="mt-7">
+            <span className="text-lg font-medium tracking-tight">
+              Enter Hotel Images
+            </span>
+
+            <div className="grid grid-cols-2 sm:flex gap-4 my-2 flex-wrap">
+              {Object.keys(images).map((key) => (
+                <label htmlFor={`images-${key}`} key={key}>
+                  <img
+                    className="max-h-13 cursor-pointer opacity-80"
+                    src={
+                      images[key]
+                        ? typeof images[key] === "string"
+                          ? images[key] // already a URL string from backend
+                          : URL.createObjectURL(images[key]) // File object from input
+                        : "/assets/uploadArea.svg"
+                    }
+                    alt=""
+                  />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    id={`images-${key}`}
+                    hidden
+                    onChange={(e) =>
+                      setImages({
+                        ...images,
+                        [key]: e.target.files[0],
+                      })
+                    }
+                  />
+                </label>
+              ))}
+            </div>
           </div>
           {/* 
           <div className="mt-7">

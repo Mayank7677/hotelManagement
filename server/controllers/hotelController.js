@@ -5,6 +5,7 @@ const stateModel = require("../models/stateModel");
 const { uploadFile, updateFile } = require("../utils/helper");
 
 exports.create = async (req, res) => {
+  
   try {
     const {
       state,
@@ -38,6 +39,16 @@ exports.create = async (req, res) => {
       return res.status(400).json({ message: "Hotel already exists" });
     }
 
+    if (!req.files || !req.files.hotelImages) {
+      return res.status(400).json({ message: "Images are required" });
+    }
+
+    const hotelImages = req.files.hotelImages;
+    const uploadedImages = await uploadFile(hotelImages);
+ 
+
+    
+
     const hotel = {
       name,
       address,
@@ -48,6 +59,7 @@ exports.create = async (req, res) => {
       description,
       contactNumber,
       contactEmail,
+      hotelImages: uploadedImages,
     };
     const newHotel = new hotelModel(hotel);
     const save = await newHotel.save();
@@ -190,23 +202,85 @@ exports.getAllByCity = async (req, res) => {
   }
 };
 
+// exports.update = async (req, res) => {
+//   console.log(req.body);
+//   try {
+//     const { id } = req.query;
+//     const data = req.body;
+
+//     if (!id) {
+//       return res.status(404).json({ message: "Error" });
+//     }
+
+//     const hotelImages = req.files.hotelImages;
+//     const uploadedImages = await uploadFile(hotelImages);
+
+//     if (uploadedImages) {
+//       data.hotelImages = uploadedImages;
+//     }
+
+//     const updateHotel = await hotelModel.findByIdAndUpdate(
+//       id,
+//       {
+//         ...data,
+//       },
+//       { new: true }
+//     );
+
+//     return res
+//       .status(200)
+//       .json({ message: "Hotel updated", hotel: updateHotel });
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+
 exports.update = async (req, res) => {
-  console.log(req.body);
+  console.log(req.body)
+  console.log(req.files)
   try {
     const { id } = req.query;
     const data = req.body;
 
     if (!id) {
-      return res.status(404).json({ message: "Error" });
+      return res.status(404).json({ message: "ID not found" });
     }
 
-    const updateHotel = await hotelModel.findByIdAndUpdate(
-      id,
-      {
-        ...data,
-      },
-      { new: true }
-    );
+    const newImages = req.files?.hotelImages || [];
+    const uploadedImages = await uploadFile(newImages);
+    
+    // Merge new uploaded images with existing image URLs
+    let existingImages = [];
+    if (req.body.existingImages) {
+      // Support both single and multiple existing image strings
+      if (typeof req.body.existingImages === "string") {
+        existingImages = [req.body.existingImages];
+      } else {
+        existingImages = req.body.existingImages;
+      }
+    }
+    
+    console.log(req.body.existingImages, "existingImages");
+    // let images = {
+    //   url: "",
+    //   public_id: "",
+    // }
+    // for (let i = 0; i<existingImages.length; i++){
+    //   images.url = existingImages[i];
+    //   images.public_id = existingImages[i];
+    //   uploadedImages.push(images);
+    // }
+
+
+
+    // data.hotelImages = uploadedImages;
+    let images = [...existingImages, ...uploadedImages];
+    data.hotelImages = images;
+    
+    const updateHotel = await hotelModel.findByIdAndUpdate(id, data, {
+      new: true,
+    });
+
     return res
       .status(200)
       .json({ message: "Hotel updated", hotel: updateHotel });
@@ -214,6 +288,8 @@ exports.update = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
 
 exports.hotelsWithRooms = async (req, res) => {
   try {
@@ -233,8 +309,6 @@ exports.hotelsWithRooms = async (req, res) => {
   }
 };
 
-
-
 exports.updateImage = async (req, res) => {
   console.log(req.files);
   try {
@@ -250,7 +324,7 @@ exports.updateImage = async (req, res) => {
     }
 
     const uploadedImages = await updateFile(req.files.hotelImages);
-    console.log(uploadedImages)
+    console.log(uploadedImages);
 
     const updateLocation = await hotelModel.findByIdAndUpdate(
       id,
@@ -263,12 +337,7 @@ exports.updateImage = async (req, res) => {
     return res
       .status(200)
       .json({ message: "Location updated", location: updateLocation });
-  }
-  catch (error) {
+  } catch (error) {
     res.status(500).json({ error: error.message });
   }
-}
-
-
-
-
+};

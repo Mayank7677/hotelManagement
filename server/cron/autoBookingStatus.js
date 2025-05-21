@@ -1,17 +1,20 @@
 const bookingModel = require("../models/bookingModel");
 
 const autoBookingStatus = async () => {
+  console.log("working");
   const today = new Date();
   today.setHours(0, 0, 0, 0); // Reset to start of day
+  console.log("today" , today);
 
   const yesterday = new Date(today);
   yesterday.setDate(today.getDate() - 1);
+  console.log("yesterday", yesterday);
 
   try {
     // ✅ Auto Check-in: If today == checkInDate → checked-in
     await bookingModel.updateMany(
       {
-            checkInDate: {  $lt: today },
+        checkInDate: { $lte: today },
         isChecking: "confirm", // Admin has confirmed the booking
       },
       {
@@ -30,19 +33,19 @@ const autoBookingStatus = async () => {
       }
     );
 
-      console.log("✅ Auto check-in/out done");
-      
-      // ✅ Auto Completed: If checkOutDate < today → completed
-      await bookingModel.updateMany(
-        {
-          checkOutDate: { $lte: yesterday },
-          isChecking: "checked-out",
-        },
-        {
-          $set: { status: "completed" },
-        }
-      );
-      console.log("✅ Auto completed done");
+    console.log("✅ Auto check-in/out done");
+
+    // ✅ Auto Completed: If checkOutDate < today → completed
+    await bookingModel.updateMany(
+      {
+        checkOutDate: { $lte: yesterday },
+        isChecking: "checked-out",
+      },
+      {
+        $set: { status: "completed" },
+      }
+    );
+    console.log("✅ Auto completed done");
   } catch (error) {
     console.error("❌ Cron job failed:", error.message);
   }

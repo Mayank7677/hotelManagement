@@ -49,5 +49,39 @@
 
 // console.log(dupArr);
 
+// // 8. Random Integer
+// // Description: Create a function that generates a random integer between two specified numbers
+// // (inclusive).
+// // Example: randomInteger(1, 10) could return any number from 1 to 10.
+
+// let randomInteger = (a, b) => Math.floor(Math.random() * (b - a + 1) + a);
+
+// console.log(randomInteger(1, 10));
+
+// 10. Reverse Words
+// Description: Create a function that reverses the order of words in a given string.
+// Example: reverseWords("Hello world") should return "world Hello".
+
+// let word = "hello world";
+// let rev = "";
+// let dup = "";
+
+// for (let i = word.length - 1; i >= 0; i--) {
+//     if (word[i] !== " ") {
+//       dup += word[i];
+//   }
+  
+// }
+// console.log(rev);
+
+
+// let arr = [];
+// for (let i = 0; i < 3; i++) {
+//   arr[i] = function () {
+//     console.log(i);
+//   };
+// }
+
+
 
 

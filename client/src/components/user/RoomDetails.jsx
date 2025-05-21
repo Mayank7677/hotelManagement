@@ -109,7 +109,7 @@ const RoomDetails = () => {
         {roomData?.images?.slice(0, 5).map((img, idx) => (
           <img
             key={idx}
-            src={img.url}
+            src={img?.url || img}
             alt={`Room view ${idx + 1}`}
             className={`object-cover w-full h-full ${
               idx === 0 ? "col-span-2 row-span-2" : ""

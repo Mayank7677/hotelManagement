@@ -118,7 +118,7 @@ const ManageBooking = () => {
                   <div className="flex flex-col md:flex-row ">
                     <img
                       className="min-md:w-44 rounded-2xl shadow object-cover"
-                      src={dets.roomId.images[0].url}
+                      src={dets.roomId?.images[0]?.url || dets.roomId.images[0]}
                       alt=""
                     />
                     <div className="flex flex-col gap-1.5 max-md:mt-3 min-md:ml-4">
@@ -160,7 +160,7 @@ const ManageBooking = () => {
                           Guests: {dets.numberOfGuests}
                         </span>
                       </div>
-                      <p class="font-serif">Total: ₹13000</p>
+                      <p class="font-serif">Total: ₹{dets.totalAmount}</p>
                     </div>
                   </div>
 
@@ -286,7 +286,7 @@ const ManageBooking = () => {
                   <div className="flex flex-col md:flex-row ">
                     <img
                       className="min-md:w-44 rounded-2xl shadow object-cover"
-                      src={dets.roomId.images[0].url}
+                      src={dets.roomId?.images[0]?.url || dets.roomId.images[0]}
                       alt=""
                     />
                     <div className="flex flex-col gap-1.5 max-md:mt-3 min-md:ml-4">
@@ -328,7 +328,7 @@ const ManageBooking = () => {
                           Guests: {dets.numberOfGuests}
                         </span>
                       </div>
-                      <p class="font-serif">Total: ₹13000</p>
+                      <p class="font-serif">Total: ₹{dets.totalAmount}</p>
                     </div>
                   </div>
 
@@ -664,7 +664,7 @@ const ManageBooking = () => {
                   <div className="flex flex-col md:flex-row ">
                     <img
                       className="min-md:w-44 rounded-2xl shadow object-cover"
-                      src={dets.roomId.images[0].url}
+                      src={dets.roomId?.images[0]?.url || dets.roomId.images[0]}
                       alt=""
                     />
                     <div className="flex flex-col gap-1.5 max-md:mt-3 min-md:ml-4">
@@ -706,7 +706,7 @@ const ManageBooking = () => {
                           Guests: {dets.numberOfGuests}
                         </span>
                       </div>
-                      <p class="font-serif">Total: ₹13000</p>
+                      <p class="font-serif">Total: ₹{dets.totalAmount}</p>
                     </div>
                   </div>
 

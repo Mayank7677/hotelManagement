@@ -6,6 +6,21 @@ import { HiOutlineMail } from "react-icons/hi";
 import { LuUsersRound } from "react-icons/lu";
 import { useTheme } from "../../ThemeProvider";
 
+/*************  ✨ Windsurf Command ⭐  *************/
+/**
+ * TableTemp is a React functional component that renders a table-like display of booking data.
+ * It displays details such as hotel name, room number, address, number of guests, total amount,
+ * check-in and check-out dates, user details (name, email, phone), and booking status.
+ * The component adapts its styling based on the current theme (dark or light).
+ *
+ * @param {Object} data - The data object containing booking information.
+ * @param {Array} data.data - Array of booking objects, each containing details about the booking.
+ * @param {string} data.status - The status of the bookings, which can be "pending", "confirm", "cancel",
+ * "checkin", or "checkout", affecting the rendering of status indicators in the UI.
+ */
+
+/*******  041716aa-7c84-4ca0-a174-c9b9139a712e  *******/
+
 const TableTemp = ({ data }) => {
   const { theme } = useTheme();
   return (
@@ -26,7 +41,7 @@ const TableTemp = ({ data }) => {
             <div className="flex flex-col md:flex-row">
               <img
                 className="min-md:w-44 rounded-2xl shadow object-cover"
-                src={booking.roomId.images[0].url}
+                src={booking.roomId?.images[0]?.url || booking.roomId?.images[0]}
                 alt=""
               />
               <div className="flex flex-col gap-1.5 max-md:mt-3 min-md:ml-4">

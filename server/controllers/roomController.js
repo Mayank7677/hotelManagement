@@ -15,7 +15,7 @@ exports.createRoom = async (req, res) => {
       roomNumber,
       roomType,
       pricePerNight,
-      description,
+      description, 
       totalPersons,
       amenities,
     } = req.body;
@@ -73,7 +73,8 @@ exports.createRoom = async (req, res) => {
         return res.status(400).json({ message: "Images are required" });
       }
 
-    const uploadedImages = await uploadFile(req.files);
+      const roomImages = req.files.images;
+      const uploadedImages = await uploadFile(roomImages);
 
     const room = {
       hotelId: checkHotel._id,
@@ -298,6 +299,23 @@ exports.update = async (req, res) => {
     if (!id) {
       return res.status(404).json({ message: "Error" });
     }
+
+    const newImages = req.files?.images || [];
+    const uploadedImages = await uploadFile(newImages);
+
+    // Merge new uploaded images with existing image URLs
+    let existingImages = [];
+    if (req.body.existingImages) {
+      // Support both single and multiple existing image strings
+      if (typeof req.body.existingImages === "string") {
+        existingImages = [req.body.existingImages];
+      } else {
+        existingImages = req.body.existingImages;
+      }
+    }
+
+    let images = [...existingImages, ...uploadedImages];
+    data.images = images;
 
     const updateRoom = await roomModel.findByIdAndUpdate(
       id,
