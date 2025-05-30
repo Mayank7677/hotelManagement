@@ -227,7 +227,7 @@ const SignupPage = () => {
                 accept="image/*"
                 onChange={(e) => setProfileImg(e.target.files[0])}
                 className="bg-transparent text-gray-500 placeholder-gray-500 outline-none text-sm  w-full  font-serif"
-                required
+                
               />
             </div>
 
