@@ -17,6 +17,7 @@ router.get('/analytics', auth, bookingController.analytics);
 router.get("/weekly-revenue", auth, bookingController.weeklyRevenue);
 router.get("/weekly-booking-counts", auth, bookingController.getWeeklyBookingCounts);
 router.get("/booking-counts", auth, bookingController.bookingCount);
+router.get("/revenueData" , auth , bookingController.revenueData)
 
 
 

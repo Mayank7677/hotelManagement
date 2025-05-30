@@ -267,7 +267,10 @@ function getLastSunday() {
 
 exports.weeklyRevenue = async (req, res) => {
   try {
-    const bookings = await bookingModel.find();
+    const bookings = await bookingModel.find({
+      status: "booked",
+      isChecking: "confirm",
+    });
 
     // Initialize revenue data for each day of the week
     const revenueByDay = {
@@ -381,5 +384,76 @@ exports.bookingCount = async (req, res) => {
     res.status(200).json({ chartData });
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+};
+
+exports.revenueData = async (req, res) => {
+  try {
+    const data = await bookingModel.aggregate([
+      {
+        $match: {
+          $and: [
+            {
+              status: "booked",
+              isChecking: "confirm",
+            },
+          ],
+        },
+      },
+      {
+        $lookup: {
+          from: "rooms",
+          localField: "roomId",
+          foreignField: "_id",
+          as: "room",
+        },
+      },
+      { $unwind: "$room" },
+      {
+        $lookup: {
+          from: "hotels",
+          localField: "room.hotelId",
+          foreignField: "_id",
+          as: "hotel",
+        },
+      },
+      { $unwind: "$hotel" },
+      {
+        $lookup: {
+          from: "locations",
+          localField: "hotel.locationId",
+          foreignField: "_id",
+          as: "location",
+        },
+      },
+      { $unwind: "$location" },
+      {
+        $lookup: {
+          from: "states",
+          localField: "location.stateId",
+          foreignField: "_id",
+          as: "state",
+        },
+      },
+      { $unwind: "$state" },
+      {
+        $group: {
+          _id: {
+            state: "$state.name",
+            city: "$location.name",
+            hotel: "$hotel.name",
+            room: "$room.roomNumber",
+          },
+          totalRevenue: { $sum: "$totalAmount" },
+          totalBookings: { $sum: 1 },
+        },
+      },
+      { $sort: { totalRevenue: -1 } },
+    ]);
+
+    res.status(200).json(data);
+  } catch (error) {
+    console.error("Error generating revenue report:", error);
+    res.status(500).json({ message: "Failed to fetch revenue data" });
   }
 };

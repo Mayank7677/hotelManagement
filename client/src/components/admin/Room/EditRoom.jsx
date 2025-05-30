@@ -322,7 +322,7 @@ const EditRoom = () => {
                     alt=""
                   />
                   <input
-                    type="file"
+                    type="file" 
                     accept="image/*"
                     id={`images-${key}`}
                     hidden

@@ -61,7 +61,7 @@ const DashBoard = () => {
       setCheckouts(
         res.data.filter((book) => book.isChecking === "checked-out")
       );
-      setRevenue(res.data.reduce((acc, curr) => acc + curr.totalAmount, 0));
+      setRevenue(res.data.filter( (book) => book.status === "booked" && book.isChecking === 'confirm' ).reduce((acc, curr) => acc + curr.totalAmount, 0));
 
       setPendingBookings(
         res.data.filter(
@@ -116,7 +116,7 @@ const DashBoard = () => {
     {
       title: "Total Revenue",
       count: revenue?.toFixed(2),
-
+      link: "/admin/revenue",
       icon: <MdOutlineCurrencyRupee />,
     },
   ];

@@ -4,7 +4,10 @@ const app = express();
 const cors = require("cors");
 const fileUpload = require("express-fileupload");
 require("./cron/scheduler");
+const dotenv = require("dotenv");
+dotenv.config();
 
+const PORT = process.env.PORT || 6000;
 
 const userRouter = require("./routers/userRouter");
 const locationRouter = require('./routers/locationRouter')
@@ -35,6 +38,6 @@ app.get("/", (req, res) => {
   res.send("hello world");
 });
 
-app.listen(7070, () => {
-  console.log("server is running on port 7070");
+app.listen(PORT, () => {
+  console.log("server is running on port" , PORT);
 });

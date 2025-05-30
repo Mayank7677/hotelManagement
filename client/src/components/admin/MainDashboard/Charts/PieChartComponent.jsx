@@ -68,6 +68,7 @@ export default function PieChartComponent() {
           <PieChart>
             <ChartTooltip
               cursor={true}
+              
               content={<ChartTooltipContent hideLabel />}
             />
             <Pie

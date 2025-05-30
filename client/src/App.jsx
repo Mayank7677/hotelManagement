@@ -35,6 +35,7 @@ import DashBoard from "./components/admin/MainDashboard/DashBoard";
 import TotalBookings from "./components/admin/MainDashboard/TotalBookings";
 import Checkin from "./components/admin/MainDashboard/Checkin";
 import Checkout from "./components/admin/MainDashboard/Checkout";
+import RevenueDetails from "./components/admin/MainDashboard/RevenueDetails";
 
 const App = () => {
   const theme = useTheme();
@@ -89,6 +90,7 @@ const App = () => {
             <Route path="totalBookings" element={<TotalBookings />} />
             <Route path="checkin" element={<Checkin />} />
             <Route path="checkout" element={<Checkout />} />
+            <Route path="revenue" element={<RevenueDetails />} />
 
             <Route path="manageBookings" element={<ManageBooking />} />
             <Route path="state" element={<CreateState />} />
