@@ -18,7 +18,9 @@ const bookingRouter = require('./routers/bookingRouter');
 const couponRouter = require('./routers/couponRouter')
 
 
-mongoose.connect("mongodb://localhost:27017/hotelManagement");
+mongoose.connect(
+  "mongodb+srv://mayyynkpanwar7:1234@cluster0.jlhnpue.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+);
 
 app.use(cors());
 app.use(express.json());
