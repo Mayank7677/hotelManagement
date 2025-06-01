@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const sentOtpEmail = async (to, otp, name) => {
-  try {
+  try { 
     await transporter.sendMail({
       from: mail,
       to: to,

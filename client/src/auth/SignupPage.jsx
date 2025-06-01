@@ -31,7 +31,6 @@ const SignupPage = () => {
     e.preventDefault();
 
     try {
-
       const formData = new FormData();
       formData.append("name", userData.name);
       formData.append("email", userData.email);
@@ -40,20 +39,18 @@ const SignupPage = () => {
       formData.append("age", userData.age);
       formData.append("profileImg", profileImg);
 
+      console.log(formData);
+      console.log(userData);
+      console.log(profileImg);
 
-      console.log(formData)
-      console.log(userData)
-      console.log(profileImg)
-      
-      
       const res = await axios.post(
         "http://localhost:7070/users/signup",
-        formData,
+        formData
       );
 
-      // console.log(res.data)
-      //   const { token, user } = res.data;
-      //   localStorage.setItem("data", JSON.stringify({ token, user }));
+      // console.log(res.data);
+      // const { token, user } = res.data;
+      // localStorage.setItem("data", JSON.stringify({ token, user }));
 
       setUserData({
         name: "",
@@ -65,7 +62,7 @@ const SignupPage = () => {
 
       toast.success(res.data.message);
       console.log(res.data);
-      navigate("/");
+      navigate("/login");
     } catch (error) {
       console.log(error);
       toast.error(error?.response?.data?.message);
@@ -203,31 +200,6 @@ const SignupPage = () => {
                 onChange={handleChange}
                 class="bg-transparent text-gray-700 placeholder-gray-500 outline-none text-sm  w-full h-full font-serif"
                 required
-              />
-            </div>
-            <div class="flex items-center justify-center mt-4 w-full bg-transparent border border-gray-500 h-12 rounded-full overflow-hidden pl-6 gap-2">
-              <svg
-                width="13"
-                height="17"
-                viewBox="0 0 13 17"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M13 8.5c0-.938-.729-1.7-1.625-1.7h-.812V4.25C10.563 1.907 8.74 0 6.5 0S2.438 1.907 2.438 4.25V6.8h-.813C.729 6.8 0 7.562 0 8.5v6.8c0 .938.729 1.7 1.625 1.7h9.75c.896 0 1.625-.762 1.625-1.7zM4.063 4.25c0-1.406 1.093-2.55 2.437-2.55s2.438 1.144 2.438 2.55V6.8H4.061z"
-                  fill="#6B7280"
-                />
-              </svg>
-              <input
-                type="file"
-                // placeholder="Password"
-                name="profileImg"
-                // onChange={(e) => setImage(e.target.files[0])}
-                // value={profileImg}
-                accept="image/*"
-                onChange={(e) => setProfileImg(e.target.files[0])}
-                className="bg-transparent text-gray-500 placeholder-gray-500 outline-none text-sm  w-full  font-serif"
-                
               />
             </div>
 

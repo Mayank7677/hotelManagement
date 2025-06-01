@@ -39,7 +39,10 @@ app.use("/coupons", couponRouter);
 app.get("/", (req, res) => {
   res.send("hello world");
 });
-
+console.log("🕒 Date now:", new Date());
+ 
 app.listen(PORT, () => {
   console.log("server is running on port" , PORT);
 });
+
+ 

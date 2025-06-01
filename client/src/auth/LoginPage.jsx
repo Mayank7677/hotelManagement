@@ -6,6 +6,7 @@ import { toast } from "sonner";
 const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
 
   // where to go after successful login –
   // if someone sent us here with state.from, use that; otherwise home
@@ -30,6 +31,8 @@ const LoginPage = () => {
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
 
+    setIsSendingOtp(true);
+
     try {
       const res = await axios.post("http://localhost:7070/users/login", {
         email: userData.email,
@@ -51,6 +54,8 @@ const LoginPage = () => {
     } catch (error) {
       // console.log(error)
       toast.error(error.response.data.message);
+    } finally {
+      setIsSendingOtp(false);
     }
   };
 
@@ -64,7 +69,7 @@ const LoginPage = () => {
       });
 
       toast.success("Login successful!");
-
+ 
       console.log(res.data);
       const { token, user } = res.data;
       localStorage.setItem("data", JSON.stringify({ token, user }));
@@ -219,9 +224,14 @@ const LoginPage = () => {
 
             <button
               type="submit"
+              disabled={isSendingOtp}
               class="mt-8 w-full h-11 rounded-full text-white bg-indigo-500 hover:bg-indigo-600 cursor-pointer hover:opacity-90 transition-opacity font-serif"
             >
-              {step === "login" ? "Send OTP" : "Verify OTP"}
+              {step === "login"
+                ? isSendingOtp
+                  ? "Sending OTP..."
+                  : "Send OTP"
+                : "Verify OTP"}
             </button>
 
             {step === "login" && (

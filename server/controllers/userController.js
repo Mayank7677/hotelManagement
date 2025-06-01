@@ -81,12 +81,12 @@ exports.signup = async (req, res) => {
       phone,
       password: hash,
       role,
-      profileImg: profileImgUrl || "",
+      // profileImg: profileImgUrl && profileImgUrl
     });
 
     await newUser.save();
 
-    res.status(201).json({ message: "User created successfully" });
+    res.status(201).json({ message: "User created successfully" ,  user : newUser });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -101,7 +101,7 @@ exports.login = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
     const isMatch = bcrypt.compareSync(password, user.password);
-    if (!isMatch) {
+    if (!isMatch) { 
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
@@ -115,7 +115,7 @@ exports.login = async (req, res) => {
 
     await userModel.findOneAndUpdate({ email }, { otp, otpTimer: newTime });
 
-    await sentOtpEmail("m.ayyynkpanwar7@gmail.com", otp, user.name);
+    await sentOtpEmail(user.email , otp, user.name);
 
     res.status(200).json({
       message: "OTP sent to your email. Please verify.",
@@ -183,7 +183,7 @@ exports.resetPassword = async (req, res) => {
 
     await sentOtpEmail("m.ayyynkpanwar7@gmail.com", otp, user.name);
 
-    res.status(200).json({
+    res.status(200).json({ 
       message: "OTP sent to your email. Please verify.",
       step: "otp_verification",
     });

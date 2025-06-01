@@ -1,2 +1,2 @@
-const BASE_URL = "https://hotelmanagement-23ad.onrender.com";
+const BASE_URL = "http://localhost:7070";
 export default BASE_URL;

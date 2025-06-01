@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import { toast } from "sonner";
 import BASE_URL from "../../utils/api";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const EditProfile = () => {
   const [user, setUser] = useState();
+  let navigate = useNavigate()
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -46,6 +49,7 @@ const EditProfile = () => {
   };
 
   const handleSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
     const token = JSON.parse(localStorage.getItem("data"))?.token;
 
@@ -74,8 +78,12 @@ const EditProfile = () => {
       setTimeout(() => {
         window.location.reload();
       }, 2000);
+
+      navigate("/");
     } catch (error) {
       toast.error(error?.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -180,8 +188,10 @@ const EditProfile = () => {
           </div>
 
           <div className="mt-7">
-            <button className="text-white bg-pink-500 hover:bg-pink-600 font-serif rounded-lg text-md px-5 py-2 text-center w-fit">
-              Update
+            <button disabled={loading} className="text-white bg-pink-500 hover:bg-pink-600 font-serif rounded-lg text-md px-5 py-2 text-center w-fit">
+              {
+                loading ? "Updating..." : "Update"
+              }
             </button>
           </div>
         </form>
