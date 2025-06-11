@@ -12,6 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useTheme } from "../../ThemeProvider";
+import BASE_URL from "../../../utils/api";
 
 const CreateCouponForm = () => {
   const [formData, setFormData] = useState({
@@ -41,7 +42,7 @@ const CreateCouponForm = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:7070/coupons/create",
+        `${BASE_URL}/coupons/create`,
         formData,
         {
           headers: {
@@ -67,7 +68,7 @@ const CreateCouponForm = () => {
   const fetchCoupons = async () => {
     let token = JSON.parse(localStorage.getItem("data")).token;
     try {
-      const res = await axios.get("http://localhost:7070/coupons/getAll", {
+      const res = await axios.get(`${BASE_URL}/coupons/getAll`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -89,7 +90,7 @@ const CreateCouponForm = () => {
     let token = JSON.parse(localStorage.getItem("data")).token;
     try {
       const res = await axios.put(
-        `http://localhost:7070/coupons/handleActive?id=${id}`,
+        `${BASE_URL}/coupons/handleActive?id=${id}`,
         {},
         {
           headers: {

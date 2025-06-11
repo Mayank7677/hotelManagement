@@ -28,7 +28,7 @@ const AllHotels = () => {
   const [search, setSearch] = useState("");
   const fetchStateData = async () => {
     try {
-      let res = await axios.get(`${BASE_URL}/states/getAll`);
+      let res = await axios.get(`${BASE_URL}/states/getAll`); 
 
       setStateData(res.data.filter((state) => state.status === "active"));
       console.log(res.data);

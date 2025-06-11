@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import BASE_URL from "../utils/api";
 
 const ResetPassPage = () => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ const ResetPassPage = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:7070/users/resetPass", {
+      const res = await axios.post(`${BASE_URL}/users/resetPass`, {
         email: userData.email,
       });
 
@@ -52,7 +53,7 @@ const ResetPassPage = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:7070/users/newPass", {
+      const res = await axios.post(`${BASE_URL}/users/newPass`, {
         email: emailForOtp,
         otp: userData.otp,
         password: userData.password,

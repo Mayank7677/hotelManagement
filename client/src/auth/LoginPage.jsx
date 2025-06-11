@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import BASE_URL from "../utils/api";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ const LoginPage = () => {
     setIsSendingOtp(true);
 
     try {
-      const res = await axios.post("http://localhost:7070/users/login", {
+      const res = await axios.post(`${BASE_URL}/users/login`, {
         email: userData.email,
         password: userData.password,
       });
@@ -63,7 +64,7 @@ const LoginPage = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:7070/users/verifyOtp", {
+      const res = await axios.post(`${BASE_URL}/users/verifyOtp`, {
         email: emailForOtp,
         otp: userData.otp,
       });

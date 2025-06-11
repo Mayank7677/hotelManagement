@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { LuSmartphone } from "react-icons/lu";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { CiCalendarDate } from "react-icons/ci";
+import BASE_URL from "../utils/api";
 
 const SignupPage = () => {
   let navigate = useNavigate();
@@ -44,7 +45,7 @@ const SignupPage = () => {
       console.log(profileImg);
 
       const res = await axios.post(
-        "http://localhost:7070/users/signup",
+        `${BASE_URL}/users/signup`,
         formData
       );
 
