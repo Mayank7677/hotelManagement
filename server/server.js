@@ -22,7 +22,12 @@ mongoose
   .then(() => console.log("DB connected"))
   .catch((err) => console.log(err));
 
-app.use(cors());
+// Allow requests from frontend on Render
+app.use(cors({
+  origin: ["https://hotelmanagement-bxyq.onrender.com"],
+  credentials: true // needed if you're using cookies or sessions
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload());
