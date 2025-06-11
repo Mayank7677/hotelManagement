@@ -28,8 +28,6 @@ app.use(cors({
   credentials: true // needed if you're using cookies or sessions
 }));
 
-// ✅ Required for preflight (OPTIONS) requests
-app.options("*", cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
