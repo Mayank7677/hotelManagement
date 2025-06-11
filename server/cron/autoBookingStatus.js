@@ -1,14 +1,14 @@
 const bookingModel = require("../models/bookingModel");
 
 const autoBookingStatus = async () => {
-  console.log("working");
+  // console.log("working");
   const today = new Date();
   today.setHours(0, 0, 0, 0); // Reset to start of day
-  console.log("today" , today);
+  // console.log("today" , today);
 
   const yesterday = new Date(today);
   yesterday.setDate(today.getDate() - 1);
-  console.log("yesterday", yesterday);
+  // console.log("yesterday", yesterday);
 
   try {
     // ✅ Auto Check-in: If today == checkInDate → checked-in

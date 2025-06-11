@@ -230,7 +230,7 @@ const BookRoom = () => {
                   : "bg-white text-black border-gray-300"
               }`}
             >
-              <div className="flex gap-10">
+              <div className="flex flex-col sm:flex-row gap-10">
                 <div className="flex flex-col ">
                   <span className="text-lg font-serif tracking-tight">
                     Check In Date

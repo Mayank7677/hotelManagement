@@ -98,7 +98,7 @@ const RoomsPage = () => {
       }`}
     >
       <div
-        className={`w-full lg:w-[70%]  px-6 py-7 rounded-4xl shadow-[0px_0px_0px_1px_rgba(0,0,0,0.06),0px_1px_1px_-0.5px_rgba(0,0,0,0.06),0px_3px_3px_-1.5px_rgba(0,0,0,0.06),_0px_6px_6px_-3px_rgba(0,0,0,0.06),0px_12px_12px_-6px_rgba(0,0,0,0.06),0px_24px_24px_-12px_rgba(0,0,0,0.06)] ${
+        className={`w-full max-sm:w-[95%] lg:w-[70%]  px-6 py-7 rounded-4xl shadow-[0px_0px_0px_1px_rgba(0,0,0,0.06),0px_1px_1px_-0.5px_rgba(0,0,0,0.06),0px_3px_3px_-1.5px_rgba(0,0,0,0.06),_0px_6px_6px_-3px_rgba(0,0,0,0.06),0px_12px_12px_-6px_rgba(0,0,0,0.06),0px_24px_24px_-12px_rgba(0,0,0,0.06)] ${
           theme === "dark" ? "bg-neutral-800 text-white" : "bg-white text-black"
         }`}
       >
@@ -117,8 +117,8 @@ const RoomsPage = () => {
         </div>
       </div>
 
-      <div className="flex flex-col-reverse md:flex-row items-start justify-between mt-15 relative">
-        <div className="pb-20 md:w-[65%]">
+      <div className="flex flex-col-reverse lg:flex-row items-start justify-between mt-15 relative">
+        <div className="pb-20  overflow-hidden md:w-[65%]">
           {filteredByCity.map((hotel, index) => (
             <Link
               key={index}
@@ -127,7 +127,7 @@ const RoomsPage = () => {
               onClick={() => window.scrollTo(0, 0)}
             >
               <div
-                className={`sm:flex sm:flex-row-reverse  gap-5    border-neutral-500  p-[5px]   text-black mt-10 justify-center ${
+                className={`sm:flex sm:flex-row-reverse  gap-5     border-neutral-500  p-[5px]   text-black mt-10 justify-center ${
                   theme === "dark"
                     ? "bg-neutral-800 text-white rounded-4xl"
                     : "bg-white text-black pb-5 border-b"
@@ -143,7 +143,7 @@ const RoomsPage = () => {
                     <CarouselContent>
                       {hotel.hotelImages.map((img, index) => (
                         <CarouselItem key={index}>
-                          <div className="rounded-3xl overflow-hidden h-70 sm:w-80">
+                          <div className="rounded-3xl overflow-hidden h-70  sm:w-80">
                             <img
                               className="h-full w-full object-cover"
                               src={img?.url || img}

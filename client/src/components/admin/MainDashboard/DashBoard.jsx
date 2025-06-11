@@ -61,7 +61,15 @@ const DashBoard = () => {
       setCheckouts(
         res.data.filter((book) => book.isChecking === "checked-out")
       );
-      setRevenue(res.data.filter( (book) => book.status === "booked" && book.isChecking === 'confirm' ).reduce((acc, curr) => acc + curr.totalAmount, 0));
+      setRevenue(
+        res.data
+          .filter(
+            (book) =>
+              !["pending", "cancelled"].includes(book.isChecking) &&
+              ["booked", "completed"].includes(book.status)
+          )
+          .reduce((acc, curr) => acc + curr.totalAmount, 0)
+      );
 
       setPendingBookings(
         res.data.filter(
@@ -163,7 +171,7 @@ const DashBoard = () => {
         <div className="flex flex-col gap-5 lg:w-[40%]">
           <PieChartComponent />
           {/* <BarChartComponent2 /> */}
-          <BarChartMultiple />
+          {/* <BarChartMultiple />   */}
         </div>
 
         <div className="max-h-[50%] h-[50%] border rounded-3xl w-full p-7 overflow-scroll scrollbar-none">

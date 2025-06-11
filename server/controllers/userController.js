@@ -1,10 +1,15 @@
 const userModel = require("../models/userModel");
+const activityModel = require("../models/activityModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const secretKey = "gsdgengnntneazfehhtht";
 const moment = require("moment");
 const sentOtpEmail = require("../utils/otpMail");
 const { uploadProfilePicture } = require("../utils/helper");
+const requestIp = require("request-ip");
+const os = require("os");
+
+
 
 // exports.signup = async (req, res) => {
 //   try {
@@ -86,6 +91,21 @@ exports.signup = async (req, res) => {
 
     await newUser.save();
 
+    const clientIp = requestIp.getClientIp(req);
+    console.log(clientIp);
+
+    const hostname = os.hostname();
+    console.log("System Hostname:", hostname);
+
+    const activity = new activityModel({
+      userId: newUser._id,
+      ipAddress: clientIp,
+      systemName: hostname,
+      action: "sigin",
+    });
+
+    await activity.save()
+ 
     res.status(201).json({ message: "User created successfully" ,  user : newUser });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -158,9 +178,24 @@ exports.verifyOtp = async (req, res) => {
       expiresIn: "1d",
     });
 
+    const clientIp = requestIp.getClientIp(req);
+    console.log(clientIp);
+
+    const hostname = os.hostname();
+    console.log("System Hostname:", hostname);
+
+    const activity = new activityModel({
+      userId: user._id,
+      ipAddress: clientIp,
+      systemName: hostname,
+      action: "login",
+    });
+
+    await activity.save();
+
     res.status(200).json({ message: "OTP verified successfully", token, user });
   } catch (error) {
-    console.log("hyy");
+    console.log("error" , error);
     res.status(500).json({ error: error.message });
   }
 };

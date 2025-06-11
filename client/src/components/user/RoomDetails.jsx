@@ -147,7 +147,7 @@ const RoomDetails = () => {
 
       {/* Booking card */}
       <section
-        className={`border-t border-gray-300 pt-10 flex justify-between items-center`}
+        className={`border-t border-gray-300 pt-10 flex flex-col lg:flex-row gap-10 justify-between max-sm:items-center`}
       >
         <div className=" flex flex-col gap-8">
           <div className="flex gap-5 items-center">
@@ -216,15 +216,16 @@ const RoomDetails = () => {
             </div>
           </div>
         </div>
+
         <div
-          className={` max-w-md border rounded-2xl px-8 py-6 flex flex-col gap-6 ${
+          className={` max-w-md max-sm:w-70 border rounded-2xl px-8 py-6 flex flex-col gap-6 ${
             theme === "dark"
               ? "bg-neutral-800 text-white border-neutral-500"
               : "bg-white text-black border-gray-300"
           }`}
         >
           <h3 className="text-xl font-serif">Check availability</h3>
-          <DatePickerWithRange date={date} setDate={setDate} />
+          <DatePickerWithRange className="w-fit" date={date} setDate={setDate} />
 
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <button

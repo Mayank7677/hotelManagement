@@ -36,6 +36,7 @@ import TotalBookings from "./components/admin/MainDashboard/TotalBookings";
 import Checkin from "./components/admin/MainDashboard/Checkin";
 import Checkout from "./components/admin/MainDashboard/Checkout";
 import RevenueDetails from "./components/admin/MainDashboard/RevenueDetails";
+import ErrorPage from "./Pages/ErrorPage";
 
 const App = () => {
   const theme = useTheme();
@@ -47,6 +48,8 @@ const App = () => {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/reset" element={<ResetPassPage />} />
+
+        <Route path="/*" element={<ErrorPage />} />
 
         <Route element={<MainLayout />}>
           <Route path="/" element={<AllHotels />} />

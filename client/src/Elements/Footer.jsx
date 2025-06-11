@@ -17,7 +17,7 @@ const Footer = () => {
   return (
     <div>
       <footer
-        class={`px-6 md:px-16 lg:px-24 xl:px-32 pt-8 w-full text-gray-500 ${
+        class={`px-6  md:px-16 lg:px-24 xl:px-32 pt-8 w-full text-gray-500 ${
           theme === "dark"
             ? "bg-neutral-800 text-white"
             : "bg-neutral-100 text-black"
@@ -25,7 +25,13 @@ const Footer = () => {
       >
         <div class="flex flex-col md:flex-row justify-between w-full gap-10 border-b border-gray-500/30 pb-6">
           <div class="md:max-w-96">
-            <p className={`font-serif  text-4xl ${theme === "dark" ? "text-white" : "text-black"}`}>QuickStays</p>
+            <p
+              className={`font-serif  text-4xl ${
+                theme === "dark" ? "text-white" : "text-black"
+              }`}
+            >
+              StaySphere
+            </p>
             <p class="mt-6 text-sm">
               Discover the world's most extraordinary places to stay, from
               boutique hotels to luxury villas and private islands.
@@ -50,9 +56,7 @@ const Footer = () => {
               </ul>
             </div>
             <div>
-              <h2 class="font-semibold  mb-5">
-                Subscribe to our newsletter
-              </h2>
+              <h2 class="font-semibold  mb-5">Subscribe to our newsletter</h2>
               <div class="text-sm space-y-2">
                 <p>
                   The latest news, articles, and resources, sent to your inbox

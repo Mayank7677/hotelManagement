@@ -1,5 +1,6 @@
 const bookingModel = require("../models/bookingModel");
 const moment = require("moment");
+const approvedBookingMail = require("../utils/approvedMail");
 exports.bookRoom = async (req, res) => {
   console.log(req.body);
   try {
@@ -16,7 +17,7 @@ exports.bookRoom = async (req, res) => {
 
     const conflict = await bookingModel.findOne({
       roomId,
-      // status: "booked",
+      status: "booked",
       $or: [
         {
           checkInDate: { $lt: new Date(checkOutDate) },
@@ -44,7 +45,7 @@ exports.bookRoom = async (req, res) => {
       userId: req.user._id,
     });
     const save = await booking.save();
-    res.status(201).json({ message: "Room Booked Successfully" });
+    res.status(201).json({ message: "Request sent successfully to admin" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -63,9 +64,10 @@ exports.checkAvailability = async (req, res) => {
 
     const conflict = await bookingModel.findOne({
       roomId,
-      status: "booked",
-      checkInDate: { $lt: new Date(checkOutDate) },
-      checkOutDate: { $gt: new Date(checkInDate) },
+      status:  "booked" || "pending",
+      
+      checkInDate: { $lt: new Date(checkOutDate) }, 
+      checkOutDate: { $gt: new Date(checkInDate) }, 
     });
     console.log("dfwvwsfrsfswf--------------------", conflict);
 
@@ -114,6 +116,14 @@ exports.approved = async (req, res) => {
       { new: true }
     );
 
+    const populatedBooking = await bookingModel
+      .findById(id)
+      .populate("userId", "name email")
+      .populate("roomId", "roomNumber roomType ");
+
+
+    await approvedBookingMail(populatedBooking);
+
     res.status(200).json({ message: "Approved", approved });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -152,7 +162,7 @@ exports.cancelled = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-};
+}; 
 
 // --------------------------------------------------
 
@@ -265,14 +275,182 @@ function getLastSunday() {
   return lastSunday;
 }
 
+// exports.weeklyRevenue = async (req, res) => {
+//   try {
+//     const bookings = await bookingModel.find({
+//       status: "booked",
+//       isChecking: "confirm",
+//     });
+
+//     // Initialize revenue data for each day of the week
+//     const revenueByDay = {
+//       Sunday: 0,
+//       Monday: 0,
+//       Tuesday: 0,
+//       Wednesday: 0,
+//       Thursday: 0,
+//       Friday: 0,
+//       Saturday: 0,
+//     };
+
+//     // Fill revenue by matching day from createdAt
+//     bookings.forEach((booking) => {
+//       const dayName = new Date(booking.createdAt).toLocaleDateString("en-US", {
+//         weekday: "long",
+//       });
+//       revenueByDay[dayName] += booking.totalAmount;
+//     });
+
+//     // Convert object to array format for chart
+//     const chartData = Object.entries(revenueByDay).map(([day, revenue]) => ({
+//       day,
+//       revenue,
+//     }));
+
+//     res.status(200).json(chartData);
+//   } catch (error) {
+//     console.error("Error fetching revenue:", error.message);
+//     res.status(500).json({ message: "Failed to get weekly revenue" });
+//   }
+// };
+
+
+// exports.weeklyRevenue = async (req, res) => {
+//   try {
+//     const startOfLastWeek = moment()
+//       .subtract(1, "weeks")
+//       .startOf("week")
+//       .startOf("day")
+//       .toDate(); // last Sunday
+//     const endOfLastWeek = moment()
+//       .subtract(1, "weeks")
+//       .endOf("week")
+//       .endOf("day")
+//       .toDate(); // last Saturday
+
+//     const bookings = await bookingModel.find({
+//       status: "booked",
+//       isChecking: "confirm",
+//       createdAt: { $gte: startOfLastWeek, $lte: endOfLastWeek },
+//     });
+
+//     const revenueByDay = {
+//       Sunday: 0,
+//       Monday: 0,
+//       Tuesday: 0,
+//       Wednesday: 0,
+//       Thursday: 0,
+//       Friday: 0,
+//       Saturday: 0,
+//     };
+
+//     bookings.forEach((booking) => {
+//       const dayName = new Date(booking.createdAt).toLocaleDateString("en-US", {
+//         weekday: "long",
+//       });
+//       revenueByDay[dayName] += booking.totalAmount;
+//     });
+
+//     const chartData = Object.entries(revenueByDay).map(([day, revenue]) => ({
+//       day,
+//       revenue,
+//     }));
+
+//     res.status(200).json(chartData);
+//   } catch (error) {
+//     console.error("Error fetching revenue:", error.message);
+//     res.status(500).json({ message: "Failed to get weekly revenue" });
+//   }
+// };
+
+// exports.weeklyRevenue = async (req, res) => {
+//   try {
+//     const startOfLastWeekMoment = moment().subtract(1, "weeks").startOf("week");
+//     const endOfLastWeekMoment = moment().subtract(1, "weeks").endOf("week");
+
+//     const startOfLastWeek = startOfLastWeekMoment.startOf("day").toDate();
+//     const endOfLastWeek = endOfLastWeekMoment.endOf("day").toDate();
+
+//     const bookings = await bookingModel.find({
+//       status: "booked",
+//       isChecking: "confirm",
+//       createdAt: { $gte: startOfLastWeek, $lte: endOfLastWeek },
+//     });
+
+//     const revenueByDay = {
+//       Sunday: 0,
+//       Monday: 0,
+//       Tuesday: 0,
+//       Wednesday: 0,
+//       Thursday: 0,
+//       Friday: 0,
+//       Saturday: 0,
+//     };
+
+//     bookings.forEach((booking) => {
+//       const dayName = new Date(booking.createdAt).toLocaleDateString("en-US", {
+//         weekday: "long",
+//       });
+//       revenueByDay[dayName] += booking.totalAmount;
+//     });
+
+//     const chartData = Object.entries(revenueByDay).map(([day, revenue]) => ({
+//       day,
+//       revenue,
+//     }));
+
+//     const weekRangeLabel = `${startOfLastWeekMoment.format(
+//       "MMMM D, YYYY"
+//     )} - ${endOfLastWeekMoment.format("MMMM D, YYYY")}`;
+
+//     res.status(200).json({
+//       weekRange: weekRangeLabel,
+//       data: chartData,
+//     });
+//   } catch (error) {
+//     console.error("Error fetching revenue:", error.message);
+//     res.status(500).json({ message: "Failed to get weekly revenue" });
+//   }
+// };
+
 exports.weeklyRevenue = async (req, res) => {
   try {
+    const { week = "last", start, end } = req.query;
+
+    let startDate, endDate;
+    let label = "";
+
+    if (week === "current") {
+      const startMoment = moment().startOf("week");
+      const endMoment = moment().endOf("week");
+      startDate = startMoment.toDate();
+      endDate = endMoment.toDate();
+      label = `${startMoment.format("MMMM D, YYYY")} - ${endMoment.format(
+        "MMMM D, YYYY"
+      )}`;
+    } else if (week === "custom" && start && end) {
+      startDate = moment(start).startOf("day").toDate();
+      endDate = moment(end).endOf("day").toDate();
+      label = `${moment(start).format("MMMM D, YYYY")} - ${moment(end).format(
+        "MMMM D, YYYY"
+      )}`;
+    } else {
+      // Default: last week
+      const startMoment = moment().subtract(1, "weeks").startOf("week");
+      const endMoment = moment().subtract(1, "weeks").endOf("week");
+      startDate = startMoment.toDate();
+      endDate = endMoment.toDate();
+      label = `${startMoment.format("MMMM D, YYYY")} - ${endMoment.format(
+        "MMMM D, YYYY"
+      )}`;
+    }
+
     const bookings = await bookingModel.find({
       status: "booked",
       isChecking: "confirm",
+      createdAt: { $gte: startDate, $lte: endDate },
     });
 
-    // Initialize revenue data for each day of the week
     const revenueByDay = {
       Sunday: 0,
       Monday: 0,
@@ -283,7 +461,6 @@ exports.weeklyRevenue = async (req, res) => {
       Saturday: 0,
     };
 
-    // Fill revenue by matching day from createdAt
     bookings.forEach((booking) => {
       const dayName = new Date(booking.createdAt).toLocaleDateString("en-US", {
         weekday: "long",
@@ -291,29 +468,192 @@ exports.weeklyRevenue = async (req, res) => {
       revenueByDay[dayName] += booking.totalAmount;
     });
 
-    // Convert object to array format for chart
     const chartData = Object.entries(revenueByDay).map(([day, revenue]) => ({
       day,
       revenue,
     }));
 
-    res.status(200).json(chartData);
+    res.status(200).json({
+      weekRange: label,
+      data: chartData,
+    });
   } catch (error) {
     console.error("Error fetching revenue:", error.message);
     res.status(500).json({ message: "Failed to get weekly revenue" });
   }
 };
 
+
+
+
+// exports.getWeeklyBookingCounts = async (req, res) => {
+//   try {
+//     const startOfWeek = moment().startOf("week").startOf("day").toDate(); // Sunday
+//     const endOfWeek = moment().endOf("week").endOf("day").toDate(); // Saturday
+
+//     const bookings = await bookingModel.find({
+//       createdAt: { $gte: startOfWeek, $lte: endOfWeek },
+//     });
+
+//     // Initialize counts with 0 for each day
+//     const weekDays = [
+//       "Sunday",
+//       "Monday",
+//       "Tuesday",
+//       "Wednesday",
+//       "Thursday",
+//       "Friday",
+//       "Saturday",
+//     ];
+//     const dayCounts = weekDays.map((day) => ({
+//       day,
+//       bookings: 0,
+//     }));
+
+//     // Count bookings per day
+//     bookings.forEach((booking) => {
+//       const dayIndex = new Date(booking.createdAt).getDay(); // 0=Sun, 6=Sat
+//       dayCounts[dayIndex].bookings += 1;
+//     });
+
+//     res.status(200).json(dayCounts);
+//   } catch (error) {
+//     console.error("Error in weekly bookings:", error);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// };
+
+
+// exports.getWeeklyBookingCounts = async (req, res) => {
+//   try {
+//     const startOfLastWeek = moment()
+//       .subtract(1, "weeks")
+//       .startOf("week")
+//       .startOf("day")
+//       .toDate(); // last Sunday
+//     const endOfLastWeek = moment()
+//       .subtract(1, "weeks")
+//       .endOf("week")
+//       .endOf("day")
+//       .toDate(); // last Saturday
+
+//     const bookings = await bookingModel.find({
+//       createdAt: { $gte: startOfLastWeek, $lte: endOfLastWeek },
+//     });
+
+//     const weekDays = [
+//       "Sunday",
+//       "Monday",
+//       "Tuesday",
+//       "Wednesday",
+//       "Thursday",
+//       "Friday",
+//       "Saturday",
+//     ];
+//     const dayCounts = weekDays.map((day) => ({
+//       day,
+//       bookings: 0,
+//     }));
+
+//     bookings.forEach((booking) => {
+//       const dayIndex = new Date(booking.createdAt).getDay(); // 0=Sun, 6=Sat
+//       dayCounts[dayIndex].bookings += 1;
+//     });
+
+//     res.status(200).json(dayCounts);
+//   } catch (error) {
+//     console.error("Error in weekly bookings:", error);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// };
+
+
+// exports.getWeeklyBookingCounts = async (req, res) => {
+//   try {
+//     const startOfLastWeekMoment = moment().subtract(1, "weeks").startOf("week");
+//     const endOfLastWeekMoment = moment().subtract(1, "weeks").endOf("week");
+
+//     const startOfLastWeek = startOfLastWeekMoment.startOf("day").toDate();
+//     const endOfLastWeek = endOfLastWeekMoment.endOf("day").toDate();
+
+//     const bookings = await bookingModel.find({
+//       createdAt: { $gte: startOfLastWeek, $lte: endOfLastWeek },
+//     });
+
+//     const weekDays = [
+//       "Sunday",
+//       "Monday",
+//       "Tuesday",
+//       "Wednesday",
+//       "Thursday",
+//       "Friday",
+//       "Saturday",
+//     ];
+//     const dayCounts = weekDays.map((day) => ({
+//       day,
+//       bookings: 0,
+//     }));
+
+//     bookings.forEach((booking) => {
+//       const dayIndex = new Date(booking.createdAt).getDay();
+//       dayCounts[dayIndex].bookings += 1;
+//     });
+
+//     const weekRangeLabel = `${startOfLastWeekMoment.format(
+//       "MMMM D, YYYY"
+//     )} - ${endOfLastWeekMoment.format("MMMM D, YYYY")}`;
+
+//     res.status(200).json({
+//       weekRange: weekRangeLabel,
+//       data: dayCounts,
+//     });
+//   } catch (error) {
+//     console.error("Error in weekly bookings:", error);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// };
+
+
+
 exports.getWeeklyBookingCounts = async (req, res) => {
   try {
-    const startOfWeek = moment().startOf("week").startOf("day").toDate(); // Sunday
-    const endOfWeek = moment().endOf("week").endOf("day").toDate(); // Saturday
+    const { week = "last", start, end } = req.query;
+
+    let startDate, endDate, weekRange;
+
+    if (week === "custom" && start && end) {
+      startDate = moment(start).startOf("day").toDate();
+      endDate = moment(end).endOf("day").toDate();
+      weekRange = `${moment(startDate).format("MMM D")} - ${moment(
+        endDate
+      ).format("MMM D")}`;
+    } else if (week === "current") {
+      startDate = moment().startOf("week").startOf("day").toDate();
+      endDate = moment().endOf("week").endOf("day").toDate();
+      weekRange = `Current Week (${moment(startDate).format(
+        "MMM D"
+      )} - ${moment(endDate).format("MMM D")})`;
+    } else {
+      // Default to last week
+      startDate = moment()
+        .subtract(1, "weeks")
+        .startOf("week")
+        .startOf("day")
+        .toDate();
+      endDate = moment()
+        .subtract(1, "weeks")
+        .endOf("week")
+        .endOf("day")
+        .toDate();
+      weekRange = `Last Week (${moment(startDate).format("MMM D")} - ${moment(
+        endDate
+      ).format("MMM D")})`;
+    }
 
     const bookings = await bookingModel.find({
-      createdAt: { $gte: startOfWeek, $lte: endOfWeek },
+      createdAt: { $gte: startDate, $lte: endDate },
     });
 
-    // Initialize counts with 0 for each day
     const weekDays = [
       "Sunday",
       "Monday",
@@ -323,23 +663,20 @@ exports.getWeeklyBookingCounts = async (req, res) => {
       "Friday",
       "Saturday",
     ];
-    const dayCounts = weekDays.map((day) => ({
-      day,
-      bookings: 0,
-    }));
+    const dayCounts = weekDays.map((day) => ({ day, bookings: 0 }));
 
-    // Count bookings per day
     bookings.forEach((booking) => {
-      const dayIndex = new Date(booking.createdAt).getDay(); // 0=Sun, 6=Sat
+      const dayIndex = new Date(booking.createdAt).getDay();
       dayCounts[dayIndex].bookings += 1;
     });
 
-    res.status(200).json(dayCounts);
+    res.status(200).json({ data: dayCounts, weekRange });
   } catch (error) {
     console.error("Error in weekly bookings:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 
 exports.bookingCount = async (req, res) => {
   try {
@@ -389,15 +726,69 @@ exports.bookingCount = async (req, res) => {
 
 exports.revenueData = async (req, res) => {
   try {
+    // const data = await bookingModel.aggregate([
+    //   {
+    //     $match: {
+    //       status: "booked",
+    //       isChecking: { $nin: ["pending", "cancelled"] }
+    //     }
+    //   },
+    //   {
+    //     $lookup: {
+    //       from: "rooms",
+    //       localField: "roomId",
+    //       foreignField: "_id",
+    //       as: "room",
+    //     },
+    //   },
+    //   { $unwind: "$room" },
+    //   {
+    //     $lookup: {
+    //       from: "hotels",
+    //       localField: "room.hotelId",
+    //       foreignField: "_id",
+    //       as: "hotel",
+    //     },
+    //   },
+    //   { $unwind: "$hotel" },
+    //   {
+    //     $lookup: {
+    //       from: "locations",
+    //       localField: "hotel.locationId",
+    //       foreignField: "_id",
+    //       as: "location",
+    //     },
+    //   },
+    //   { $unwind: "$location" },
+    //   {
+    //     $lookup: {
+    //       from: "states",
+    //       localField: "location.stateId",
+    //       foreignField: "_id",
+    //       as: "state",
+    //     },
+    //   },
+    //   { $unwind: "$state" },
+    //   {
+    //     $group: {
+    //       _id: {
+    //         state: "$state.name",
+    //         city: "$location.name",
+    //         hotel: "$hotel.name",
+    //         room: "$room.roomNumber",
+    //       },
+    //       totalRevenue: { $sum: "$totalAmount" },
+    //       totalBookings: { $sum: 1 },
+    //     },
+    //   },
+    //   { $sort: { totalRevenue: -1 } },
+    // ]);
+
     const data = await bookingModel.aggregate([
       {
         $match: {
-          $and: [
-            {
-              status: "booked",
-              isChecking: "confirm",
-            },
-          ],
+          status: { $in: ["booked", "completed"] },
+          isChecking: { $nin: ["pending", "cancelled"] },
         },
       },
       {
@@ -446,10 +837,15 @@ exports.revenueData = async (req, res) => {
           },
           totalRevenue: { $sum: "$totalAmount" },
           totalBookings: { $sum: 1 },
+          createdAt: { $first: "$createdAt" },
         },
       },
       { $sort: { totalRevenue: -1 } },
     ]);
+    
+
+
+    console.log(data)
 
     res.status(200).json(data);
   } catch (error) {

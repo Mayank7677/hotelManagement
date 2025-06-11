@@ -17,8 +17,8 @@ const NavBar = () => {
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Explore", path: "/allHotels" },
-    { name: "Contact", path: "/" },
-    { name: "About", path: "/" },
+    { name: "Contact", path: "/contact" },
+    { name: "About", path: "/about" },
   ];
 
   const location = useLocation();
@@ -108,7 +108,7 @@ const NavBar = () => {
               : "text-white"
           }`}
         >
-          QuickStays
+          StaySphere
         </p>
       </Link>
 
@@ -270,17 +270,30 @@ const NavBar = () => {
         ))}
 
         {isAdmin && (
-          <Link to="/admin" onClick={() => setIsMenuOpen(false)}>
-            <button className="border px-4 py-1 text-sm font-[400] rounded-full">
-              Dashboard
-            </button>
-          </Link>
+          <div>
+            <Link to="/admin" onClick={() => setIsMenuOpen(false)}>
+              <button className="border px-4 py-1 text-sm font-[400] rounded-full">
+                Dashboard
+              </button>
+            </Link>
+          </div>
         )}
 
         {isLogin ? (
-          <button className="bg-pink-500 text-white px-8 py-2 rounded-full">
-            My Account
-          </button>
+          <div className="flex flex-col gap-10">
+            <Link to={"/profile"} onClick={() => setIsMenuOpen(false)}>
+              <button className="bg-pink-500 text-white px-8 py-2 rounded-full">
+                My Account
+              </button>
+            </Link>
+
+            <button
+              onClick={logOutUser}
+              className="text-red-500 font-serif text-sm border py-2 rounded-full border-red-600"
+            >
+              Logout
+            </button>
+          </div>
         ) : (
           <Link to="/login" onClick={() => setIsMenuOpen(false)}>
             <button className="bg-black text-white px-8 py-2 rounded-full">

@@ -98,9 +98,7 @@ export default function PieChartComponent() {
             <div className="font-[400] text-xs leading-none">Confirmed</div>
           </div>
         </div>
-        <div className="flex gap-2 font-medium leading-none">
-          Showing revenue for the last week.
-        </div>
+        
       </CardFooter>
     </Card>
   );

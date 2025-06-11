@@ -4,7 +4,7 @@ import axios from "axios";
 import BASE_URL from "../../../utils/api";
 import { toast } from "sonner";
 import { LuUsersRound } from "react-icons/lu";
-import { CiLocationOn, CiUser } from "react-icons/ci";
+import { CiCalendarDate, CiLocationOn, CiUser } from "react-icons/ci";
 import { useTheme } from "../../ThemeProvider";
 import { HiOutlineMail } from "react-icons/hi";
 import { CgSmartphone } from "react-icons/cg";
@@ -111,41 +111,95 @@ const ManageBooking = () => {
               <div className="pl-[3%]">Manage</div>
             </div>
 
-            {bookingData
-              .filter((data) => data.status === "pending")
-              .map((dets) => (
-                <div className="grid grid-cols-1 max-md:gap-5 md:grid-cols-[3fr_2fr_2fr_1fr] w-full border-b border-gray-300 py-6 first:border-t ">
-                  <div className="flex flex-col md:flex-row ">
-                    <img
-                      className="min-md:w-44 rounded-2xl shadow object-cover"
-                      src={dets.roomId?.images[0]?.url || dets.roomId.images[0]}
-                      alt=""
-                    />
-                    <div className="flex flex-col gap-1.5 max-md:mt-3 min-md:ml-4">
-                      <p className="text-2xl font-serif tracking-tight">
-                        {dets.hotelId.name} ,
-                        <span className="text-[15px]">
-                          ({dets.roomId.roomNumber})
-                        </span>{" "}
-                      </p>
-                      <div class="flex items-center gap-1 text-sm  tracking-tight font-serif">
-                        <CiLocationOn
-                          className={` text-lg ${
-                            theme === "dark" ? "text-white" : "text-black"
-                          } `}
-                        />
-                        <span
-                          className={`${
+            {bookingData.filter((data) => data.status === "pending").length >
+            0 ? (
+              bookingData
+                .filter((data) => data.status === "pending")
+                .map((dets) => (
+                  <div className="grid grid-cols-1 max-md:gap-5 md:grid-cols-[3fr_2fr_2fr_1fr] w-full border-b border-gray-300 py-6 first:border-t ">
+                    <div className="flex flex-col md:flex-row ">
+                      <img
+                        className="min-md:w-44 rounded-2xl shadow object-cover"
+                        src={
+                          dets.roomId?.images[0]?.url || dets.roomId.images[0]
+                        }
+                        alt=""
+                      />
+                      <div className="flex flex-col gap-1.5 max-md:mt-3 min-md:ml-4">
+                        <p className="text-2xl font-serif tracking-tight">
+                          {dets.hotelId.name} ,
+                          <span className="text-[15px]">
+                            ({dets.roomId.roomNumber})
+                          </span>{" "}
+                        </p>
+                        <div class="flex items-center gap-1 text-sm  tracking-tight font-serif">
+                          <CiLocationOn
+                            className={` text-lg ${
+                              theme === "dark" ? "text-white" : "text-black"
+                            } `}
+                          />
+                          <span
+                            className={`${
+                              theme === "dark"
+                                ? "text-neutral-300"
+                                : "text-gray-700"
+                            }`}
+                          >
+                            {dets.hotelId.address}
+                          </span>
+                        </div>
+                        <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
+                          <LuUsersRound
+                            className={` text-lg ${
+                              theme === "dark"
+                                ? "text-neutral-400"
+                                : "text-black"
+                            } `}
+                          />
+                          <span
+                            className={`${
+                              theme === "dark"
+                                ? "text-neutral-300"
+                                : "text-gray-700"
+                            }`}
+                          >
+                            Guests: {dets.numberOfGuests}
+                          </span>
+                        </div>
+                        <p class="font-serif">Total: ₹{dets.totalAmount}</p>
+                      </div>
+                    </div>
+
+                    <div class="flex flex-col mt-3 gap-3">
+                      <div>
+                        <p className="font-serif">Check-In:</p>
+                        <p
+                          class={` text-sm font-serif ${
                             theme === "dark"
-                              ? "text-neutral-300"
+                              ? "text-neutral-400"
                               : "text-gray-700"
                           }`}
                         >
-                          {dets.hotelId.address}
-                        </span>
+                          {new Date(dets.checkInDate).toDateString()}
+                        </p>
                       </div>
+                      <div>
+                        <p className="font-serif">Check-Out:</p>
+                        <p
+                          class={` text-sm font-serif ${
+                            theme === "dark"
+                              ? "text-neutral-400"
+                              : "text-gray-700"
+                          }`}
+                        >
+                          {new Date(dets.checkOutDate).toDateString()}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-1.5 max-md:mt-3 mt-5">
                       <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
-                        <LuUsersRound
+                        <BiUser
                           className={` text-lg ${
                             theme === "dark" ? "text-neutral-400" : "text-black"
                           } `}
@@ -157,112 +211,74 @@ const ManageBooking = () => {
                               : "text-gray-700"
                           }`}
                         >
-                          Guests: {dets.numberOfGuests}
+                          Name: {dets.userName}
                         </span>
                       </div>
-                      <p class="font-serif">Total: ₹{dets.totalAmount}</p>
+                      <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
+                        <HiOutlineMail
+                          className={` text-lg ${
+                            theme === "dark" ? "text-neutral-400" : "text-black"
+                          } `}
+                        />
+                        <span
+                          className={`${
+                            theme === "dark"
+                              ? "text-neutral-300"
+                              : "text-gray-700"
+                          }`}
+                        >
+                          Email: {dets.userId.email}
+                        </span>
+                      </div>
+                      <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
+                        <CgSmartphone
+                          className={` text-lg ${
+                            theme === "dark" ? "text-neutral-400" : "text-black"
+                          } `}
+                        />
+                        <span
+                          className={`${
+                            theme === "dark"
+                              ? "text-neutral-300"
+                              : "text-gray-700"
+                          }`}
+                        >
+                          Phone: {dets.userPhone}
+                        </span>
+                      </div>
                     </div>
-                  </div>
 
-                  <div class="flex flex-col mt-3 gap-3">
-                    <div>
-                      <p className="font-serif">Check-In:</p>
-                      <p
-                        class={` text-sm font-serif ${
-                          theme === "dark"
-                            ? "text-neutral-400"
-                            : "text-gray-700"
-                        }`}
-                      >
-                        {new Date(dets.checkInDate).toDateString()}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="font-serif">Check-Out:</p>
-                      <p
-                        class={` text-sm font-serif ${
-                          theme === "dark"
-                            ? "text-neutral-400"
-                            : "text-gray-700"
-                        }`}
-                      >
-                        {new Date(dets.checkOutDate).toDateString()}
-                      </p>
+                    <div className="flex flex-col w-fit md:items-center">
+                      <>
+                        <button
+                          onClick={() => approvedReq(dets._id)}
+                          class="px-4 py-1.5 mt-4 text-xs border border-blue-500 text-blue-500 rounded-full hover:bg-gray-50 transition-all cursor-pointer font-serif"
+                        >
+                          Confirm
+                        </button>
+                        <button
+                          onClick={() => cancelledReq(dets._id)}
+                          class="px-4 py-1.5 mt-4 text-xs border border-red-500 text-red-500 rounded-full hover:bg-gray-50 transition-all cursor-pointer font-serif"
+                        >
+                          Cancell
+                        </button>
+                        {/* <button class="px-4 py-1.5 mt-4 text-xs border border-yellow-400 text-yellow-400 rounded-full hover:bg-gray-50 transition-all cursor-pointer font-serif">
+                      Pending
+                    </button> */}
+                      </>
                     </div>
                   </div>
-
-                  <div className="flex flex-col gap-1.5 max-md:mt-3 mt-5">
-                    <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
-                      <BiUser
-                        className={` text-lg ${
-                          theme === "dark" ? "text-neutral-400" : "text-black"
-                        } `}
-                      />
-                      <span
-                        className={`${
-                          theme === "dark"
-                            ? "text-neutral-300"
-                            : "text-gray-700"
-                        }`}
-                      >
-                        Name: {dets.userName}
-                      </span>
-                    </div>
-                    <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
-                      <HiOutlineMail
-                        className={` text-lg ${
-                          theme === "dark" ? "text-neutral-400" : "text-black"
-                        } `}
-                      />
-                      <span
-                        className={`${
-                          theme === "dark"
-                            ? "text-neutral-300"
-                            : "text-gray-700"
-                        }`}
-                      >
-                        Email: {dets.userId.email}
-                      </span>
-                    </div>
-                    <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
-                      <CgSmartphone
-                        className={` text-lg ${
-                          theme === "dark" ? "text-neutral-400" : "text-black"
-                        } `}
-                      />
-                      <span
-                        className={`${
-                          theme === "dark"
-                            ? "text-neutral-300"
-                            : "text-gray-700"
-                        }`}
-                      >
-                        Phone: {dets.userPhone}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col w-fit md:items-center">
-                    <>
-                      <button
-                        onClick={() => approvedReq(dets._id)}
-                        class="px-4 py-1.5 mt-4 text-xs border border-blue-500 text-blue-500 rounded-full hover:bg-gray-50 transition-all cursor-pointer font-serif"
-                      >
-                        Confirm
-                      </button>
-                      <button
-                        onClick={() => cancelledReq(dets._id)}
-                        class="px-4 py-1.5 mt-4 text-xs border border-red-500 text-red-500 rounded-full hover:bg-gray-50 transition-all cursor-pointer font-serif"
-                      >
-                        Cancell
-                      </button>
-                      {/* <button class="px-4 py-1.5 mt-4 text-xs border border-yellow-400 text-yellow-400 rounded-full hover:bg-gray-50 transition-all cursor-pointer font-serif">
-                        Pending
-                      </button> */}
-                    </>
-                  </div>
-                </div>
-              ))}
+                ))
+            ) : (
+              <div className="px-6 py-4  flex flex-col items-center justify-center h-100">
+                <CiCalendarDate
+                  className={`text-6xl ${
+                    theme === "dark" ? "text-white" : "text-black"
+                  }`}
+                />
+                <p className="text-3xl mt-3">No Bookings Found</p>
+              </div>
+            )}
           </div>
         </TabsContent>
 
@@ -279,41 +295,95 @@ const ManageBooking = () => {
               <div className="pl-[3%]">Manage</div>
             </div>
 
-            {bookingData
-              .filter((data) => data.status === "booked")
-              .map((dets) => (
-                <div className="grid grid-cols-1 max-md:gap-5 md:grid-cols-[3fr_2fr_2fr_1fr] w-full border-b border-gray-300 py-6 first:border-t ">
-                  <div className="flex flex-col md:flex-row ">
-                    <img
-                      className="min-md:w-44 rounded-2xl shadow object-cover"
-                      src={dets.roomId?.images[0]?.url || dets.roomId.images[0]}
-                      alt=""
-                    />
-                    <div className="flex flex-col gap-1.5 max-md:mt-3 min-md:ml-4">
-                      <p className="text-2xl font-serif tracking-tight">
-                        {dets.hotelId.name} ,
-                        <span className="text-[15px]">
-                          ({dets.roomId.roomNumber})
-                        </span>{" "}
-                      </p>
-                      <div class="flex items-center gap-1 text-sm  tracking-tight font-serif">
-                        <CiLocationOn
-                          className={` text-lg ${
-                            theme === "dark" ? "text-white" : "text-black"
-                          } `}
-                        />
-                        <span
-                          className={`${
+            {bookingData.filter((data) => data.status === "booked").length >
+            0 ? (
+              bookingData
+                .filter((data) => data.status === "booked")
+                .map((dets) => (
+                  <div className="grid grid-cols-1 max-md:gap-5 md:grid-cols-[3fr_2fr_2fr_1fr] w-full border-b border-gray-300 py-6 first:border-t ">
+                    <div className="flex flex-col md:flex-row ">
+                      <img
+                        className="min-md:w-44 rounded-2xl shadow object-cover"
+                        src={
+                          dets.roomId?.images[0]?.url || dets.roomId.images[0]
+                        }
+                        alt=""
+                      />
+                      <div className="flex flex-col gap-1.5 max-md:mt-3 min-md:ml-4">
+                        <p className="text-2xl font-serif tracking-tight">
+                          {dets.hotelId.name} ,
+                          <span className="text-[15px]">
+                            ({dets.roomId.roomNumber})
+                          </span>{" "}
+                        </p>
+                        <div class="flex items-center gap-1 text-sm  tracking-tight font-serif">
+                          <CiLocationOn
+                            className={` text-lg ${
+                              theme === "dark" ? "text-white" : "text-black"
+                            } `}
+                          />
+                          <span
+                            className={`${
+                              theme === "dark"
+                                ? "text-neutral-300"
+                                : "text-gray-700"
+                            }`}
+                          >
+                            {dets.hotelId.address}
+                          </span>
+                        </div>
+                        <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
+                          <LuUsersRound
+                            className={` text-lg ${
+                              theme === "dark"
+                                ? "text-neutral-400"
+                                : "text-black"
+                            } `}
+                          />
+                          <span
+                            className={`${
+                              theme === "dark"
+                                ? "text-neutral-300"
+                                : "text-gray-700"
+                            }`}
+                          >
+                            Guests: {dets.numberOfGuests}
+                          </span>
+                        </div>
+                        <p class="font-serif">Total: ₹{dets.totalAmount}</p>
+                      </div>
+                    </div>
+
+                    <div class="flex flex-col mt-3 gap-3">
+                      <div>
+                        <p className="font-serif">Check-In:</p>
+                        <p
+                          class={` text-sm font-serif ${
                             theme === "dark"
-                              ? "text-neutral-300"
+                              ? "text-neutral-400"
                               : "text-gray-700"
                           }`}
                         >
-                          {dets.hotelId.address}
-                        </span>
+                          {new Date(dets.checkInDate).toDateString()}
+                        </p>
                       </div>
+                      <div>
+                        <p className="font-serif">Check-Out:</p>
+                        <p
+                          class={` text-sm font-serif ${
+                            theme === "dark"
+                              ? "text-neutral-400"
+                              : "text-gray-700"
+                          }`}
+                        >
+                          {new Date(dets.checkOutDate).toDateString()}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-1.5 max-md:mt-3 mt-5">
                       <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
-                        <LuUsersRound
+                        <BiUser
                           className={` text-lg ${
                             theme === "dark" ? "text-neutral-400" : "text-black"
                           } `}
@@ -325,116 +395,78 @@ const ManageBooking = () => {
                               : "text-gray-700"
                           }`}
                         >
-                          Guests: {dets.numberOfGuests}
+                          Name: {dets.userName}
                         </span>
                       </div>
-                      <p class="font-serif">Total: ₹{dets.totalAmount}</p>
+                      <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
+                        <HiOutlineMail
+                          className={` text-lg ${
+                            theme === "dark" ? "text-neutral-400" : "text-black"
+                          } `}
+                        />
+                        <span
+                          className={`${
+                            theme === "dark"
+                              ? "text-neutral-300"
+                              : "text-gray-700"
+                          }`}
+                        >
+                          Email: {dets.userId.email}
+                        </span>
+                      </div>
+                      <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
+                        <CgSmartphone
+                          className={` text-lg ${
+                            theme === "dark" ? "text-neutral-400" : "text-black"
+                          } `}
+                        />
+                        <span
+                          className={`${
+                            theme === "dark"
+                              ? "text-neutral-300"
+                              : "text-gray-700"
+                          }`}
+                        >
+                          Phone: {dets.userPhone}
+                        </span>
+                      </div>
                     </div>
-                  </div>
 
-                  <div class="flex flex-col mt-3 gap-3">
-                    <div>
-                      <p className="font-serif">Check-In:</p>
-                      <p
-                        class={` text-sm font-serif ${
-                          theme === "dark"
-                            ? "text-neutral-400"
-                            : "text-gray-700"
-                        }`}
-                      >
-                        {new Date(dets.checkInDate).toDateString()}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="font-serif">Check-Out:</p>
-                      <p
-                        class={` text-sm font-serif ${
-                          theme === "dark"
-                            ? "text-neutral-400"
-                            : "text-gray-700"
-                        }`}
-                      >
-                        {new Date(dets.checkOutDate).toDateString()}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-1.5 max-md:mt-3 mt-5">
-                    <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
-                      <BiUser
-                        className={` text-lg ${
-                          theme === "dark" ? "text-neutral-400" : "text-black"
-                        } `}
-                      />
-                      <span
-                        className={`${
-                          theme === "dark"
-                            ? "text-neutral-300"
-                            : "text-gray-700"
-                        }`}
-                      >
-                        Name: {dets.userName}
-                      </span>
-                    </div>
-                    <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
-                      <HiOutlineMail
-                        className={` text-lg ${
-                          theme === "dark" ? "text-neutral-400" : "text-black"
-                        } `}
-                      />
-                      <span
-                        className={`${
-                          theme === "dark"
-                            ? "text-neutral-300"
-                            : "text-gray-700"
-                        }`}
-                      >
-                        Email: {dets.userId.email}
-                      </span>
-                    </div>
-                    <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
-                      <CgSmartphone
-                        className={` text-lg ${
-                          theme === "dark" ? "text-neutral-400" : "text-black"
-                        } `}
-                      />
-                      <span
-                        className={`${
-                          theme === "dark"
-                            ? "text-neutral-300"
-                            : "text-gray-700"
-                        }`}
-                      >
-                        Phone: {dets.userPhone}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col w-fit md:items-center">
-                    <>
-                      {/* <button
+                    <div className="flex flex-col w-fit md:items-center">
+                      <>
+                        {/* <button
                         onClick={() => approvedReq(dets._id)}
                         class="px-4 py-1.5 mt-4 text-xs border border-blue-500 text-blue-500 rounded-full hover:bg-gray-50 transition-all cursor-pointer font-serif"
                       >
                         Confirm
                       </button> */}
-                      <button
-                        onClick={() => cancelledReq(dets._id)}
-                        class="px-4 py-1.5 mt-4 text-xs border border-red-500 text-red-500 rounded-full hover:bg-gray-50 transition-all cursor-pointer font-serif"
-                      >
-                        Cancell
-                      </button>
+                        <button
+                          onClick={() => cancelledReq(dets._id)}
+                          class="px-4 py-1.5 mt-4 text-xs border border-red-500 text-red-500 rounded-full hover:bg-gray-50 transition-all cursor-pointer font-serif"
+                        >
+                          Cancell
+                        </button>
 
-                      <button
-                        onClick={() => pendingReq(dets._id)}
-                        class="px-4 py-1.5 mt-4 text-xs border border-yellow-400 text-yellow-400 rounded-full hover:bg-gray-50 transition-all cursor-pointer font-serif"
-                      >
-                        Pending
-                      </button>
-                    </>
+                        <button
+                          onClick={() => pendingReq(dets._id)}
+                          class="px-4 py-1.5 mt-4 text-xs border border-yellow-400 text-yellow-400 rounded-full hover:bg-gray-50 transition-all cursor-pointer font-serif"
+                        >
+                          Pending
+                        </button>
+                      </>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))
+            ) : (
+              <div className="px-6 py-4  flex flex-col items-center justify-center h-100">
+                <CiCalendarDate
+                  className={`text-6xl ${
+                    theme === "dark" ? "text-white" : "text-black"
+                  }`}
+                />
+                <p className="text-3xl mt-3">No Bookings Found</p>
+              </div>
+            )}
           </div>
 
           {/* <h1 className="font-medium mt-10 text-xl tracking-tighter">
@@ -657,41 +689,95 @@ const ManageBooking = () => {
               <div className="pl-[3%]">Manage</div>
             </div>
 
-            {bookingData
-              .filter((data) => data.status === "cancelled")
-              .map((dets) => (
-                <div className="grid grid-cols-1 max-md:gap-5 md:grid-cols-[3fr_2fr_2fr_1fr] w-full border-b border-gray-300 py-6 first:border-t ">
-                  <div className="flex flex-col md:flex-row ">
-                    <img
-                      className="min-md:w-44 rounded-2xl shadow object-cover"
-                      src={dets.roomId?.images[0]?.url || dets.roomId.images[0]}
-                      alt=""
-                    />
-                    <div className="flex flex-col gap-1.5 max-md:mt-3 min-md:ml-4">
-                      <p className="text-2xl font-serif tracking-tight">
-                        {dets.hotelId.name} ,
-                        <span className="text-[15px]">
-                          ({dets.roomId.roomNumber})
-                        </span>{" "}
-                      </p>
-                      <div class="flex items-center gap-1 text-sm  tracking-tight font-serif">
-                        <CiLocationOn
-                          className={` text-lg ${
-                            theme === "dark" ? "text-white" : "text-black"
-                          } `}
-                        />
-                        <span
-                          className={`${
+            {bookingData.filter((data) => data.status === "cancelled").length >
+            0 ? (
+              bookingData
+                .filter((data) => data.status === "cancelled")
+                .map((dets) => (
+                  <div className="grid grid-cols-1 max-md:gap-5 md:grid-cols-[3fr_2fr_2fr_1fr] w-full border-b border-gray-300 py-6 first:border-t ">
+                    <div className="flex flex-col md:flex-row ">
+                      <img
+                        className="min-md:w-44 rounded-2xl shadow object-cover"
+                        src={
+                          dets.roomId?.images[0]?.url || dets.roomId.images[0]
+                        }
+                        alt=""
+                      />
+                      <div className="flex flex-col gap-1.5 max-md:mt-3 min-md:ml-4">
+                        <p className="text-2xl font-serif tracking-tight">
+                          {dets.hotelId.name} ,
+                          <span className="text-[15px]">
+                            ({dets.roomId.roomNumber})
+                          </span>{" "}
+                        </p>
+                        <div class="flex items-center gap-1 text-sm  tracking-tight font-serif">
+                          <CiLocationOn
+                            className={` text-lg ${
+                              theme === "dark" ? "text-white" : "text-black"
+                            } `}
+                          />
+                          <span
+                            className={`${
+                              theme === "dark"
+                                ? "text-neutral-300"
+                                : "text-gray-700"
+                            }`}
+                          >
+                            {dets.hotelId.address}
+                          </span>
+                        </div>
+                        <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
+                          <LuUsersRound
+                            className={` text-lg ${
+                              theme === "dark"
+                                ? "text-neutral-400"
+                                : "text-black"
+                            } `}
+                          />
+                          <span
+                            className={`${
+                              theme === "dark"
+                                ? "text-neutral-300"
+                                : "text-gray-700"
+                            }`}
+                          >
+                            Guests: {dets.numberOfGuests}
+                          </span>
+                        </div>
+                        <p class="font-serif">Total: ₹{dets.totalAmount}</p>
+                      </div>
+                    </div>
+
+                    <div class="flex flex-col mt-3 gap-3">
+                      <div>
+                        <p className="font-serif">Check-In:</p>
+                        <p
+                          class={` text-sm font-serif ${
                             theme === "dark"
-                              ? "text-neutral-300"
+                              ? "text-neutral-400"
                               : "text-gray-700"
                           }`}
                         >
-                          {dets.hotelId.address}
-                        </span>
+                          {new Date(dets.checkInDate).toDateString()}
+                        </p>
                       </div>
+                      <div>
+                        <p className="font-serif">Check-Out:</p>
+                        <p
+                          class={` text-sm font-serif ${
+                            theme === "dark"
+                              ? "text-neutral-400"
+                              : "text-gray-700"
+                          }`}
+                        >
+                          {new Date(dets.checkOutDate).toDateString()}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-1.5 max-md:mt-3 mt-5">
                       <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
-                        <LuUsersRound
+                        <BiUser
                           className={` text-lg ${
                             theme === "dark" ? "text-neutral-400" : "text-black"
                           } `}
@@ -703,116 +789,78 @@ const ManageBooking = () => {
                               : "text-gray-700"
                           }`}
                         >
-                          Guests: {dets.numberOfGuests}
+                          Name: {dets.userName}
                         </span>
                       </div>
-                      <p class="font-serif">Total: ₹{dets.totalAmount}</p>
+                      <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
+                        <HiOutlineMail
+                          className={` text-lg ${
+                            theme === "dark" ? "text-neutral-400" : "text-black"
+                          } `}
+                        />
+                        <span
+                          className={`${
+                            theme === "dark"
+                              ? "text-neutral-300"
+                              : "text-gray-700"
+                          }`}
+                        >
+                          Email: {dets.userId.email}
+                        </span>
+                      </div>
+                      <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
+                        <CgSmartphone
+                          className={` text-lg ${
+                            theme === "dark" ? "text-neutral-400" : "text-black"
+                          } `}
+                        />
+                        <span
+                          className={`${
+                            theme === "dark"
+                              ? "text-neutral-300"
+                              : "text-gray-700"
+                          }`}
+                        >
+                          Phone: {dets.userPhone}
+                        </span>
+                      </div>
                     </div>
-                  </div>
 
-                  <div class="flex flex-col mt-3 gap-3">
-                    <div>
-                      <p className="font-serif">Check-In:</p>
-                      <p
-                        class={` text-sm font-serif ${
-                          theme === "dark"
-                            ? "text-neutral-400"
-                            : "text-gray-700"
-                        }`}
-                      >
-                        {new Date(dets.checkInDate).toDateString()}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="font-serif">Check-Out:</p>
-                      <p
-                        class={` text-sm font-serif ${
-                          theme === "dark"
-                            ? "text-neutral-400"
-                            : "text-gray-700"
-                        }`}
-                      >
-                        {new Date(dets.checkOutDate).toDateString()}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-1.5 max-md:mt-3 mt-5">
-                    <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
-                      <BiUser
-                        className={` text-lg ${
-                          theme === "dark" ? "text-neutral-400" : "text-black"
-                        } `}
-                      />
-                      <span
-                        className={`${
-                          theme === "dark"
-                            ? "text-neutral-300"
-                            : "text-gray-700"
-                        }`}
-                      >
-                        Name: {dets.userName}
-                      </span>
-                    </div>
-                    <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
-                      <HiOutlineMail
-                        className={` text-lg ${
-                          theme === "dark" ? "text-neutral-400" : "text-black"
-                        } `}
-                      />
-                      <span
-                        className={`${
-                          theme === "dark"
-                            ? "text-neutral-300"
-                            : "text-gray-700"
-                        }`}
-                      >
-                        Email: {dets.userId.email}
-                      </span>
-                    </div>
-                    <div class="flex items-center gap-1 text-sm text-gray-700 tracking-tight font-serif">
-                      <CgSmartphone
-                        className={` text-lg ${
-                          theme === "dark" ? "text-neutral-400" : "text-black"
-                        } `}
-                      />
-                      <span
-                        className={`${
-                          theme === "dark"
-                            ? "text-neutral-300"
-                            : "text-gray-700"
-                        }`}
-                      >
-                        Phone: {dets.userPhone}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col w-fit md:items-center">
-                    <>
-                      <button
-                        onClick={() => approvedReq(dets._id)}
-                        class="px-4 py-1.5 mt-4 text-xs border border-blue-500 text-blue-500 rounded-full hover:bg-gray-50 transition-all cursor-pointer font-serif"
-                      >
-                        Confirm
-                      </button>
-                      {/* <button
+                    <div className="flex flex-col w-fit md:items-center">
+                      <>
+                        <button
+                          onClick={() => approvedReq(dets._id)}
+                          class="px-4 py-1.5 mt-4 text-xs border border-blue-500 text-blue-500 rounded-full hover:bg-gray-50 transition-all cursor-pointer font-serif"
+                        >
+                          Confirm
+                        </button>
+                        {/* <button
                         onClick={() => cancelledReq(dets._id)}
                         class="px-4 py-1.5 mt-4 text-xs border border-red-500 text-red-500 rounded-full hover:bg-gray-50 transition-all cursor-pointer font-serif"
                       >
                         Cancell
                       </button> */}
 
-                      <button
-                        onClick={() => pendingReq(dets._id)}
-                        class="px-4 py-1.5 mt-4 text-xs border border-yellow-400 text-yellow-400 rounded-full hover:bg-gray-50 transition-all cursor-pointer font-serif"
-                      >
-                        Pending
-                      </button>
-                    </>
+                        <button
+                          onClick={() => pendingReq(dets._id)}
+                          class="px-4 py-1.5 mt-4 text-xs border border-yellow-400 text-yellow-400 rounded-full hover:bg-gray-50 transition-all cursor-pointer font-serif"
+                        >
+                          Pending
+                        </button>
+                      </>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))
+            ) : (
+              <div className="px-6 py-4  flex flex-col items-center justify-center h-100">
+                <CiCalendarDate
+                  className={`text-6xl ${
+                    theme === "dark" ? "text-white" : "text-black"
+                  }`}
+                />
+                <p className="text-3xl mt-3">No Bookings Found</p>
+              </div>
+            )}
           </div>
         </TabsContent>
       </Tabs>

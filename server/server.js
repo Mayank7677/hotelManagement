@@ -7,26 +7,25 @@ require("./cron/scheduler");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const PORT = process.env.PORT || 6000;
+const PORT = process.env.PORT || 5000;
 
 const userRouter = require("./routers/userRouter");
-const locationRouter = require('./routers/locationRouter')
-const stateRouter = require('./routers/stateRouter')
-const hotelRouter = require('./routers/hotelRouter');
-const roomRouter = require('./routers/roomRouter');
-const bookingRouter = require('./routers/bookingRouter');
-const couponRouter = require('./routers/couponRouter')
-
-
-mongoose.connect(
-  "mongodb+srv://mayyynkpanwar7:1234@cluster0.jlhnpue.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-);
+const locationRouter = require("./routers/locationRouter");
+const stateRouter = require("./routers/stateRouter");
+const hotelRouter = require("./routers/hotelRouter");
+const roomRouter = require("./routers/roomRouter"); 
+const bookingRouter = require("./routers/bookingRouter");
+const couponRouter = require("./routers/couponRouter");
+ 
+mongoose
+  .connect(process.env.MONO_URI) 
+  .then(() => console.log("DB connected"))
+  .catch((err) => console.log(err));
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload());
-
 
 app.use("/users", userRouter);
 app.use("/locations", locationRouter);
@@ -40,9 +39,7 @@ app.get("/", (req, res) => {
   res.send("hello world");
 });
 console.log("🕒 Date now:", new Date());
- 
-app.listen(PORT, () => {
-  console.log("server is running on port" , PORT);
-});
 
- 
+app.listen(PORT, () => {
+  console.log("server is running on port", PORT);
+});
