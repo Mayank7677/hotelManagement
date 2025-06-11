@@ -24,9 +24,12 @@ mongoose
 
 // Allow requests from frontend on Render
 app.use(cors({
-  origin: ["https://hotelmanagement-bxyq.onrender.com"],
+  origin: "https://hotelmanagement-bxyq.onrender.com",
   credentials: true // needed if you're using cookies or sessions
 }));
+
+// ✅ Required for preflight (OPTIONS) requests
+app.options("*", cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
