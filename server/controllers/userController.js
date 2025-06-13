@@ -9,8 +9,7 @@ const { uploadProfilePicture } = require("../utils/helper");
 const requestIp = require("request-ip");
 const os = require("os");
 const { default: mongoose } = require("mongoose");
-
-
+const geoip = require("geoip-lite");
 
 // exports.signup = async (req, res) => {
 //   try {
@@ -29,7 +28,6 @@ const { default: mongoose } = require("mongoose");
 //     // Upload the image to Cloudinary
 //     const imageData = await uploadProfilePicture(profileImg);
 
-
 //     const user = new userModel({
 //       name,
 //       email,
@@ -40,9 +38,6 @@ const { default: mongoose } = require("mongoose");
 //       profileImg: imageData ? imageData.url : "",
 //     });
 
-    
-
-
 //     const userData = new userModel(user);
 //     const data = await userData.save();
 //     res.status(201).json({ message: "User created successfully" });
@@ -52,7 +47,6 @@ const { default: mongoose } = require("mongoose");
 // };
 
 exports.signup = async (req, res) => {
-
   const session = await mongoose.startSession();
   session.startTransaction();
 
@@ -95,10 +89,13 @@ exports.signup = async (req, res) => {
       // profileImg: profileImgUrl && profileImgUrl
     });
 
-    await newUser.save({session});
+    await newUser.save({ session });
 
     const clientIp = requestIp.getClientIp(req);
     console.log(clientIp);
+
+    const geo = geoip.lookup(clientIp);
+    console.log("location : ", geo);
 
     const hostname = os.hostname();
     console.log("System Hostname:", hostname);
@@ -106,19 +103,49 @@ exports.signup = async (req, res) => {
     const activity = new activityModel({
       userId: newUser._id,
       ipAddress: clientIp,
+      location: geo ? `${geo.city}, ${geo.region}, ${geo.country}` : "Unknown",
       systemName: hostname,
-      action: "sigin",
+      action: "signup",
     });
 
-    await activity.save({ session })
-    
+    await activity.save({ session });
+
     await session.commitTransaction();
     session.endSession();
- 
-    res.status(201).json({ message: "User created successfully" ,  user : newUser });
+
+    res
+      .status(201)
+      .json({ message: "User created successfully", user: newUser });
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.logout = async (req, res) => {
+  try {
+    const clientIp = requestIp.getClientIp(req);
+    console.log(clientIp);
+
+    const geo = geoip.lookup(clientIp);
+    console.log("location : ", geo);
+
+    const hostname = os.hostname();
+    console.log("System Hostname:", hostname);
+
+    const activity = new activityModel({
+      userId: req.user._id,
+      ipAddress: clientIp,
+      location: geo ? `${geo.city}, ${geo.region}, ${geo.country}` : "Unknown",
+      systemName: hostname,
+      action: "logout",
+    });
+
+    await activity.save();
+
+    res.status(201).json({ message: "User logout successfully" });
+  } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
@@ -132,7 +159,7 @@ exports.login = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
     const isMatch = bcrypt.compareSync(password, user.password);
-    if (!isMatch) { 
+    if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
@@ -146,7 +173,7 @@ exports.login = async (req, res) => {
 
     await userModel.findOneAndUpdate({ email }, { otp, otpTimer: newTime });
 
-    await sentOtpEmail(user.email , otp, user.name);
+    await sentOtpEmail(user.email, otp, user.name);
 
     res.status(200).json({
       message: "OTP sent to your email. Please verify.",
@@ -192,12 +219,16 @@ exports.verifyOtp = async (req, res) => {
     const clientIp = requestIp.getClientIp(req);
     console.log(clientIp);
 
+    const geo = geoip.lookup(clientIp);
+    console.log("location : ", geo);
+
     const hostname = os.hostname();
     console.log("System Hostname:", hostname);
 
     const activity = new activityModel({
       userId: user._id,
       ipAddress: clientIp,
+      location: geo ? `${geo.city}, ${geo.region}, ${geo.country}` : "Unknown",
       systemName: hostname,
       action: "login",
     });
@@ -206,7 +237,7 @@ exports.verifyOtp = async (req, res) => {
 
     res.status(200).json({ message: "OTP verified successfully", token, user });
   } catch (error) {
-    console.log("error" , error);
+    console.log("error", error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -229,7 +260,7 @@ exports.resetPassword = async (req, res) => {
 
     await sentOtpEmail("m.ayyynkpanwar7@gmail.com", otp, user.name);
 
-    res.status(200).json({ 
+    res.status(200).json({
       message: "OTP sent to your email. Please verify.",
       step: "otp_verification",
     });
@@ -245,9 +276,9 @@ exports.newPassword = async (req, res) => {
     const user = await userModel.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: "User not found" });
-      }
-      
-      console.log(otp , user.otp)
+    }
+
+    console.log(otp, user.otp);
 
     if (toString(user.otp) !== toString(otp)) {
       return res.status(400).json({ message: "Invalid OTP" });
@@ -278,7 +309,6 @@ exports.newPassword = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
 
 exports.editProfile = async (req, res) => {
   console.log(req.body);
@@ -328,12 +358,11 @@ exports.editProfile = async (req, res) => {
   }
 };
 
-
 exports.getUser = async (req, res) => {
-  console.log("efw")
+  console.log("efw");
   try {
-    const data = req.user
-    console.log(data)
+    const data = req.user;
+    console.log(data);
 
     const user = await userModel.findById(data._id).select("-password");
     if (!user) {
@@ -344,4 +373,4 @@ exports.getUser = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-}
+};

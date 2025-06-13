@@ -12,6 +12,8 @@ import {
 import { toast } from "sonner";
 import { ModeToggle } from "../components/modeToggle";
 import { useTheme } from "../components/ThemeProvider";
+import BASE_URL from "../utils/api";
+import axios from "axios";
 
 const NavBar = () => {
   const navLinks = [
@@ -66,22 +68,26 @@ const NavBar = () => {
     }
   }, [localStorage.getItem("data")]); // dependency to trigger on change
 
-  const logOutUser = () => {
-    localStorage.removeItem("data");
-    toast.success("Logout successful.");
-    setIsLogin(false);
-    setProfileImg("");
-    setName("");
-    setRole("");
-    setIsAdmin(false);
-    setIsMenuOpen(false);
-    navigate("/");
+  const logOutUser = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/users/logout`);
+      localStorage.removeItem("data");
+      toast.success("Logout successful.");
+      setIsLogin(false);
+      setProfileImg("");
+      setName("");
+      setRole("");
+      setIsAdmin(false);
+      setIsMenuOpen(false);
+      navigate("/");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Error in logout");
+    }
   };
 
   const isAdminRoute = location.pathname.startsWith("/admin");
 
-    const { theme } = useTheme();
-  
+  const { theme } = useTheme();
 
   return (
     <nav

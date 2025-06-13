@@ -11,12 +11,15 @@ const activitySchema = new mongoose.Schema(
     systemName: {
       type: String,
     },
+    location: {
+      type: String,
+    },
     action: {
       type: String,
-      enum: ["login", "logout", "sigin"],
+      enum: ["login", "logout", "signup"],
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model('activity' , activitySchema)
+module.exports = mongoose.model("activity", activitySchema);
