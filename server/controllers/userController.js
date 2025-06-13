@@ -8,6 +8,7 @@ const sentOtpEmail = require("../utils/otpMail");
 const { uploadProfilePicture } = require("../utils/helper");
 const requestIp = require("request-ip");
 const os = require("os");
+const { default: mongoose } = require("mongoose");
 
 
 
@@ -51,11 +52,17 @@ const os = require("os");
 // };
 
 exports.signup = async (req, res) => {
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     const { name, email, age, phone, password, role } = req.body;
 
-    const checkUser = await userModel.findOne({ email });
+    const checkUser = await userModel.findOne({ email }).session(session);
     if (checkUser) {
+      await session.abortTransaction();
+      session.endSession();
       return res.status(400).json({ message: "User already exists" });
     }
 
@@ -64,7 +71,6 @@ exports.signup = async (req, res) => {
 
     // Extract file data if any
     let profileImgUrl = "";
-
     if (req.files && req.files.profileImg) {
       // Assuming the field name is 'profileImg'
       const file = req.files.profileImg;
@@ -89,7 +95,7 @@ exports.signup = async (req, res) => {
       // profileImg: profileImgUrl && profileImgUrl
     });
 
-    await newUser.save();
+    await newUser.save({session});
 
     const clientIp = requestIp.getClientIp(req);
     console.log(clientIp);
@@ -104,10 +110,15 @@ exports.signup = async (req, res) => {
       action: "sigin",
     });
 
-    await activity.save()
+    await activity.save({ session })
+    
+    await session.commitTransaction();
+    session.endSession();
  
     res.status(201).json({ message: "User created successfully" ,  user : newUser });
   } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
     res.status(500).json({ error: error.message });
   }
 };

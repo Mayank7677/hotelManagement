@@ -46,7 +46,7 @@ const RoomCard = ({ room }) => {
 
         <div className="mt-3 pl-1 overflow-hidden">
           <p className="text-lg  tracking-tight font-serif">
-            {room.hotelId.name} , {room.stateId.name}
+            {room.hotelId.name} , {room.locationId.name}
           </p>
           <p className="text-[13px] tracking-tight text-gray-600 font-[450]">
             {room.hotelId.address}
