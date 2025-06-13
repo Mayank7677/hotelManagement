@@ -69,8 +69,13 @@ const NavBar = () => {
   }, [localStorage.getItem("data")]); // dependency to trigger on change
 
   const logOutUser = async () => {
+    let token = JSON.parse(localStorage.getItem("data")).token;
     try {
-      const res = await axios.get(`${BASE_URL}/users/logout`);
+      const res = await axios.get(`${BASE_URL}/users/logout`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       localStorage.removeItem("data");
       toast.success("Logout successful.");
       setIsLogin(false);
