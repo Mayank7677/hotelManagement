@@ -71,12 +71,12 @@ const NavBar = () => {
   const logOutUser = async () => {
     let token = JSON.parse(localStorage.getItem("data")).token;
     try {
+      localStorage.removeItem("data");
       const res = await axios.get(`${BASE_URL}/users/logout`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      localStorage.removeItem("data");
       toast.success("Logout successful.");
       setIsLogin(false);
       setProfileImg("");
