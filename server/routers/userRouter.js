@@ -10,7 +10,7 @@ router.post("/resetPass", userController.resetPassword);
 router.post("/newPass", userController.newPassword);
 router.put("/updateProfile", userController.editProfile);
 router.get("/getProfile", auth, userController.getUser);
-router.get("/logout", userController.logout);
+router.get("/logout", auth, userController.logout);
 
 
 module.exports = router;

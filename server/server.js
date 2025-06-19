@@ -23,10 +23,12 @@ mongoose
   .catch((err) => console.log(err));
 
 // Allow requests from frontend on Render
-app.use(cors({
-  origin: "https://hotelmanagement-bxyq.onrender.com",
-  credentials: true // needed if you're using cookies or sessions
-}));
+app.use(
+  cors({
+    origin: ["https://hotelmanagement-bxyq.onrender.com" , 'http://localhost:5173'],
+    credentials: true, // needed if you're using cookies or sessions
+  })
+);
 
 
 app.use(express.json());
