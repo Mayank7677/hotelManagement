@@ -240,8 +240,8 @@ const CreateRoom = () => {
           Authorization: `Bearer ${token}`,
         },
       });
+      
       console.log(res.data);
-
       setRoomData(res.data);
     } catch (error) {
       console.log(error.response.data.message);
@@ -255,7 +255,8 @@ const CreateRoom = () => {
   // searching and sorting
   const [search, setSearch] = useState("");
   const filteredData = roomData.filter((state) =>
-    state.hotelId.name.toLowerCase().includes(search.toLowerCase())
+    // console.log(state),
+    state?.hotelId?.name.toLowerCase().includes(search.toLowerCase())
   );
 
   const [click, setClick] = useState("default");
@@ -275,7 +276,7 @@ const CreateRoom = () => {
 
   const [searchInactive, setSearchInactive] = useState("");
   const filteredDataInactive = roomData.filter((state) =>
-    state.hotelId.name.toLowerCase().includes(searchInactive.toLowerCase())
+    state?.hotelId?.name.toLowerCase().includes(searchInactive.toLowerCase())
   );
 
   const [clickInactive, setClickInactive] = useState("default");
@@ -318,19 +319,22 @@ const CreateRoom = () => {
   };
 
   const handleDelete = async (id) => {
-    console.log("object");
+    console.log("object" ,id);
     let token = JSON.parse(localStorage.getItem("data")).token;
 
     try {
+      console.log('object')
       const res = await axios.delete(`${BASE_URL}/rooms/hardDelete?id=${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log('object')
 
       toast.success(res.data.message);
       fetchRoomData();
     } catch (error) {
+      console.log(error)
       toast.error(error?.response?.data?.message);
     }
   };
@@ -527,7 +531,7 @@ const CreateRoom = () => {
                     </span>
 
                     <input
-                      type="number"
+                      type="text"
                       id="roomNumber"
                       placeholder="Room Number"
                       value={room.roomNumber}

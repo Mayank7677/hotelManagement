@@ -13,23 +13,17 @@ const userRouter = require("./routers/userRouter");
 const locationRouter = require("./routers/locationRouter");
 const stateRouter = require("./routers/stateRouter");
 const hotelRouter = require("./routers/hotelRouter");
-const roomRouter = require("./routers/roomRouter"); 
+const roomRouter = require("./routers/roomRouter");
 const bookingRouter = require("./routers/bookingRouter");
 const couponRouter = require("./routers/couponRouter");
- 
+
 mongoose
-  .connect(process.env.MONO_URI) 
+  .connect(process.env.MONO_URI)
   .then(() => console.log("DB connected"))
   .catch((err) => console.log(err));
 
 // Allow requests from frontend on Render
-app.use(
-  cors({
-    origin: ["https://hotelmanagement-bxyq.onrender.com" , 'http://localhost:5173'],
-    credentials: true, // needed if you're using cookies or sessions
-  })
-);
-
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

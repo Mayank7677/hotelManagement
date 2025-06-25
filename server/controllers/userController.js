@@ -159,7 +159,7 @@ exports.login = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
     const isMatch = bcrypt.compareSync(password, user.password);
-    if (!isMatch) {
+    if (!isMatch) { 
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
@@ -172,8 +172,8 @@ exports.login = async (req, res) => {
     const newTime = currTime.clone().add(10, "minutes");
 
     await userModel.findOneAndUpdate({ email }, { otp, otpTimer: newTime });
-
     await sentOtpEmail(user.email, otp, user.name);
+    console.log('agsgvwrgvergver')
 
     res.status(200).json({
       message: "OTP sent to your email. Please verify.",

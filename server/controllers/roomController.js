@@ -269,6 +269,9 @@ exports.softDelete = async (req, res) => {
 };
 
 exports.hardDelete = async (req, res) => {
+  console.log(req.query);
+  console.log(req.data);
+  console.log('fwsfws');
   try {
     const { id } = req.query;
 
@@ -277,13 +280,13 @@ exports.hardDelete = async (req, res) => {
     }
 
     const room = await roomModel.findById(id);
-    if (!hotel) {
-      return res.status(404).json({ message: "No Hotel found" });
+    if (!room) {
+      return res.status(404).json({ message: "No Room found" });
     }
 
     const deleteLocation = await roomModel.findByIdAndDelete(id);
 
-    return res.status(200).json({ message: "Location deleted" });
+    return res.status(200).json({ message: "Room deleted" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

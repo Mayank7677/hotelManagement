@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 
-const mail = "mayankpanwar066@gmail.com";
-const pass = "sbuu segn sfcw suwv";
+const mail = process.env.OTP_MAIL
+const pass = process.env.OTP_PASS
 console.log(mail, pass);
 
 // Setup the Nodemailer transporter

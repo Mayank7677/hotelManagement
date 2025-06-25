@@ -80,6 +80,8 @@ const EditRoom = () => {
     }
   };
  
+  
+  
   return (
     <div className="pb-15 font-serif">
       <Link to="/admin/room">
@@ -181,7 +183,7 @@ const EditRoom = () => {
                 </span>
 
                 <input
-                  type="number"
+                  type="text"
                   id="roomNumber"
                   placeholder="Room Number"
                   value={roomNumber}

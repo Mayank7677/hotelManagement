@@ -35,6 +35,7 @@ const LoginPage = () => {
     setIsSendingOtp(true);
 
     try {
+      console.log('sending')
       const res = await axios.post(`${BASE_URL}/users/login`, {
         email: userData.email,
         password: userData.password,
